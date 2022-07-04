@@ -1,5 +1,13 @@
 # sana-capstone
 
+![tg_image_1000845230](https://user-images.githubusercontent.com/34044768/177221039-b53582a6-f86f-4f83-9f09-33ad9d87f543.jpeg)
+
+![tg_image_1323631511](https://user-images.githubusercontent.com/34044768/177221109-871482c2-db94-4b26-a87f-4838740d2b66.jpeg)
+
+![tg_image_3985667267](https://user-images.githubusercontent.com/34044768/177221127-4035b0e2-6dd4-4482-8183-c765937e5648.jpeg)
+
+
+
 ## A description of the application
 
 A multiplayer game on a website, that will generate party code (similar to JackBox).
