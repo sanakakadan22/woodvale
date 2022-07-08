@@ -6,18 +6,32 @@ export const lobbyRouter = createRouter()
     .query("get-by-code", {
         input: z.object({ lobbyCode: z.string() }),
         async resolve({ ctx , input}) {
-            return await ctx.prisma.lobby.findFirst({
-                    where: {
-                        lobbyCode: input.lobbyCode,
-                    },
-            });
+            const lobby = await ctx.prisma.lobby.findFirst({
+                where: {
+                    lobbyCode: input.lobbyCode,
+                },
+                include: {
+                    players: true, // include all players
+                },
+            })
+
+            lobby?.players.forEach(player => player.token = '') // remove all tokens to prevent hacks
+            return lobby ;
         },
     })
     .mutation("create", {
-        async resolve({ctx}) {
+        async resolve({ctx, input}) {
+            const name = ctx.req?.cookies["name"]
+            if (!ctx.token || !name) throw new Error("Unauthorized");
+
             return await ctx.prisma.lobby.create({
                 data: {
                     lobbyCode: nanoid(5),
+                    players: {
+                        create: [
+                            { name: name, token: ctx.token }, // Populates authorId with user's id
+                        ],
+                    }
                 },
             });
         },
