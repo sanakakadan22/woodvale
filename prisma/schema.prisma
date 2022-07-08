@@ -11,6 +11,24 @@ datasource db {
     // url      = env("DATABASE_URL")
 }
 
-model Example {
-    id String @id @default(cuid())
+model Lobby {
+    id Int  @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    lobbyCode String
+    players Player[]
+
+    @@index([lobbyCode])
+}
+
+model Player {
+  id Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  name String
+  token String
+
+  lobby   Lobby @relation(fields: [lobbyId], references: [id])
+  lobbyId Int
+
+  @@index([token])
 }
