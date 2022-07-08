@@ -24,10 +24,10 @@ const Home: NextPage = () => {
     const joinElement = useRef<HTMLInputElement>(null);
 
     const [cookies, setCookie] = useCookies(['name']);
-    const name = useRef<string>('');
+    const [name, setName] = useState('');
 
     useEffect(() => {
-        name.current = cookies.name
+        setName(cookies.name)
     }, [])
 
     return (
@@ -38,31 +38,33 @@ const Home: NextPage = () => {
             <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div>
-            <form onSubmit={(e) => {
-                e.preventDefault()
-                setCookie('name', nameElement.current?.value)
-            }}>
-                <input ref={nameElement}
-                       type="text"
-                       placeholder={name.current || "Type name"}
-                       className="input input-bordered w-full max-w-xs"/>
-            </form>
-        </div>
+        <div className="grid h-screen place-items-center">
+            <div>
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                    setCookie('name', nameElement.current?.value)
+                }}>
+                    <input ref={nameElement}
+                           type="text"
+                           placeholder={name || "Type name"}
+                           className="input input-bordered w-full max-w-xs"/>
+                </form>
 
-        <div className="btn-group">
-            <button className="btn btn-primary" onClick={() => {createLobby()}}>Create</button>
-            <button className="btn" onClick={() => {
-                if (!joinElement.current?.value) {
-                    return
-                }
-                joinLobby({lobbyCode: joinElement.current.value})
-            }}>Join</button>
+                <div className="btn-group">
+                    <button className="btn btn-primary" onClick={() => {createLobby()}}>Create</button>
+                    <button className="btn" onClick={() => {
+                        if (!joinElement.current?.value) {
+                            return
+                        }
+                        joinLobby({lobbyCode: joinElement.current.value})
+                    }}>Join</button>
+                </div>
+                <input ref={joinElement}
+                       type="text"
+                       placeholder={"Join lobby code"}
+                       className="input input-bordered w-full max-w-xs"/>
+            </div>
         </div>
-        <input ref={joinElement}
-               type="text"
-               placeholder={"Join lobby code"}
-               className="input input-bordered w-full max-w-xs"/>
     </>
   );
 };

@@ -14,11 +14,13 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         }
     }, [data])
 
-    return <div>
-        {data?.lobbyCode}
-        <ul>
-            {players.map((player, i) => <li key={i}>{player}</li>)}
-        </ul>
+    return <div className="grid h-screen place-items-center">
+        <div>
+            {data?.lobbyCode}
+            <ul>
+                {players.map((player, i) => <li key={i}>{player}</li>)}
+            </ul>
+        </div>
     </div>
 }
 
