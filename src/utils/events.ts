@@ -16,14 +16,14 @@ const events = new Ably.Realtime.Promise({authUrl: '/api/createTokenRequest'});
 
 function useEvent(eventName: string, callbackOnMessage: (message: Types.Message) => void) {
     const { query } = useRouter();
-    const { id } = query;
+    const { code } = query;
 
     const useEffectHook = () => {
-        if (!id || typeof id !== 'string') {
+        if (!code || typeof code !== 'string') {
             return
         }
 
-        const channel = events.channels.get(<string>id);
+        const channel = events.channels.get(<string>code);
         channel.subscribe(eventName, msg => {
             console.log(msg)
             callbackOnMessage(msg);
