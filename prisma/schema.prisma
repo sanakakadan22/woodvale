@@ -18,6 +18,7 @@ model Lobby {
     players Player[]
 
     @@index([lobbyCode])
+    @@unique([lobbyCode])
 }
 
 model Player {
@@ -31,4 +32,5 @@ model Player {
   lobbyId Int
 
   @@index([token])
+  @@unique([lobbyId, token])
 }

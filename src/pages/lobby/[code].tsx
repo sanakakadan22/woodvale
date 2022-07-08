@@ -1,13 +1,23 @@
 import {useRouter} from "next/router";
 import {trpc} from "../../utils/trpc";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useJoinLobby} from "../../utils/events";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
+    const [players, setPlayers] = useState<string[]>([])
+
+    useJoinLobby(playerName => setPlayers([...players, playerName]))
+    useEffect(() => {
+        if (data) {
+            setPlayers(data.players.map(player => player.name))
+        }
+    }, [data])
 
     return <div>
+        {data?.lobbyCode}
         <ul>
-            <p>{data ? data.players.map((player, i) => <li key={i}>{player.name}</li>) : null}</p>
+            {players.map((player, i) => <li key={i}>{player}</li>)}
         </ul>
     </div>
 }
