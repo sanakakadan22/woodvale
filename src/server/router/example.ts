@@ -8,7 +8,8 @@ export const exampleRouter = createRouter()
         text: z.string().nullish(),
       })
       .nullish(),
-    resolve({ input }) {
+    resolve({ ctx, input }) {
+        ctx.events.emitJoinedLobby("test", "Sana")
       return {
         greeting: `Hello ${input?.text ?? "world"}`,
       };

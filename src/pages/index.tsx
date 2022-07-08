@@ -1,14 +1,14 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
-import {useJoinLobby} from "../utils/ably";
+import {useJoinLobby} from "../utils/events";
 import {useState} from "react";
 
 const Home: NextPage = () => {
-    const [p, setP] = useState('')
   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
 
-  useJoinLobby((playerName) => setP(playerName))
+  const [players, setPlayers] = useState<string[]>([])
+  useJoinLobby((playerName) => setPlayers([...players, playerName]))
 
   return (
     <>
@@ -20,9 +20,9 @@ const Home: NextPage = () => {
       <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
         {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading...</p>}
       </div>
-        <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
-            {p ? <p>{p}</p> : <p>Loading Player...</p>}
-        </div>
+      <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
+        {players ? <ul>{players.map((player, i) => <li key={i}>{player}</li>)}</ul> : <p>No Players Yet...</p>}
+      </div>
     </>
   );
 };

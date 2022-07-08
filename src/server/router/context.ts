@@ -2,6 +2,7 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { prisma } from "../db/client";
+import { events } from "../events/client";
 
 export const createContext = (opts?: trpcNext.CreateNextContextOptions) => {
   const req = opts?.req;
@@ -11,6 +12,7 @@ export const createContext = (opts?: trpcNext.CreateNextContextOptions) => {
     req,
     res,
     prisma,
+    events,
   };
 };
 
