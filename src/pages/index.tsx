@@ -8,13 +8,21 @@ import {useEffect, useRef, useState} from "react";
 const Home: NextPage = () => {
     const router = useRouter();
 
-    const { mutate } = trpc.useMutation("lobby.create", {
+    const createLobby = trpc.useMutation("lobby.create", {
         onSuccess: (data) => {
             router.push(`/lobby/${data.lobbyCode}`);
         },
-    });
+    }).mutate;
+
+    const joinLobby = trpc.useMutation("lobby.join", {
+        onSuccess: (data) => {
+            router.push(`/lobby/${data.lobbyCode}`);
+        },
+    }).mutate;
 
     const nameElement = useRef<HTMLInputElement>(null);
+    const joinElement = useRef<HTMLInputElement>(null);
+
     const [cookies, setCookie] = useCookies(['name']);
     const name = useRef<string>('');
 
@@ -43,9 +51,18 @@ const Home: NextPage = () => {
         </div>
 
         <div className="btn-group">
-            <button className="btn btn-primary" onClick={() => {mutate()}}>Create</button>
-            <button className="btn">Join</button>
+            <button className="btn btn-primary" onClick={() => {createLobby()}}>Create</button>
+            <button className="btn" onClick={() => {
+                if (!joinElement.current?.value) {
+                    return
+                }
+                joinLobby({lobbyCode: joinElement.current.value})
+            }}>Join</button>
         </div>
+        <input ref={joinElement}
+               type="text"
+               placeholder={"Join lobby code"}
+               className="input input-bordered w-full max-w-xs"/>
     </>
   );
 };
