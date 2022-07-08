@@ -6,7 +6,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
 
     return <div>
-        <p>{data ? data.lobbyCode : 'Loading Lobby...'}</p>
+        <ul>
+            <p>{data ? data.players.map((player, i) => <li key={i}>{player.name}</li>) : null}</p>
+        </ul>
     </div>
 }
 
