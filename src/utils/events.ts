@@ -40,5 +40,5 @@ function useEvent(
     };
   };
 
-  useEffect(useEffectHook);
+  useEffect(useEffectHook, []);
 }
