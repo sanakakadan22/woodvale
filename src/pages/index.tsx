@@ -20,15 +20,8 @@ const Home: NextPage = () => {
     },
   }).mutate;
 
-  const nameElement = useRef<HTMLInputElement>(null);
   const joinElement = useRef<HTMLInputElement>(null);
-
   const [cookies, setCookie] = useCookies(["name"]);
-  const [name, setName] = useState("");
-
-  useEffect(() => {
-    setName(cookies.name);
-  }, []);
 
   return (
     <>
@@ -40,18 +33,13 @@ const Home: NextPage = () => {
 
       <div className="grid h-screen place-items-center">
         <div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setCookie("name", nameElement.current?.value);
-            }}>
-            <input
-              ref={nameElement}
-              type="text"
-              placeholder={name || "Type name"}
-              className="input input-bordered w-full max-w-xs"
-            />
-          </form>
+          <input
+            type="text"
+            value={cookies.name}
+            onChange={(e) => setCookie("name", e.target.value)}
+            placeholder={"Type name"}
+            className="input input-bordered w-full max-w-xs"
+          />
 
           <div className="btn-group">
             <button
