@@ -14,8 +14,12 @@ datasource db {
 model Lobby {
     id Int  @id @default(autoincrement())
     createdAt DateTime @default(now())
+
     lobbyCode String
+    status String // InLobby / InGame / Ended
     players Player[]
+    rounds Round[]
+    roundLength Int
 
     @@index([lobbyCode])
     @@unique([lobbyCode])
@@ -27,10 +31,43 @@ model Player {
 
   name String
   token String
+  answers Answer[]
 
   lobby   Lobby @relation(fields: [lobbyId], references: [id])
   lobbyId Int
 
   @@index([token])
   @@unique([lobbyId, token])
+}
+
+model Round {
+  id Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  question String
+  answer Int
+  choices Choice[]
+  answers Answer[]
+
+  lobby   Lobby @relation(fields: [lobbyId], references: [id])
+  lobbyId Int
+}
+
+model Choice {
+  id Int  @id @default(autoincrement())
+  choice String
+
+  round Round @relation(fields: [roundId], references: [id])
+  roundId Int
+}
+
+model Answer {
+  id Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  round Round @relation(fields: [roundId], references: [id])
+  roundId Int
+
+  player Player @relation(fields: [playerId], references: [id])
+  playerId Int
 }
