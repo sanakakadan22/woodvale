@@ -16,11 +16,14 @@ export const lobbyRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         include: {
-          players: true, // include all players
+          players: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
 
-      lobby?.players.forEach((player) => (player.token = "")); // remove all tokens to prevent hacks
       return lobby;
     },
   })

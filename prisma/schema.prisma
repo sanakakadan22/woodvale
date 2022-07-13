@@ -65,9 +65,13 @@ model Answer {
   id Int  @id @default(autoincrement())
   createdAt DateTime @default(now())
 
+  answer Int
+
   round Round @relation(fields: [roundId], references: [id])
   roundId Int
 
   player Player @relation(fields: [playerId], references: [id])
   playerId Int
+
+   @@unique([roundId, playerId])
 }
