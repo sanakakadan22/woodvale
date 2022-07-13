@@ -57,9 +57,6 @@ export const gameRouter = createRouter()
   .mutation("sendAnswer", {
     input: z.object({ lobbyCode: z.string(), answer: z.number() }),
     async resolve({ ctx, input }) {
-      // check if it has been < 13 seconds
-      // return correct/incorrect
-
       const lobby = await ctx.prisma.lobby.findFirst({
         where: {
           lobbyCode: input.lobbyCode,
@@ -92,6 +89,10 @@ export const gameRouter = createRouter()
         throw new Error("No round");
       }
 
+      if ((Date.now() - round.createdAt.getTime()) / 1000 > lobby.roundLength) {
+        throw new Error("Out of time");
+      }
+
       const answer = await ctx.prisma.answer.create({
         data: {
           answer: input.answer,
@@ -100,10 +101,8 @@ export const gameRouter = createRouter()
         },
       });
 
-      if (answer.answer == round.answer) {
-        console.log("correct");
-      } else {
-        console.log("wrong");
-      }
+      return {
+        correct: answer.answer == round.answer,
+      };
     },
   });
