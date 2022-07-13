@@ -6,7 +6,12 @@ import { useJoinLobby } from "../../utils/events";
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
   const [players, setPlayers] = useState<string[]>([]);
-  const sendAnswer = trpc.useMutation("game.sendAnswer").mutate;
+
+  const sendAnswer = trpc.useMutation("game.sendAnswer", {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  }).mutate;
   const newRound = trpc.useMutation("game.newRound").mutate;
 
   useJoinLobby((playerName) => setPlayers([...players, playerName]));
