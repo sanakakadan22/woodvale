@@ -66,6 +66,7 @@ model Answer {
   createdAt DateTime @default(now())
 
   answer Int
+  score Int
 
   round Round @relation(fields: [roundId], references: [id])
   roundId Int
@@ -73,5 +74,5 @@ model Answer {
   player Player @relation(fields: [playerId], references: [id])
   playerId Int
 
-   @@unique([roundId, playerId])
+  @@unique([roundId, playerId])
 }
