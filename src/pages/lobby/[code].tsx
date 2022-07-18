@@ -7,12 +7,13 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
   const [players, setPlayers] = useState<string[]>([]);
 
-  const sendAnswer = trpc.useMutation("game.sendAnswer", {
+  const router = useRouter();
+
+  const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      console.log(data);
+      router.push(`/game/${data.lobbyCode}`);
     },
   }).mutate;
-  const newRound = trpc.useMutation("game.newRound").mutate;
 
   useJoinLobby((playerName) => setPlayers([...players, playerName]));
   useEffect(() => {
@@ -38,13 +39,6 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           newRound({ lobbyCode: lobbyCode });
         }}>
         New Round
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          sendAnswer({ lobbyCode: lobbyCode, answer: 2 });
-        }}>
-        Send Answer
       </button>
     </div>
   );
