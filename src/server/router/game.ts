@@ -38,7 +38,7 @@ export const gameRouter = createRouter()
       ];
 
       const round = {
-        question: "I remember it all too wall",
+        question: "I remember it all too well",
         answer: 2,
         choices: {
           create: choices,
