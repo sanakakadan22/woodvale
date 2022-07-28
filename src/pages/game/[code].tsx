@@ -10,7 +10,7 @@ enum Answer {
 
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [correct, setCorrect] = useState(Answer.Neutral);
-  const { data } = trpc.useQuery(["game.get-round-by-code", { lobbyCode }]);
+  const { data, refetch } = trpc.useQuery(["game.get-round-by-code", { lobbyCode }]);
   const round = data?.rounds.at(0);
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
@@ -26,6 +26,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
+      refetch()
       setCorrect(Answer.Neutral);
     },
   }).mutate;
