@@ -3,6 +3,8 @@ import { z } from "zod";
 import is from "@sindresorhus/is";
 import integer = is.integer;
 import { TRPCError } from "@trpc/server";
+import { allLyrics } from "../lyrics/allLyrics";
+import { makeQuestion } from "../lyrics/questionMaker";
 
 export const gameRouter = createRouter()
   .mutation("newRound", {
@@ -22,24 +24,36 @@ export const gameRouter = createRouter()
       //     players: true, // include all players
       //   },
       // });
-      const choices = [
-        {
-          choice: "Lover",
-        },
-        {
-          choice: "Cardigan",
-        },
-        {
-          choice: "All Too Well",
-        },
-        {
-          choice: "willow",
-        },
-      ];
+
+      // const choices = [
+      //   {
+      //     choice: "Lover",
+      //   },
+      //   {
+      //     choice: "Cardigan",
+      //   },
+      //   {
+      //     choice: "All Too Well",
+      //   },
+      //   {
+      //     choice: "willow",
+      //   },
+      // ];
+      const [question, selected, answerIndex] = makeQuestion()
+
+      const choices = selected.map(
+        choice => {
+          return {
+            choice: choice,
+          }
+        }
+      )
+
+
 
       const round = {
-        question: "I remember it all too well",
-        answer: 2,
+        question: question,
+        answer: answerIndex,
         choices: {
           create: choices,
         },
