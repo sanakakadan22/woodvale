@@ -1,11 +1,8 @@
 import { Types } from "ably";
-import Ably from "ably/promises";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
-
-export enum GameEvent {
-  JoinedLobby = "joinedLobby",
-}
+import { GameEvent } from "./enums";
+import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { nanoid } from "nanoid";
 
 export const useJoinLobby = (onJoinedLobby: (playerName: string) => void) => {
   const callback = (message: Types.Message) => {
@@ -14,31 +11,17 @@ export const useJoinLobby = (onJoinedLobby: (playerName: string) => void) => {
   useEvent(GameEvent.JoinedLobby, callback);
 };
 
-const events = new Ably.Realtime.Promise({
+configureAbly({
   authUrl: "/api/createTokenRequest",
+  clientId: nanoid(9),
 });
 
 function useEvent(
-  eventName: string,
+  eventName: GameEvent,
   callbackOnMessage: (message: Types.Message) => void
 ) {
   const { query } = useRouter();
   const { code } = query;
 
-  const useEffectHook = () => {
-    if (!code || typeof code !== "string") {
-      return;
-    }
-
-    const channel = events.channels.get(<string>code);
-    channel.subscribe(eventName, (msg) => {
-      console.log(msg);
-      callbackOnMessage(msg);
-    });
-    return () => {
-      channel.unsubscribe();
-    };
-  };
-
-  useEffect(useEffectHook, []);
+  useChannel(<string>code, eventName, callbackOnMessage);
 }

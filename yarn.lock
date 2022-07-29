@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@ably-labs/react-hooks@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@ably-labs/react-hooks/-/react-hooks-2.0.7.tgz#7f4ad32d24025e870a33d2ea65a3d5d8a2697439"
+  integrity sha512-4g0Neg0rfIceS4/U/W1L8ib/1q5aW9JDPOtjQBZE8zxRvbxwdSu32+BjQEL5oRpALDd06iosPYdDixKDwNwwoA==
+  dependencies:
+    ably "^1.2.27"
+
 "@ably/msgpack-js@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@ably/msgpack-js/-/msgpack-js-0.4.0.tgz#aaaf5d8dffacf7aa253effd8c3488aa09130e6a2"

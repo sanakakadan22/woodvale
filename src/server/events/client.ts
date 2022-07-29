@@ -1,6 +1,6 @@
 // src/server/events/client.ts
 import Ably from "ably/promises";
-import { GameEvent } from "../../utils/events";
+import { GameEvent } from "../../utils/enums";
 
 const ably = new Ably.Realtime(process.env.ABLY_API_KEY || "");
 
