@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useState } from "react";
-import { GameEvent, useEvent } from "../../utils/events";
+import { useEvent } from "../../utils/events";
 import { Answer, Player } from "@prisma/client";
 import _ from "lodash";
+import { GameEvent } from "../../utils/enums";
 
 enum AnswerColor {
   Neutral,
@@ -13,7 +14,10 @@ enum AnswerColor {
 
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [correct, setCorrect] = useState(AnswerColor.Neutral);
-  const { data, refetch } = trpc.useQuery(["game.get-round-by-code", { lobbyCode }]);
+  const { data, refetch } = trpc.useQuery([
+    "game.get-round-by-code",
+    { lobbyCode },
+  ]);
   const round = data?.rounds[0];
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
@@ -34,11 +38,11 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }).mutate;
 
   const newRoundCallBack = () => {
-    refetch()
+    refetch();
     setCorrect(AnswerColor.Neutral);
-  }
+  };
 
-  useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack)
+  useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
 
   if (!round) {
     return null;
@@ -51,7 +55,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     color = "bg-red-600";
   }
 
-  const p = data.players[0]
+  const p = data.players[0];
 
   return (
     <div className="grid h-screen place-items-center">
@@ -97,13 +101,14 @@ const GamePage = () => {
 
 export default GamePage;
 
+const PlayerScore: React.FC<{
+  player: { answers: Answer[]; name: string };
+}> = ({ player }) => {
+  const score = _.sum(player.answers.map((answer) => answer.score));
 
-const PlayerScore: React.FC<{ player: {answers: Answer[]; name: string;} }> = ({ player }) => {
-  const score = _.sum(player.answers.map(answer => answer.score))
-  
-  return(
+  return (
     <div>
       {player.name}:{score}
     </div>
-  )
-}
+  );
+};
