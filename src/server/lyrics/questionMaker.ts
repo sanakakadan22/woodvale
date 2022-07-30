@@ -1,6 +1,8 @@
 import lyrics from './lyrics.json'; 
 
-const LyricMap = new Map(Object.values(lyrics).flatMap(value => Object.entries(value)));
+const LyricMap = new Map(Object.entries(lyrics.reputation)) //.flatMap(value => Object.entries(value)));
+
+// const LyricMap = new Map(Object.values(lyrics).flatMap(value => Object.entries(value)));
 
 const getRandomIndex = (array: any[]) => Math.floor(Math.random() * array.length)
 

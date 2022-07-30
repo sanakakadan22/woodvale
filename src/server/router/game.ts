@@ -59,7 +59,7 @@ export const gameRouter = createRouter()
         },
       };
 
-      return await ctx.prisma.lobby.update({
+      const newRound = await ctx.prisma.lobby.update({
         where: {
           lobbyCode: input.lobbyCode,
         },
@@ -69,6 +69,8 @@ export const gameRouter = createRouter()
           },
         },
       });
+      ctx.events.newRound(input.lobbyCode)
+      return newRound
     },
   })
   .mutation("sendAnswer", {
@@ -117,8 +119,13 @@ export const gameRouter = createRouter()
         });
       }
 
-      const score = Math.round(1 - elapsedSeconds / lobby.roundLength) * 10;
-      console.log(score);
+      const correct = input.answer == round.answer
+      let score = 0
+      if (correct) {
+        score = Math.round((1 - elapsedSeconds / lobby.roundLength) * 10);
+        console.log(score);
+      }
+      
 
       const answer = await ctx.prisma.answer.create({
         data: {
@@ -130,7 +137,7 @@ export const gameRouter = createRouter()
       });
 
       return {
-        correct: answer.answer == round.answer,
+        correct: correct
       };
     },
   })
@@ -157,6 +164,7 @@ export const gameRouter = createRouter()
           players: {
             select: {
               name: true,
+              answers: true,
             },
           },
         },

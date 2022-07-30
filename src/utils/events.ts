@@ -5,36 +5,34 @@ import { useRouter } from "next/router";
 
 export enum GameEvent {
   JoinedLobby = "joinedLobby",
+  NewRound = "NewRound"
 }
 
-export const useJoinLobby = (onJoinedLobby: (playerName: string) => void) => {
+export const useJoinLobby = (lobbyCode: string, onJoinedLobby: (playerName: string) => void) => {
   const callback = (message: Types.Message) => {
     onJoinedLobby(<string>message.data);
   };
-  useEvent(GameEvent.JoinedLobby, callback);
+  useEvent(lobbyCode, GameEvent.JoinedLobby, callback);
 };
 
-const events = new Ably.Realtime.Promise({
-  authUrl: "/api/createTokenRequest",
-});
-
-function useEvent(
+let counter = 0
+export function useEvent(
+  lobbyCode: string,
   eventName: string,
   callbackOnMessage: (message: Types.Message) => void
 ) {
-  const { query } = useRouter();
-  const { code } = query;
-
   const useEffectHook = () => {
-    if (!code || typeof code !== "string") {
-      return;
-    }
+    const ably = new Ably.Realtime.Promise({
+      authUrl: "/api/createTokenRequest",
+    });
 
-    const channel = events.channels.get(<string>code);
+    const channel = ably.channels.get(<string>lobbyCode);
+    console.log(`ABLY COUNTER: ${counter++})`);
+
     channel.subscribe(eventName, (msg) => {
-      console.log(msg);
       callbackOnMessage(msg);
     });
+  
     return () => {
       channel.unsubscribe();
     };

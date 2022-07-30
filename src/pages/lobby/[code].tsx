@@ -1,21 +1,22 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { useJoinLobby } from "../../utils/events";
+import { GameEvent, useEvent, useJoinLobby } from "../../utils/events";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
   const [players, setPlayers] = useState<string[]>([]);
 
   const router = useRouter();
-
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
       router.push(`/game/${data.lobbyCode}`);
     },
   }).mutate;
 
-  useJoinLobby((playerName) => setPlayers([...players, playerName]));
+  useEvent(lobbyCode, GameEvent.NewRound, () => router.push(`/game/${lobbyCode}`))
+  useJoinLobby(lobbyCode, (playerName) => setPlayers(players => [...players, playerName]));
+
   useEffect(() => {
     if (data) {
       setPlayers(data.players.map((player) => player.name));
