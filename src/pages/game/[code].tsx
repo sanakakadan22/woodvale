@@ -14,6 +14,8 @@ enum AnswerColor {
 
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [correct, setCorrect] = useState(AnswerColor.Neutral);
+  const [selected, setSelected] = useState(-1);
+
   const { data, refetch } = trpc.useQuery([
     "game.get-round-by-code",
     { lobbyCode },
@@ -21,8 +23,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const round = data?.rounds[0];
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       console.log(data);
+      setSelected(variables.answer);
       if (data.correct) {
         setCorrect(AnswerColor.Correct);
       } else {
@@ -33,13 +36,14 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      // newRoundCallBack()
+      newRoundCallBack();
     },
   }).mutate;
 
   const newRoundCallBack = () => {
     refetch();
     setCorrect(AnswerColor.Neutral);
+    setSelected(-1);
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -48,14 +52,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return null;
   }
 
-  let color = "bg-gray-500";
+  let color = "btn-primary";
   if (AnswerColor.Correct === correct) {
-    color = "bg-green-500";
+    color = "btn-success";
   } else if (AnswerColor.Wrong === correct) {
-    color = "bg-red-600";
+    color = "btn-error";
   }
-
-  const p = data.players[0];
 
   return (
     <div className="grid h-screen place-items-center">
@@ -63,20 +65,26 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <PlayerScore player={player} key={i}></PlayerScore>
       ))}
       <h1 className="text-6xl">"{round.question}"</h1>
-      <div className={`card shadow-2xl ${color} p-7`}>
-        <div className="grid grid-cols-2 grid-rows-2">
-          {round.choices.map((choice, i) => (
+      {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
+      <div className="grid grid-cols-2 grid-rows-2">
+        {round.choices.map((choice, i) => {
+          let selectedColor = "btn-primary";
+          if (i === selected) {
+            selectedColor = color;
+          }
+          return (
             <button
-              className="btn btn-primary btn-lg m-2"
+              className={`btn ${selectedColor} btn-lg m-2`}
               key={i}
               onClick={() => {
                 sendAnswer({ lobbyCode: lobbyCode, answer: i });
               }}>
               {choice.choice}
             </button>
-          ))}
-        </div>
+          );
+        })}
       </div>
+      {/*</div>*/}
       <button
         className="btn btn-primary"
         onClick={() => {

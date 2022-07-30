@@ -32,6 +32,12 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     <div className="grid h-screen place-items-center">
       <div>
         {data?.lobbyCode}
+        <button
+          className="btn sm:btn-sm"
+          onClick={() => navigator.clipboard.writeText(lobbyCode)}>
+          Copy
+        </button>
+
         <ul>
           {players.map((player, i) => (
             <li key={i}>{player}</li>

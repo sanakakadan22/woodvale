@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { makeQuestion } from "../lyrics/questionMaker";
+import { makeFlagQuestion, makeQuestion } from "../lyrics/questionMaker";
 
 export const gameRouter = createRouter()
   .mutation("newRound", {
@@ -36,7 +36,7 @@ export const gameRouter = createRouter()
       //     choice: "willow",
       //   },
       // ];
-      const [question, selected, answerIndex] = makeQuestion();
+      const [question, selected, answerIndex] = makeFlagQuestion();
 
       const choices = selected.map((choice) => {
         return {
