@@ -19,6 +19,7 @@ function getRandomValue<Type>(array: Type[] | undefined) {
 }
 
 export function makeFlagQuestion(): [string, string[], number] {
+  // @ts-ignore
   const keys = <string[]>[...FlagMap.keys()];
   const shuffled = keys.sort(() => 0.5 - Math.random());
 
@@ -33,6 +34,7 @@ export function makeFlagQuestion(): [string, string[], number] {
 }
 
 export function makeQuestion(): [string, string[], number] {
+  // @ts-ignore
   const keys = [...LyricMap.keys()];
   const shuffled = keys.sort(() => 0.5 - Math.random());
 

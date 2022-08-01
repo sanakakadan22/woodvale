@@ -1,7 +1,6 @@
 import { Types } from "ably";
 import { GameEvent } from "./enums";
 import { configureAbly, useChannel } from "@ably-labs/react-hooks";
-import { nanoid } from "nanoid";
 
 export const useJoinLobby = (
   lobbyCode: string,
@@ -15,7 +14,6 @@ export const useJoinLobby = (
 
 configureAbly({
   authUrl: "/api/createTokenRequest",
-  clientId: nanoid(9),
 });
 
 export function useEvent(
