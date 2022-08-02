@@ -15,6 +15,7 @@ enum AnswerColor {
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [correct, setCorrect] = useState(AnswerColor.Neutral);
   const [selected, setSelected] = useState(-1);
+  const [correctAnswer, setCorrectAnswer] = useState(-1);
 
   const { data, refetch } = trpc.useQuery([
     "game.get-round-by-code",
@@ -29,7 +30,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       if (data.correct) {
         setCorrect(AnswerColor.Correct);
       } else {
-        setCorrect(AnswerColor.Wrong);
+        setCorrect(AnswerColor.Wrong);   
+        setCorrectAnswer(data.correctAnswer)
+      
       }
     },
   }).mutate;
@@ -44,6 +47,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     refetch();
     setCorrect(AnswerColor.Neutral);
     setSelected(-1);
+    setCorrectAnswer(-1);
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -59,6 +63,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     color = "btn-error";
   }
 
+  
   return (
     <div className="grid h-screen place-items-center">
       {data.players.map((player, i) => (
@@ -68,13 +73,16 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
       <div className="grid grid-cols-2 grid-rows-2">
         {round.choices.map((choice, i) => {
-          let selectedColor = "btn-primary";
+          let buttonColor = "btn-primary";
           if (i === selected) {
-            selectedColor = color;
+            buttonColor = color;
+          } if ( i === correctAnswer){
+            buttonColor = "btn-success"
           }
+          
           return (
             <button
-              className={`btn ${selectedColor} btn-lg m-2`}
+              className={`btn ${buttonColor} btn-lg m-2`}
               key={i}
               onClick={() => {
                 sendAnswer({ lobbyCode: lobbyCode, answer: i });

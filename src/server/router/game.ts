@@ -112,7 +112,7 @@ export const gameRouter = createRouter()
         });
       }
 
-      const correct = input.answer == round.answer;
+      const correct = input.answer === round.answer;
       let score = 0;
       if (correct) {
         score = Math.round((1 - elapsedSeconds / lobby.roundLength) * 10);
@@ -130,6 +130,7 @@ export const gameRouter = createRouter()
 
       return {
         correct: correct,
+        correctAnswer: round.answer,
       };
     },
   })
