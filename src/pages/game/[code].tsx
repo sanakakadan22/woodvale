@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
 import { useEvent } from "../../utils/events";
-import { Answer, Player } from "@prisma/client";
+import { Answer } from "@prisma/client";
 import _ from "lodash";
 import { GameEvent } from "../../utils/enums";
 
@@ -25,26 +25,27 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEffect(() => {
     if (!data) {
-      return
+      return;
     }
     const round = data?.rounds[0];
     if (!round) {
-      return
+      return;
     }
-    const secondsLeft = data.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
+    const secondsLeft =
+      data.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
 
     if (secondsLeft <= 0) {
-      return
+      return;
     }
 
-    setSeconds(Math.floor(secondsLeft))
+    setSeconds(Math.floor(secondsLeft));
     const interval = setInterval(() => {
-      setSeconds(seconds => seconds - 1);
+      setSeconds((seconds) => seconds - 1);
     }, 1000);
 
-    const timeout = setTimeout(()=> {
+    const timeout = setTimeout(() => {
       refetch();
-    }, secondsLeft*1000)
+    }, secondsLeft * 1000);
 
     return () => {
       clearInterval(interval);
@@ -59,8 +60,8 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       if (data.correct) {
         setCorrect(AnswerColor.Correct);
       } else {
-        setCorrect(AnswerColor.Wrong);   
-        setCorrectAnswer(data.correctAnswer)
+        setCorrect(AnswerColor.Wrong);
+        setCorrectAnswer(data.correctAnswer);
       }
     },
   }).mutate;
@@ -91,29 +92,29 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   } else if (AnswerColor.Wrong === correct) {
     color = "btn-error";
   }
-  
+
   return (
     <div className="grid h-screen place-items-center">
       {data.players.map((player, i) => (
         <PlayerScore player={player} key={i}></PlayerScore>
       ))}
       <span className="countdown">
-        <span style={{"--value": seconds} as React.CSSProperties}></span>
+        <span style={{ "--value": seconds } as React.CSSProperties}></span>
       </span>
       <h1 className="text-6xl">"{round.question}"</h1>
-      
+
       {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
       <div className="grid grid-cols-2 grid-rows-2">
         {round.choices.map((choice, i) => {
           let buttonColor = "btn-primary";
           if (i === selected) {
             buttonColor = color;
-          } else if ( i === correctAnswer){
-            buttonColor = "btn-warning"
-          } else if ( i === round.answer) {
-            buttonColor = "btn-warning"
+          } else if (i === correctAnswer) {
+            buttonColor = "btn-warning";
+          } else if (i === round.answer) {
+            buttonColor = "btn-warning";
           }
-          
+
           return (
             <button
               className={`btn ${buttonColor} btn-lg m-2`}
@@ -160,7 +161,7 @@ const PlayerScore: React.FC<{
     <div>
       {player.name}:{" "}
       <span className="countdown">
-        <span style={{"--value": score} as React.CSSProperties}> </span>
+        <span style={{ "--value": score } as React.CSSProperties}> </span>
       </span>
     </div>
   );
