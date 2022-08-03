@@ -36,7 +36,7 @@ export const gameRouter = createRouter()
       //     choice: "willow",
       //   },
       // ];
-      const [question, selected, answerIndex] = makeFlagQuestion();
+      const [question, selected, answerIndex] = makeQuestion();
 
       const choices = selected.map((choice) => {
         return {

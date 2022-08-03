@@ -36,7 +36,7 @@ export const lobbyRouter = createRouter()
         data: {
           lobbyCode: nanoid(5),
           status: GameStatus.InLobby,
-          roundLength: 13,
+          roundLength: 13 + 1,
           players: {
             create: [
               {
