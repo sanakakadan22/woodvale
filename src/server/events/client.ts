@@ -12,7 +12,7 @@ export const events = {
   emitJoinedLobby: (lobbyCode: string, name: string) => {
     publish(lobbyCode, GameEvent.JoinedLobby, name);
   },
-  newRound:  (lobbyCode: string) => {
-    publish(lobbyCode,GameEvent.NewRound,'' )
-  }
+  newRound: (lobbyCode: string) => {
+    publish(lobbyCode, GameEvent.NewRound, "");
+  },
 };
