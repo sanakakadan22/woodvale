@@ -7,6 +7,7 @@ import { GameEvent } from "../../utils/enums";
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
   const [players, setPlayers] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
@@ -30,28 +31,37 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   return (
     <div className="grid h-screen place-items-center">
-      <div>
-        {data?.lobbyCode}
+      <div className="text-center place-items-center">
+        <div className="card shadow-2xl flex flex-row bg-secondary p-3">
+          <p className="text-2xl text-center text-bold mr-2">
+            Code: {data?.lobbyCode}
+          </p>
+          <button
+            className="btn btn-sm text-2xl"
+            onClick={() => {
+              navigator.clipboard.writeText(lobbyCode);
+              setCopied(true);
+            }}>
+            {copied ? "💃" : "📋"}
+          </button>
+        </div>
         <button
-          className="btn sm:btn-sm"
-          onClick={() => navigator.clipboard.writeText(lobbyCode)}>
-          Copy
+          className="btn btn-primary btn-lg m-5"
+          onClick={() => {
+            newRound({ lobbyCode: lobbyCode });
+          }}>
+          Start
         </button>
-
         <ul>
           {players.map((player, i) => (
-            <li key={i}>{player}</li>
+            <li
+              className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center"
+              key={i}>
+              {player}
+            </li>
           ))}
         </ul>
       </div>
-
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          newRound({ lobbyCode: lobbyCode });
-        }}>
-        New Round
-      </button>
     </div>
   );
 };

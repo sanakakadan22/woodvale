@@ -72,6 +72,16 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   }).mutate;
 
+  const endGame = trpc.useMutation("game.newRound", {
+    onSuccess: (data) => {
+      endGameCallBack();
+    },
+  }).mutate;
+
+  const endGameCallBack = () => {
+    refetch();
+  };
+
   const newRoundCallBack = () => {
     refetch();
     setCorrect(AnswerColor.Neutral);
@@ -106,7 +116,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
       <div className="grid grid-cols-2 grid-rows-2">
         {round.choices.map((choice, i) => {
-          let buttonColor = "btn-primary";
+          let buttonColor = "btn";
           if (i === selected) {
             buttonColor = color;
           } else if (i === correctAnswer) {
@@ -127,13 +137,19 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           );
         })}
       </div>
-      {/*</div>*/}
       <button
         className="btn btn-primary"
         onClick={() => {
           newRound({ lobbyCode: lobbyCode });
         }}>
         New Round
+      </button>
+      <button
+        className="btn btn-primary"
+        onClick={() => {
+          endGame({ lobbyCode: lobbyCode });
+        }}>
+        End Game
       </button>
     </div>
   );
@@ -156,12 +172,17 @@ const PlayerScore: React.FC<{
   player: { answers: Answer[]; name: string };
 }> = ({ player }) => {
   const score = _.sum(player.answers.map((answer) => answer.score));
+  console.log(score);
 
   return (
     <div>
-      {player.name}:{" "}
+      {player.name}:
       <span className="countdown">
-        <span style={{ "--value": score } as React.CSSProperties}> </span>
+        <span
+          style={
+            { "--value": Math.floor(score / 100) } as React.CSSProperties
+          }></span>
+        <span style={{ "--value": score % 100 } as React.CSSProperties}> </span>
       </span>
     </div>
   );
