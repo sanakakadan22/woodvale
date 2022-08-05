@@ -10,7 +10,7 @@ export function middleware(req: NextRequest) {
   const random = nanoid();
 
   // Redirect (to apply cookie)
-  const res = NextResponse.redirect(req.nextUrl);
+  const res = NextResponse.next();
 
   res.cookies.set("user-token", random, { sameSite: "strict" });
 
