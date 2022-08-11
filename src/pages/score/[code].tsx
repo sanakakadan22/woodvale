@@ -3,6 +3,8 @@ import { trpc } from "../../utils/trpc";
 import { Answer } from "@prisma/client";
 import _ from "lodash";
 import { useRouter } from "next/router";
+import { useEvent } from "../../utils/events";
+import { GameEvent } from "../../utils/enums";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);

@@ -2,6 +2,7 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { makeFlagQuestion, makeQuestion } from "../lyrics/questionMaker";
+import { GameStatus } from "./lobby";
 
 export const gameRouter = createRouter()
   .mutation("newRound", {
@@ -9,33 +10,36 @@ export const gameRouter = createRouter()
     async resolve({ ctx, input }) {
       // make sure input comes from the host?
       // make sure rounds < 13?
-      // make sure game status is InGame
-      // emit new round event
-      // question generator
 
-      // const lobby = await ctx.prisma.lobby.findFirst({
-      //   where: {
-      //     lobbyCode: input.lobbyCode,
-      //   },
-      //   include: {
-      //     players: true, // include all players
-      //   },
-      // });
+      const lobby = await ctx.prisma.lobby.findFirst({
+        where: {
+          lobbyCode: input.lobbyCode,
+        },
+        include: {
+          players: true, // include all players
+        },
+      });
 
-      // const choices = [
-      //   {
-      //     choice: "Lover",
-      //   },
-      //   {
-      //     choice: "Cardigan",
-      //   },
-      //   {
-      //     choice: "All Too Well",
-      //   },
-      //   {
-      //     choice: "willow",
-      //   },
-      // ];
+      if (lobby == null) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const player = lobby.players.find((player) => player.token == ctx.token);
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (lobby.status === GameStatus.Ended) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Game has ended already",
+        });
+      }
+
       const [question, selected, answerIndex] = makeQuestion();
 
       const choices = selected.map((choice) => {
@@ -57,6 +61,7 @@ export const gameRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         data: {
+          status: GameStatus.InGame,
           rounds: {
             create: [round],
           },
@@ -184,5 +189,51 @@ export const gameRouter = createRouter()
       }
 
       return lobby;
+    },
+  })
+  .mutation("endTheGame", {
+    input: z.object({ lobbyCode: z.string() }),
+    async resolve({ ctx, input }) {
+      const lobby = await ctx.prisma.lobby.findFirst({
+        where: {
+          lobbyCode: input.lobbyCode,
+        },
+        include: {
+          players: true,
+        },
+      });
+
+      if (lobby == null) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const player = lobby.players.find((player) => player.token == ctx.token);
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (lobby.status !== GameStatus.InGame) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Game Not In Progress",
+        });
+      }
+
+      const updatedLobby = await ctx.prisma.lobby.update({
+        where: {
+          lobbyCode: input.lobbyCode,
+        },
+        data: {
+          status: GameStatus.Ended,
+        },
+      });
+
+      ctx.events.endGame(input.lobbyCode);
+
+      return updatedLobby;
     },
   });

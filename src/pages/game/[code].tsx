@@ -72,15 +72,16 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   }).mutate;
 
-  const endGame = trpc.useMutation("game.newRound", {
-    onSuccess: (data) => {
-      endGameCallBack();
+  const router = useRouter();
+  const endGame = trpc.useMutation("game.endTheGame", {
+    onSettled: (data) => {
+      router.push(`/score/${lobbyCode}`);
     },
   }).mutate;
 
-  const endGameCallBack = () => {
-    refetch();
-  };
+  useEvent(lobbyCode, GameEvent.EndGame, () =>
+    router.push(`/score/${lobbyCode}`)
+  );
 
   const newRoundCallBack = () => {
     refetch();
