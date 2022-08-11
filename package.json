@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ably-labs/react-hooks": "^2.0.7",
+    "@formkit/auto-animate": "^1.0.0-beta.1",
     "@prisma/client": "^4.0.0",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",

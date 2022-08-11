@@ -33,10 +33,10 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="grid h-screen place-items-center">
-        <p className="text-4xl font-extrabold font-mono">
+        <p className="text-4xl font-extrabold font-mono text-center">
           Welcome to Sana&apos;s Swiftie Game hub
         </p>
-        <p className="text-lg italic">let the games begin...</p>
+        <p className="text-lg italic text-center">let the games begin...</p>
         <Image
           className="mask mask-squircle float-left"
           src="/homepage.jpeg"

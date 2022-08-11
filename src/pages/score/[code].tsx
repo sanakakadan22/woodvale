@@ -5,10 +5,7 @@ import { useRouter } from "next/router";
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
 
-  let maxScore = 0;
-  if (data) {
-    maxScore = data.roundLength * data.numberOfRounds;
-  }
+  const maxScore = data?.players[0]?.score || 0;
 
   return (
     <div className="grid place-items-center">

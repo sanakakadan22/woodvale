@@ -3,6 +3,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { makeFlagQuestion, makeQuestion } from "../lyrics/questionMaker";
 import { GameStatus } from "./lobby";
+import _ from "lodash";
 
 export const gameRouter = createRouter()
   .mutation("newRound", {
@@ -161,6 +162,7 @@ export const gameRouter = createRouter()
           },
           players: {
             select: {
+              id: true,
               name: true,
               answers: true,
             },
@@ -188,7 +190,20 @@ export const gameRouter = createRouter()
         round.answer = -1;
       }
 
-      return lobby;
+      const players = lobby.players
+        .map((player) => {
+          return {
+            id: player.id,
+            name: player.name,
+            score: _.sum(player.answers.map((answer) => answer.score)) || 0,
+          };
+        })
+        .sort((a, b) => (a.score > b.score ? -1 : 1));
+
+      return {
+        ...lobby,
+        players: players,
+      };
     },
   })
   .mutation("endTheGame", {

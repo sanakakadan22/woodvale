@@ -3,11 +3,20 @@ import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
 import { useEvent, useJoinLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }]);
+  const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }], {
+    onSuccess: (data) => {
+      if (data?.status == "inGame") {
+        router.push(`/game/${lobbyCode}`);
+      }
+    },
+  });
+
   const [players, setPlayers] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [parent] = useAutoAnimate<HTMLUListElement>();
 
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
@@ -52,7 +61,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           }}>
           Start
         </button>
-        <ul>
+        <ul ref={parent}>
           {players.map((player, i) => (
             <li
               className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center"

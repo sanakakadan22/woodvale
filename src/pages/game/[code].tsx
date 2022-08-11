@@ -2,9 +2,8 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
 import { useEvent } from "../../utils/events";
-import { Answer } from "@prisma/client";
-import _ from "lodash";
 import { GameEvent } from "../../utils/enums";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 enum AnswerColor {
   Neutral,
@@ -17,6 +16,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [selected, setSelected] = useState(-1);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
   const [seconds, setSeconds] = useState(0);
+  const [parent] = useAutoAnimate<HTMLUListElement>();
 
   const { data, refetch } = trpc.useQuery([
     "game.get-round-by-code",
@@ -105,17 +105,19 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }
 
   return (
-    <div className="grid h-screen place-items-center">
-      {data.players.map((player, i) => (
-        <PlayerScore player={player} key={i}></PlayerScore>
-      ))}
-      <span className="countdown">
+    <div className="grid place-items-center">
+      <ul ref={parent} className="flex flex-row m-5">
+        {data.players.map((player) => (
+          <PlayerScore player={player} key={player.id}></PlayerScore>
+        ))}
+      </ul>
+      <span className="countdown text-6xl font-mono p-5">
         <span style={{ "--value": seconds } as React.CSSProperties}></span>
       </span>
-      <h1 className="text-6xl">{round.question}</h1>
+      <h1 className="text-6xl p-5 text-center">{round.question}</h1>
 
       {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
-      <div className="grid grid-cols-2 grid-rows-2">
+      <div className="grid grid-cols-2 grid-rows-2 p-5">
         {round.choices.map((choice, i) => {
           let buttonColor = "btn";
           if (i === selected) {
@@ -139,7 +141,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         })}
       </div>
       <button
-        className="btn btn-primary"
+        className="btn btn-secondary mb-5"
         onClick={() => {
           newRound({ lobbyCode: lobbyCode });
         }}>
@@ -170,20 +172,20 @@ const GamePage = () => {
 export default GamePage;
 
 const PlayerScore: React.FC<{
-  player: { answers: Answer[]; name: string };
+  player: { score: number; name: string };
 }> = ({ player }) => {
-  const score = _.sum(player.answers.map((answer) => answer.score));
-  console.log(score);
-
   return (
-    <div>
-      {player.name}:
-      <span className="countdown">
+    <div className="card shadow-2xl p-2 ml-2 bg-secondary">
+      <p className="font-bold text-center">{player.name} </p>
+      <span className="countdown justify-center">
         <span
           style={
-            { "--value": Math.floor(score / 100) } as React.CSSProperties
+            { "--value": Math.floor(player.score / 100) } as React.CSSProperties
           }></span>
-        <span style={{ "--value": score % 100 } as React.CSSProperties}> </span>
+        <span
+          style={
+            { "--value": player.score % 100 } as React.CSSProperties
+          }></span>
       </span>
     </div>
   );

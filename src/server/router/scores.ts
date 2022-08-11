@@ -34,15 +34,17 @@ export const scoreRouter = createRouter().query("get-by-code", {
     const players = lobby.players;
     const numberOfRounds = lobby.rounds.length;
 
-    const response = players.map((player) => {
-      return {
-        name: player.name,
-        score: _.sum(player.answers.map((answer) => answer.score)) || 0,
-      };
-    });
+    const response = players
+      .map((player) => {
+        return {
+          name: player.name,
+          score: _.sum(player.answers.map((answer) => answer.score)) || 0,
+        };
+      })
+      .sort((a, b) => (a.score > b.score ? -1 : 1));
 
     return {
-      players: response.sort((a, b) => (a.score > b.score ? -1 : 1)),
+      players: response,
       numberOfRounds: numberOfRounds,
       roundLength: lobby.roundLength - 1,
     };
