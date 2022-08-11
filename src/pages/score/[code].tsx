@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { trpc } from "../../utils/trpc";
-import { Answer } from "@prisma/client";
-import _ from "lodash";
 import { useRouter } from "next/router";
-import { useEvent } from "../../utils/events";
-import { GameEvent } from "../../utils/enums";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
 
+  let maxScore = 0;
+  if (data) {
+    maxScore = data.roundLength * data.numberOfRounds;
+  }
+
   return (
-    <div>
-      <div className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center">
+    <div className="grid place-items-center">
+      <p className="text-4xl font-extrabold font-mono m-10">
+        And the Top Swiftie is...
+      </p>
+      <p className="text-lg italic m-10">you just won a grammy!</p>
+      <div className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center w-3/5">
         {data?.players.map((player, i) => (
-          <PlayerScore player={player} key={i}></PlayerScore>
+          <PlayerScore
+            maxScore={maxScore}
+            player={player}
+            key={i}></PlayerScore>
         ))}
       </div>
     </div>
@@ -21,20 +29,18 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 };
 
 const PlayerScore: React.FC<{
-  player: { answers: Answer[]; name: string };
-}> = ({ player }) => {
-  const score = _.sum(player.answers.map((answer) => answer.score));
-  console.log(score);
-
+  player: { score: number; name: string };
+  maxScore: number;
+}> = ({ player, maxScore }) => {
   return (
     <div className="flex flex-row place-items-center w-100">
       <div className="w-1/5">{player.name}:</div>
       <progress
         className="progress progress-primary w-3/5 h-6 m-5"
-        value={score}
-        max="1300"
+        value={player.score}
+        max={maxScore}
       />
-      {score}
+      {player.score}
     </div>
   );
 };
