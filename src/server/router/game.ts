@@ -17,7 +17,20 @@ export const gameRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         include: {
-          players: true, // include all players
+          players: true,
+          rounds: {
+            include: {
+              answers: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+          },
         },
       });
 
@@ -25,6 +38,18 @@ export const gameRouter = createRouter()
         throw new TRPCError({
           code: "NOT_FOUND",
         });
+      }
+
+      const round = lobby.rounds[0];
+      if (round) {
+        const elapsedSeconds = (Date.now() - round.createdAt.getTime()) / 1000;
+        const everyoneAnswered = round.answers.length === lobby.players.length;
+        if (!everyoneAnswered && elapsedSeconds < lobby.roundLength) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Too soon",
+          });
+        }
       }
 
       const player = lobby.players.find((player) => player.token == ctx.token);
@@ -49,7 +74,7 @@ export const gameRouter = createRouter()
         };
       });
 
-      const round = {
+      const roundData = {
         question: question,
         answer: answerIndex,
         choices: {
@@ -64,7 +89,7 @@ export const gameRouter = createRouter()
         data: {
           status: GameStatus.InGame,
           rounds: {
-            create: [round],
+            create: [roundData],
           },
         },
       });
