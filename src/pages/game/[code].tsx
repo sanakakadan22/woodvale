@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import confetti from "canvas-confetti";
 
 enum AnswerColor {
   Neutral,
@@ -55,9 +56,20 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, variables) => {
-      console.log(data);
       setSelected(variables.answer);
       if (data.correct) {
+        confetti();
+        confetti({
+          angle: 60,
+          spread: 100,
+          origin: { x: 0 },
+        });
+        // and launch a few from the right edge
+        confetti({
+          angle: 120,
+          spread: 100,
+          origin: { x: 1 },
+        });
         setCorrect(AnswerColor.Correct);
       } else {
         setCorrect(AnswerColor.Wrong);
