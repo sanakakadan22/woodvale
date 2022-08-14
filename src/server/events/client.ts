@@ -18,4 +18,7 @@ export const events = {
   endGame: (lobbyCode: string) => {
     publish(lobbyCode, GameEvent.EndGame, "");
   },
+  newRoundReady: (lobbyCode: string) => {
+    publish(lobbyCode, GameEvent.NewRoundReady, "");
+  },
 };

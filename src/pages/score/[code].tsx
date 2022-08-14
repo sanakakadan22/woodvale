@@ -9,9 +9,13 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   return (
     <div className="grid place-items-center">
-      <p className="text-4xl font-extrabold font-mono m-10">
+      <p className="text-4xl font-extrabold font-mono text-center m-10 ">
         And the Top Swiftie is...
       </p>
+      <p className="text-4xl font-extrabold font-mono text-center m-10 ">
+        {data?.players[0]?.name}
+      </p>
+
       <p className="text-lg italic m-10">you just won a grammy!</p>
       <div className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center w-3/5">
         {data?.players.map((player, i) => (

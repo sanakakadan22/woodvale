@@ -17,6 +17,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [selected, setSelected] = useState(-1);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
   const [seconds, setSeconds] = useState(0);
+  const [isDisabled, setDisabled] = useState(true);
   const [parent] = useAutoAnimate<HTMLUListElement>();
 
   const { data, refetch } = trpc.useQuery([
@@ -36,6 +37,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       data.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
 
     if (secondsLeft <= 0) {
+      setDisabled(false);
       return;
     }
 
@@ -80,7 +82,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      newRoundCallBack();
+      // newRoundCallBack();
     },
   }).mutate;
 
@@ -95,11 +97,16 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     router.push(`/score/${lobbyCode}`)
   );
 
+  useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
+    setDisabled(false);
+  });
+
   const newRoundCallBack = () => {
     refetch();
     setCorrect(AnswerColor.Neutral);
     setSelected(-1);
     setCorrectAnswer(-1);
+    setDisabled(true);
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -153,6 +160,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         })}
       </div>
       <button
+        disabled={isDisabled}
         className="btn btn-secondary mb-5"
         onClick={() => {
           newRound({ lobbyCode: lobbyCode });

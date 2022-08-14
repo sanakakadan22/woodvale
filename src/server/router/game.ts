@@ -107,6 +107,13 @@ export const gameRouter = createRouter()
         include: {
           players: true,
           rounds: {
+            include: {
+              answers: {
+                select: {
+                  id: true,
+                },
+              },
+            },
             orderBy: {
               createdAt: "desc",
             },
@@ -158,6 +165,11 @@ export const gameRouter = createRouter()
           score: score,
         },
       });
+      const everyoneAnswered =
+        round.answers.length + 1 === lobby.players.length;
+      if (everyoneAnswered) {
+        ctx.events.newRoundReady(input.lobbyCode);
+      }
 
       return {
         correct: correct,
