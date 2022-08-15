@@ -3,8 +3,8 @@ import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
 import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import confetti from "canvas-confetti";
+import autoAnimate from "@formkit/auto-animate";
 
 enum AnswerColor {
   Neutral,
@@ -18,7 +18,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [correctAnswer, setCorrectAnswer] = useState(-1);
   const [seconds, setSeconds] = useState(0);
   const [isDisabled, setDisabled] = useState(true);
-  const [parent] = useAutoAnimate<HTMLUListElement>();
+  const [parent] = useAutoAnimate();
 
   const { data, refetch } = trpc.useQuery([
     "game.get-round-by-code",
@@ -210,3 +210,11 @@ const PlayerScore: React.FC<{
     </div>
   );
 };
+
+function useAutoAnimate<T extends HTMLElement>(options = {}) {
+  const [element, setElement] = React.useState<T | null>(null);
+  React.useEffect(() => {
+    if (element instanceof HTMLElement) autoAnimate(element, options);
+  }, [element, options]);
+  return [setElement];
+}
