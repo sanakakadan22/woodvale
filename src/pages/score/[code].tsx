@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
+import confetti from "canvas-confetti";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
 
   const maxScore = data?.players[0]?.score || 0;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      confetti({
+        spread: 100,
+      });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="grid place-items-center">
