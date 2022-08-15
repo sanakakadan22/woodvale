@@ -17,7 +17,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
     return () => clearInterval(interval);
   }, []);
-
+  const router = useRouter();
   return (
     <div className="grid place-items-center">
       <p className="text-4xl font-extrabold font-mono text-center m-10 ">
@@ -36,6 +36,13 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             key={i}></PlayerScore>
         ))}
       </div>
+      <button
+        className="btn btn-secondary m-10 text-center "
+        onClick={() => {
+          router.push("/");
+        }}>
+        Play again
+      </button>
     </div>
   );
 };
