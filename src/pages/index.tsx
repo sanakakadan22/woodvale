@@ -33,9 +33,17 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="grid h-screen place-items-center">
-        <p className="text-4xl font-extrabold font-mono text-center">
-          Welcome to Sana&apos;s Swiftie Game hub
-        </p>
+        <div className="text-4xl font-extrabold font-mono text-center">
+          Welcome to{" "}
+          <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
+            <a
+              href="https://github.com/sanakakadan22"
+              className="link link-hover link-primary">
+              Sana
+            </a>
+          </div>
+          &apos;s Swiftie Game hub
+        </div>
         <p className="text-lg italic text-center">let the games begin...</p>
         <Image
           className="mask mask-squircle float-left"

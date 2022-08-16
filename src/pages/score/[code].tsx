@@ -10,9 +10,11 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      confetti({
-        spread: 100,
-      });
+      if (document.hasFocus()) {
+        confetti({
+          spread: 100,
+        });
+      }
     }, 2000);
 
     return () => clearInterval(interval);

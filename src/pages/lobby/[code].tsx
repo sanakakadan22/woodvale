@@ -41,18 +41,20 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   return (
     <div className="grid h-screen place-items-center">
       <div className="text-center place-items-center">
-        <div className="card shadow-2xl flex flex-row bg-secondary p-3">
+        <div className="card shadow-2xl flex flex-row bg-secondary p-3 overflow-visible">
           <p className="text-2xl text-center text-bold mr-2">
             Code: {data?.lobbyCode}
           </p>
-          <button
-            className="btn btn-sm text-2xl"
-            onClick={() => {
-              navigator.clipboard.writeText(lobbyCode);
-              setCopied(true);
-            }}>
-            {copied ? "💃" : "📋"}
-          </button>
+          <div className="tooltip" data-tip={copied ? "copied" : "copy"}>
+            <button
+              className="btn btn-sm text-2xl"
+              onClick={() => {
+                navigator.clipboard.writeText(lobbyCode);
+                setCopied(true);
+              }}>
+              {copied ? "💃" : "📋"}
+            </button>
+          </div>
         </div>
         <button
           className="btn btn-primary btn-lg m-5"
