@@ -6,15 +6,18 @@ import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const { data } = trpc.useQuery(["lobby.get-by-code", { lobbyCode }], {
-    onSuccess: (data) => {
-      if (data?.status == "inGame") {
-        router.push(`/game/${lobbyCode}`);
-      }
-    },
-  });
+  const { data, refetch } = trpc.useQuery(
+    ["lobby.get-by-code", { lobbyCode }],
+    {
+      onSuccess: (data) => {
+        if (data?.status == "inGame") {
+          router.push(`/game/${lobbyCode}`);
+        }
+      },
+    }
+  );
 
-  const [players, setPlayers] = useState<string[]>([]);
+  const [players, setPlayers] = useState<{ name: string; id: number }[]>([]);
   const [copied, setCopied] = useState(false);
   const [parent] = useAutoAnimate<HTMLUListElement>();
 
@@ -25,23 +28,27 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   }).mutate;
 
+  const removePlayer = trpc.useMutation("lobby.remove-player-by-id", {
+    onSuccess: (data) => {
+      refetch();
+    },
+  }).mutate;
+
   const channel = useEvent(lobbyCode, GameEvent.NewRound, () => {
     channel.detach(() => router.push(`/game/${lobbyCode}`));
   });
-  useJoinLobby(lobbyCode, (playerName) =>
-    setPlayers((players) => [...players, playerName])
-  );
+  useJoinLobby(lobbyCode, (playerName) => refetch());
 
   useEffect(() => {
     if (data) {
-      setPlayers(data.players.map((player) => player.name));
+      setPlayers([...data.players]);
     }
   }, [data]);
 
   return (
     <div className="grid h-screen place-items-center">
-      <div className="text-center place-items-center">
-        <div className="card shadow-2xl flex flex-row bg-secondary p-3 overflow-visible">
+      <div className="grid justify-items-center">
+        <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content]">
           <p className="text-2xl text-center text-bold mr-2">
             Code: {data?.lobbyCode}
           </p>
@@ -64,12 +71,20 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           Start
         </button>
         <ul ref={parent}>
-          {players.map((player, i) => (
-            <li
-              className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center"
-              key={i}>
-              {player}
-            </li>
+          {players.map((player) => (
+            <div
+              className="card-body text-2xl bg-accent rounded shadow-2xl p-3 m-2 text-center flex-row justify-center"
+              key={player.id}>
+              <p className="flex-grow">{player.name}</p>
+              <button
+                className="tooltip"
+                data-tip="remove"
+                onClick={() => {
+                  removePlayer({ lobbyCode: lobbyCode, playerId: player.id });
+                }}>
+                ✖️
+              </button>
+            </div>
           ))}
         </ul>
       </div>

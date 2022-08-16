@@ -11,12 +11,12 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
   const { mutate } = trpc.useMutation("scores.create-new-lobby", {
     onSuccess: (newLobbyCode) => {
-      router.push(`/lobby/${newLobbyCode}`);
+      // router.push(`/lobby/${newLobbyCode}`);
     },
   });
 
-  useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    router.push(`/lobby/${message.data}`);
+  const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
+    channel.detach(() => router.push(`/lobby/${message.data}`));
   });
 
   const maxScore = data?.players[0]?.score || 0;

@@ -89,12 +89,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const endGame = trpc.useMutation("game.endTheGame", {
     onSettled: (data) => {
-      router.push(`/score/${lobbyCode}`);
+      // router.push(`/score/${lobbyCode}`);
     },
   }).mutate;
 
-  useEvent(lobbyCode, GameEvent.EndGame, () =>
-    router.push(`/score/${lobbyCode}`)
+  const channel = useEvent(lobbyCode, GameEvent.EndGame, () =>
+    channel.detach(() => router.push(`/score/${lobbyCode}`))
   );
 
   useEvent(lobbyCode, GameEvent.NewRoundReady, () => {

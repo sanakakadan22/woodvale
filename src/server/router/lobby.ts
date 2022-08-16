@@ -1,6 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import { TRPCError } from "@trpc/server";
 
 export enum GameStatus {
   InLobby = "inLobby",
@@ -18,6 +19,7 @@ export const lobbyRouter = createRouter()
         include: {
           players: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -68,7 +70,49 @@ export const lobbyRouter = createRouter()
         },
       });
 
-      ctx.events.emitJoinedLobby(input.lobbyCode, name);
+      ctx.events.emitJoinedLobby(input.lobbyCode);
       return lobby;
+    },
+  })
+  .mutation("remove-player-by-id", {
+    input: z.object({ lobbyCode: z.string(), playerId: z.number() }),
+    async resolve({ ctx, input }) {
+      const lobby = await ctx.prisma.lobby.findFirst({
+        where: {
+          lobbyCode: input.lobbyCode,
+        },
+        include: {
+          players: true,
+        },
+      });
+
+      if (lobby == null) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const player = lobby.players.find((player) => player.token == ctx.token);
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (lobby.players.length == 1) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Lobby can't be empty",
+        });
+      }
+
+      await ctx.prisma.player.delete({
+        where: {
+          id: input.playerId,
+        },
+      });
+
+      ctx.events.emitJoinedLobby(input.lobbyCode);
+      return;
     },
   });

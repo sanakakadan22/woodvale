@@ -54,19 +54,19 @@ const Home: NextPage = () => {
             setName(e.target.value);
           }}
           placeholder={"Type name"}
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered input-primary w-full"
         />
 
-        <div className="btn-group">
+        <div className="btn-group w-full p-2">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary w-1/2"
             onClick={() => {
               createLobby();
             }}>
             Create
           </button>
           <button
-            className="btn"
+            className="btn w-1/2"
             onClick={() => {
               if (!joinElement.current?.value) {
                 return;

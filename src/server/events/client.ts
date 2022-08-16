@@ -9,8 +9,8 @@ const publish = (channel: string, event: string, message: any) => {
 };
 
 export const events = {
-  emitJoinedLobby: (lobbyCode: string, name: string) => {
-    publish(lobbyCode, GameEvent.JoinedLobby, name);
+  emitJoinedLobby: (lobbyCode: string) => {
+    publish(lobbyCode, GameEvent.JoinedLobby, "");
   },
   newRound: (lobbyCode: string) => {
     publish(lobbyCode, GameEvent.NewRound, "");
