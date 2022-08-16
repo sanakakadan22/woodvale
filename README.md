@@ -41,7 +41,6 @@ Deployment:
 
 ## Instructions for setting up the app
 
-TODO:
 
 set up the Ably Realtime (https://ably.com) make an acount, get the token put it in .env file
 
