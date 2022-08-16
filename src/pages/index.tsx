@@ -3,7 +3,7 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 
 const Home: NextPage = () => {
@@ -23,6 +23,7 @@ const Home: NextPage = () => {
 
   const joinElement = useRef<HTMLInputElement>(null);
   const [cookies, setCookie] = useCookies(["name"]);
+  const [name, setName] = useState(cookies.name);
 
   return (
     <div className="grid h-screen place-items-center">
@@ -48,8 +49,11 @@ const Home: NextPage = () => {
       <div>
         <input
           type="text"
-          value={cookies.name}
-          onChange={(e) => setCookie("name", e.target.value)}
+          value={name}
+          onChange={(e) => {
+            setCookie("name", e.target.value, { sameSite: "strict" });
+            setName(e.target.value);
+          }}
           placeholder={"Type name"}
           className="input input-bordered w-full max-w-xs"
         />
