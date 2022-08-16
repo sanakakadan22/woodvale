@@ -3,9 +3,21 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
+import { useEvent } from "../../utils/events";
+import { GameEvent } from "../../utils/enums";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
+  const router = useRouter();
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
+  const { mutate } = trpc.useMutation("scores.create-new-lobby", {
+    onSuccess: (newLobbyCode) => {
+      router.push(`/lobby/${newLobbyCode}`);
+    },
+  });
+
+  useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
+    router.push(`/lobby/${message.data}`);
+  });
 
   const maxScore = data?.players[0]?.score || 0;
 
@@ -20,7 +32,6 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
     return () => clearInterval(interval);
   }, []);
-  const router = useRouter();
   return (
     <div className="grid place-items-center">
       <p className="text-4xl font-extrabold font-mono text-center m-4 ">
@@ -46,13 +57,18 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             key={i}></PlayerScore>
         ))}
       </div>
-      <button
-        className="btn btn-secondary m-10 text-center "
-        onClick={() => {
-          router.push("/");
-        }}>
-        Play again
-      </button>
+      <div className="btn-group m-10">
+        <button
+          className="btn btn-secondary"
+          onClick={() => {
+            mutate({ lobbyCode: lobbyCode });
+          }}>
+          Play again
+        </button>
+        <button className="btn">
+          <a href={"/"}>Home</a>
+        </button>
+      </div>
     </div>
   );
 };

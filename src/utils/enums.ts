@@ -3,4 +3,5 @@ export enum GameEvent {
   NewRound = "NewRound",
   EndGame = "EndGame",
   NewRoundReady = "NewRoundReady",
+  NewLobbyCreated = "NewLobbyCreated",
 }

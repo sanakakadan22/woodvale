@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
