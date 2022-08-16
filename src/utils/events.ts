@@ -21,5 +21,6 @@ export function useEvent(
   eventName: GameEvent,
   callbackOnMessage: (message: Types.Message) => void
 ) {
-  useChannel(lobbyCode, eventName, callbackOnMessage);
+  const [channel] = useChannel(lobbyCode, eventName, callbackOnMessage);
+  return channel;
 }

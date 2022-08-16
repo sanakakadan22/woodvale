@@ -25,9 +25,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   }).mutate;
 
-  useEvent(lobbyCode, GameEvent.NewRound, () =>
-    router.push(`/game/${lobbyCode}`)
-  );
+  const channel = useEvent(lobbyCode, GameEvent.NewRound, () => {
+    channel.detach(() => router.push(`/game/${lobbyCode}`));
+  });
   useJoinLobby(lobbyCode, (playerName) =>
     setPlayers((players) => [...players, playerName])
   );
