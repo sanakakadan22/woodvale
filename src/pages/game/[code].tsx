@@ -130,10 +130,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           <PlayerScore player={player} key={player.id}></PlayerScore>
         ))}
       </ul>
-      <span className="countdown text-6xl font-mono p-5">
+      <span className="countdown text-2xl sm:text-6xl font-mono p-5">
         <span style={{ "--value": seconds } as React.CSSProperties}></span>
       </span>
-      <h1 className="text-6xl p-5 text-center">{round.question}</h1>
+      <h1 className="text-2xl sm:text-6xl p-5 text-center">{round.question}</h1>
 
       {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
       <div className="grid grid-cols-2 grid-rows-2 p-5">
