@@ -43,15 +43,22 @@ Deployment:
 
 TODO:
 
-set up the Ably Realtime(https://ably.com) make an acount, get the token put it in .env file
+set up the Ably Realtime (https://ably.com) make an acount, get the token put it in .env file
+
 `yarn install`
+
 In schema.prisma :
-```datasource db {
+
+```
+datasource db {
     provider = "sqlite"
     url      = "file:./db.sqlite"
     //provider = "mysql"
     //url      = env("DATABASE_URL")
     referentialIntegrity = "prisma"
-}```
+}
+```
+
 `yarn prisma db push`
+
 `yarn dev`
