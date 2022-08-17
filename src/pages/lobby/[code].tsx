@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useEvent, useJoinLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import Image from "next/image";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data, refetch } = trpc.useQuery(
@@ -48,7 +49,17 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   return (
     <div className="grid h-screen place-items-center">
       <div className="grid justify-items-center">
-        <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content]">
+        <p className="text-lg italic text-center m-2">
+          ...are you ready for it?
+        </p>
+        <Image
+          className="mask mask-squircle float-left m-2"
+          src="/ready.jpeg"
+          alt="TS 1989"
+          width={600}
+          height={400}
+        />
+        <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">
             Code: {data?.lobbyCode}
           </p>
@@ -63,6 +74,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             </button>
           </div>
         </div>
+
         <button
           className="btn btn-primary btn-lg m-5"
           onClick={() => {
