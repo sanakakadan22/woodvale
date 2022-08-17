@@ -33,9 +33,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     if (!round) {
       return;
     }
-    const secondsLeft =
-      data.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
-
+    const secondsLeft = data.secondsLeft;
     if (secondsLeft <= 0) {
       setDisabled(false);
       return;

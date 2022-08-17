@@ -240,6 +240,8 @@ export const gameRouter = createRouter()
       return {
         ...lobby,
         players: players,
+        secondsLeft:
+          lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000,
       };
     },
   })

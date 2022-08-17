@@ -24,7 +24,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      router.push(`/game/${data.lobbyCode}`);
+      // router.push(`/game/${data.lobbyCode}`);
     },
   }).mutate;
 
