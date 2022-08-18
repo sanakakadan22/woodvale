@@ -86,7 +86,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const endGame = trpc.useMutation("game.endTheGame", {
     onSettled: (data) => {
-      // router.push(`/score/${lobbyCode}`);
+      router.push(`/score/${lobbyCode}`);
     },
   }).mutate;
 
