@@ -56,7 +56,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, variables) => {
-      setSelected(variables.answer);
       if (data.correct) {
         confetti();
         confetti({
@@ -114,7 +113,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return null;
   }
 
-  let color = "btn-primary";
+  let color = "btn";
   if (AnswerColor.Correct === correct) {
     color = "btn-success";
   } else if (AnswerColor.Wrong === correct) {
@@ -150,7 +149,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               className={`btn ${buttonColor} btn-lg m-2`}
               key={i}
               onClick={() => {
-                sendAnswer({ lobbyCode: lobbyCode, answer: i });
+                if (selected == -1) {
+                  setSelected(i);
+                  sendAnswer({ lobbyCode: lobbyCode, answer: i });
+                }
               }}>
               {choice.choice}
             </button>
