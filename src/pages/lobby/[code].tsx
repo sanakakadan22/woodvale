@@ -109,7 +109,7 @@ const LobbyPage = () => {
   const { code } = query;
 
   if (!code || typeof code !== "string") {
-    return <div>No Code</div>;
+    return null;
   }
 
   return <LobbyContent lobbyCode={code} />;

@@ -95,7 +95,7 @@ const ScoreBoardPage = () => {
   const { code } = query;
 
   if (!code || typeof code !== "string") {
-    return <div>No Code</div>;
+    return null;
   }
 
   return <ScoreBoard lobbyCode={code} />;

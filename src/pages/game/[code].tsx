@@ -183,7 +183,7 @@ const GamePage = () => {
   const { code } = query;
 
   if (!code || typeof code !== "string") {
-    return <div>No Code</div>;
+    return null;
   }
 
   return <GameContent lobbyCode={code} />;
