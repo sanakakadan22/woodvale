@@ -128,9 +128,21 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     color = "btn-error";
   }
 
+  const gameOver = data.totalRounds >= data.maxRounds;
   return (
     <div className="grid h-screen place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
+        <ul ref={parent} className="flex flex-row">
+          {Array.apply(null, Array(data.maxRounds)).map(function (_, i) {
+            let bg = i < data.totalRounds ? "bg-secondary" : "bg-primary";
+            if (i + 1 === data.totalRounds) {
+              bg = "bg-fuchsia-300";
+            }
+            return (
+              <li key={i} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
+            );
+          })}
+        </ul>
         <ul ref={parent} className="flex flex-row m-5">
           {data.players.map((player) => (
             <PlayerScore player={player} key={player.id}></PlayerScore>
@@ -170,12 +182,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={isDisabled}
+          disabled={isDisabled || gameOver}
           className="btn btn-secondary"
           onClick={() => {
             newRound({ lobbyCode: lobbyCode });
           }}>
-          New Round
+          {gameOver ? "Last Round!" : "Next Round"}
         </button>
         <button
           className="btn btn-primary"

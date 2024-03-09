@@ -89,6 +89,7 @@ export const gameRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         data: {
+          totalRounds: lobby.totalRounds + 1,
           status: GameStatus.InGame,
           rounds: {
             create: [roundData],

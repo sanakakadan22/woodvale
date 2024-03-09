@@ -55,11 +55,13 @@ export const lobbyRouter = createRouter()
     async resolve({ ctx, input }) {
       if (!ctx.token || !input.name) throw new Error("Unauthorized");
 
-      return await ctx.prisma.lobby.create({
+      return ctx.prisma.lobby.create({
         data: {
           lobbyCode: nanoid(5),
           status: GameStatus.InLobby,
           roundLength: 13 + 1,
+          totalRounds: 0,
+          maxRounds: 13,
           players: {
             create: [
               {

@@ -23,6 +23,8 @@ model Lobby {
     players Player[]
     rounds Round[]
     roundLength Int
+    totalRounds Int
+    maxRounds Int
 
     @@index([lobbyCode])
     @@unique([lobbyCode])
