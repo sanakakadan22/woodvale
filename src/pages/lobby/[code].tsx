@@ -5,14 +5,14 @@ import { useEvent, useJoinLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
-import { useCookies } from "react-cookie";
+import { nameAtom } from "../index";
+import { useAtom } from "jotai";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const [cookies, setCookie] = useCookies(["name"]);
-  const [name, setName] = useState<string>(cookies.name);
+  const [name, setName] = useAtom(nameAtom);
 
   const joinLobby = trpc.useMutation("lobby.join").mutate;
-  const { data, refetch, isLoading, isSuccess } = trpc.useQuery(
+  const { data, refetch } = trpc.useQuery(
     ["lobby.get-by-code", { lobbyCode }],
     {
       onSuccess: (data) => {
@@ -72,7 +72,6 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           <button
             className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
             onClick={() => {
-              setCookie("name", name, { sameSite: "strict", path: "/" });
               joinLobby({ lobbyCode: lobbyCode, name: name });
             }}>
             Join
@@ -84,12 +83,10 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   return (
     <div className="grid h-screen place-items-center">
-      <div className="grid justify-items-center">
-        <p className="text-lg italic text-center m-2">
-          ...are you ready for it?
-        </p>
+      <div className="grid grid-flow-row-dense place-items-center space-y-5">
+        <p className="text-lg italic text-center">...are you ready for it?</p>
         <Image
-          className="mask mask-squircle float-left m-2"
+          className="mask mask-squircle float-left"
           src="/ready.jpeg"
           alt="TS 1989"
           width={600}
@@ -112,18 +109,18 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </div>
 
         <button
-          className="btn btn-primary btn-lg m-5"
+          className="btn btn-primary btn-lg"
           onClick={() => {
             newRound({ lobbyCode: lobbyCode });
           }}>
           Start
         </button>
-        <ul ref={parent}>
+        <ul ref={parent} className="space-y-2">
           {players.map((player) => (
             <div
               className={`card-body text-2xl ${
                 player.isMe ? "bg-fuchsia-300" : "bg-accent"
-              } rounded shadow-2xl p-3 m-2 text-center flex-row justify-center`}
+              } rounded shadow-2xl p-3 text-center flex-row justify-center`}
               key={player.id}>
               <p className="flex-grow">{player.name}</p>
               <button

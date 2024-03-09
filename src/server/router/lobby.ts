@@ -51,9 +51,9 @@ export const lobbyRouter = createRouter()
     },
   })
   .mutation("create", {
+    input: z.object({ name: z.string() }),
     async resolve({ ctx, input }) {
-      const name = ctx.req?.cookies["name"];
-      if (!ctx.token || !name) throw new Error("Unauthorized");
+      if (!ctx.token || !input.name) throw new Error("Unauthorized");
 
       return await ctx.prisma.lobby.create({
         data: {
@@ -63,7 +63,7 @@ export const lobbyRouter = createRouter()
           players: {
             create: [
               {
-                name: name,
+                name: input.name,
                 token: ctx.token,
               }, // Populates authorId with user's id
             ],
@@ -73,9 +73,9 @@ export const lobbyRouter = createRouter()
     },
   })
   .mutation("join", {
-    input: z.object({ lobbyCode: z.string(), name: z.string().optional() }),
+    input: z.object({ lobbyCode: z.string(), name: z.string() }),
     async resolve({ ctx, input }) {
-      const name = input.name ?? ctx.req?.cookies["name"];
+      const name = input.name;
       if (!ctx.token || !name) throw new Error("Unauthorized");
 
       const lobby = await ctx.prisma.lobby.update({

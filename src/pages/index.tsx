@@ -1,9 +1,12 @@
 import type { NextPage } from "next";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { atomWithStorage } from "jotai/utils";
+import { useAtom } from "jotai";
+
+export const nameAtom = atomWithStorage<string>("name", "");
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -20,70 +23,73 @@ const Home: NextPage = () => {
     },
   }).mutate;
 
-  const joinElement = useRef<HTMLInputElement>(null);
-  const [cookies, setCookie] = useCookies(["name"]);
-  const [name, setName] = useState(cookies.name);
+  const [lobbyCode, setLobbyCode] = useState("");
+  const [name, setName] = useAtom(nameAtom);
 
   return (
     <div className="grid h-screen place-items-center">
-      <div className="text-4xl font-extrabold font-mono text-center">
-        Welcome to{" "}
-        <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
-          <a
-            href="https://github.com/sanakakadan22"
-            className="link link-hover link-primary">
-            Sana
-          </a>
+      <div className="grid grid-flow-row-dense place-items-center space-y-5">
+        <div className="text-4xl font-extrabold font-mono text-center">
+          Welcome to{" "}
+          <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
+            <a
+              href="https://github.com/sanakakadan22"
+              className="link link-hover link-primary">
+              Sana
+            </a>
+          </div>
+          &apos;s Swiftie Game hub
         </div>
-        &apos;s Swiftie Game hub
-      </div>
-      <p className="text-lg italic text-center">let the games begin...</p>
-      <Image
-        className="mask mask-squircle float-left"
-        src="/homepage.jpeg"
-        alt="TS 1989"
-        width={650}
-        height={430}
-      />
-      <div>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setCookie("name", e.target.value, { sameSite: "strict" });
-            setName(e.target.value);
-          }}
-          placeholder={"Type name"}
-          className="input input-bordered input-primary w-full"
+        <p className="text-lg italic text-center">let the games begin...</p>
+        <Image
+          className="mask mask-squircle float-left"
+          src="/homepage.jpeg"
+          alt="TS 1989"
+          width={650}
+          height={430}
         />
+        <div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            placeholder={"Type name"}
+            className="input input-bordered input-primary w-full"
+          />
 
-        <div className="btn-group w-full p-2">
-          <button
-            className="btn btn-primary w-1/2"
-            onClick={() => {
-              createLobby();
-            }}>
-            Create
-          </button>
-          <button
-            className="btn w-1/2"
-            onClick={() => {
-              if (!joinElement.current?.value) {
-                return;
-              }
-              joinLobby({
-                lobbyCode: joinElement.current.value,
-              });
-            }}>
-            Join
-          </button>
+          <div className="btn-group w-full p-2">
+            <button
+              className="btn btn-secondary w-1/2"
+              disabled={!name}
+              onClick={() => {
+                createLobby({ name });
+              }}>
+              Create
+            </button>
+            <button
+              className="btn w-1/2"
+              disabled={!lobbyCode || !name}
+              onClick={() => {
+                joinLobby({
+                  lobbyCode: lobbyCode,
+                  name: name,
+                });
+              }}>
+              Join
+            </button>
+          </div>
+          <input
+            value={lobbyCode}
+            onChange={(e) => {
+              setLobbyCode(e.target.value);
+            }}
+            type="text"
+            placeholder={"Join lobby code"}
+            className="input input-bordered w-full max-w-xs"
+          />
         </div>
-        <input
-          ref={joinElement}
-          type="text"
-          placeholder={"Join lobby code"}
-          className="input input-bordered w-full max-w-xs"
-        />
       </div>
     </div>
   );

@@ -21,6 +21,7 @@
     "ably": "^1.2.27",
     "canvas-confetti": "^1.5.1",
     "daisyui": "^2.18.1",
+    "jotai": "^2.7.0",
     "lodash": "^4.17.21",
     "next": "12.2.0",
     "prettier": "^2.7.1",

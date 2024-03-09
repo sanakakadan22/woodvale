@@ -5,7 +5,8 @@ import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
-import { useCookies } from "react-cookie";
+import { useAtom } from "jotai";
+import { nameAtom } from "../index";
 
 enum AnswerColor {
   Neutral,
@@ -110,8 +111,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
 
   const joinLobby = trpc.useMutation("lobby.join").mutate;
-  const [cookies, setCookie] = useCookies(["name"]);
-  const [name, setName] = useState<string>(cookies.name);
+  const [name, setName] = useAtom(nameAtom);
   if (!name || !data?.joined) {
     return (
       <div className="grid h-screen place-items-center content-center">
@@ -128,7 +128,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           <button
             className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
             onClick={() => {
-              setCookie("name", name, { sameSite: "strict", path: "/" });
               joinLobby({ lobbyCode: lobbyCode, name: name });
             }}>
             Join
@@ -151,59 +150,62 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }
 
   return (
-    <div className="grid place-items-center">
-      <ul ref={parent} className="flex flex-row m-5">
-        {data.players.map((player) => (
-          <PlayerScore player={player} key={player.id}></PlayerScore>
-        ))}
-      </ul>
-      <span className="countdown text-2xl sm:text-6xl font-mono p-5">
-        <span style={{ "--value": seconds } as React.CSSProperties}></span>
-      </span>
-      <h1 className="text-2xl sm:text-6xl p-5 text-center">{round.question}</h1>
+    <div className="grid h-screen place-items-center">
+      <div className="grid grid-flow-row-dense place-items-center space-y-5">
+        <ul ref={parent} className="flex flex-row m-5">
+          {data.players.map((player) => (
+            <PlayerScore player={player} key={player.id}></PlayerScore>
+          ))}
+        </ul>
+        <span className="countdown text-2xl sm:text-6xl font-mono">
+          <span style={{ "--value": seconds } as React.CSSProperties}></span>
+        </span>
+        <h1 className="text-2xl sm:text-6xl p-5 text-center">
+          {round.question}
+        </h1>
 
-      {/*<div className={`card shadow-2xl ${color} p-7`}>*/}
-      <div className="grid grid-cols-2 grid-rows-2 p-5">
-        {round.choices.map((choice, i) => {
-          let buttonColor = "btn";
-          if (i === selected) {
-            buttonColor = color;
-          } else if (i === correctAnswer) {
-            buttonColor = "btn-warning";
-          } else if (i === round.answer) {
-            buttonColor = "btn-warning";
-          }
+        <div className="grid grid-cols-2 grid-rows-2">
+          {round.choices.map((choice, i) => {
+            let buttonColor = "btn";
+            if (i === selected) {
+              buttonColor = color;
+            } else if (i === correctAnswer) {
+              buttonColor = "btn-warning";
+            } else if (i === round.answer) {
+              buttonColor = "btn-warning";
+            }
 
-          return (
-            <button
-              className={`btn ${buttonColor} btn-lg m-2 h-fit`}
-              key={i}
-              onClick={() => {
-                if (selected == -1) {
-                  setSelected(i);
-                  sendAnswer({ lobbyCode: lobbyCode, answer: i });
-                }
-              }}>
-              {choice.choice}
-            </button>
-          );
-        })}
+            return (
+              <button
+                className={`btn ${buttonColor} btn-lg m-2 h-fit`}
+                key={i}
+                onClick={() => {
+                  if (selected == -1) {
+                    setSelected(i);
+                    sendAnswer({ lobbyCode: lobbyCode, answer: i });
+                  }
+                }}>
+                {choice.choice}
+              </button>
+            );
+          })}
+        </div>
+        <button
+          disabled={isDisabled}
+          className="btn btn-secondary"
+          onClick={() => {
+            newRound({ lobbyCode: lobbyCode });
+          }}>
+          New Round
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            endGame({ lobbyCode: lobbyCode });
+          }}>
+          End Game
+        </button>
       </div>
-      <button
-        disabled={isDisabled}
-        className="btn btn-secondary mb-5"
-        onClick={() => {
-          newRound({ lobbyCode: lobbyCode });
-        }}>
-        New Round
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          endGame({ lobbyCode: lobbyCode });
-        }}>
-        End Game
-      </button>
     </div>
   );
 };
