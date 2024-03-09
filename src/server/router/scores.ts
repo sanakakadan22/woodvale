@@ -96,6 +96,8 @@ export const scoreRouter = createRouter()
           lobbyCode: nanoid(5),
           status: GameStatus.InLobby,
           roundLength: lobby.roundLength,
+          maxRounds: lobby.maxRounds,
+          totalRounds: 0,
           players: {
             create: lobby.players,
           },
