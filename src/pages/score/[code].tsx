@@ -32,7 +32,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="grid h-screen place-items-center">
+    <div className="grid h-[calc(100dvh)] place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <p className="text-4xl font-extrabold font-mono text-center ">
           And the Top Swiftie is...
