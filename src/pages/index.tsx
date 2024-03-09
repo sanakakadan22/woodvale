@@ -49,37 +49,50 @@ const Home: NextPage = () => {
           height={430}
         />
         <div>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            placeholder={"Type name"}
-            className="input input-bordered input-primary w-full"
-          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              createLobby({ name });
+            }}>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              placeholder={"Type name"}
+              className="input input-bordered input-primary w-full"
+            />
 
-          <div className="btn-group w-full p-2">
-            <button
-              className="btn btn-secondary w-1/2"
-              disabled={!name}
-              onClick={() => {
-                createLobby({ name });
-              }}>
-              Create
-            </button>
-            <button
-              className="btn w-1/2"
-              disabled={!lobbyCode || !name}
-              onClick={() => {
-                joinLobby({
-                  lobbyCode: lobbyCode,
-                  name: name,
-                });
-              }}>
-              Join
-            </button>
-          </div>
+            <div className="btn-group w-full p-2">
+              <button
+                className="btn btn-secondary w-1/2"
+                disabled={!name}
+                type="submit">
+                Create
+              </button>
+              <button
+                className="btn w-1/2"
+                disabled={!lobbyCode || !name}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    joinLobby({
+                      lobbyCode: lobbyCode,
+                      name: name,
+                    });
+                  }
+                }}
+                onClick={() => {
+                  joinLobby({
+                    lobbyCode: lobbyCode,
+                    name: name,
+                  });
+                }}>
+                Join
+              </button>
+            </div>
+          </form>
           <input
             value={lobbyCode}
             onChange={(e) => {

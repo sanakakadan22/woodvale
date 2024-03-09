@@ -7,6 +7,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { nameAtom } from "../index";
 import { useAtom } from "jotai";
+import { PlayerNameInput } from "../../components/name_input";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
@@ -57,28 +58,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }, [data]);
 
   if (!name || !data?.joined) {
-    return (
-      <div className="grid h-screen place-items-center content-center">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          placeholder={"Type name"}
-          className="input input-bordered input-primary w-100"
-        />
-        <div className="btn-group p-2">
-          <button
-            className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
-            onClick={() => {
-              joinLobby({ lobbyCode: lobbyCode, name: name });
-            }}>
-            Join
-          </button>
-        </div>
-      </div>
-    );
+    return <PlayerNameInput lobbyCode={lobbyCode} />;
   }
 
   return (

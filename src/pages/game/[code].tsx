@@ -7,6 +7,7 @@ import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { nameAtom } from "../index";
+import { PlayerNameInput } from "../../components/name_input";
 
 enum AnswerColor {
   Neutral,
@@ -110,31 +111,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
 
-  const joinLobby = trpc.useMutation("lobby.join").mutate;
   const [name, setName] = useAtom(nameAtom);
   if (!name || !data?.joined) {
-    return (
-      <div className="grid h-screen place-items-center content-center">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          placeholder={"Type name"}
-          className="input input-bordered input-primary w-100"
-        />
-        <div className="btn-group p-2">
-          <button
-            className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
-            onClick={() => {
-              joinLobby({ lobbyCode: lobbyCode, name: name });
-            }}>
-            Join
-          </button>
-        </div>
-      </div>
-    );
+    return <PlayerNameInput lobbyCode={lobbyCode} />;
   }
 
   const round = data?.rounds[0];

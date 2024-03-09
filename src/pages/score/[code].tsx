@@ -33,41 +33,43 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="grid place-items-center space-y-5">
-      <p className="text-4xl font-extrabold font-mono text-center m-4 ">
-        And the Top Swiftie is...
-      </p>
-      <p className="text-4xl font-extrabold font-mono text-center m-2 text-primary">
-        {data?.players[0]?.name}
-      </p>
-      <p className="text-lg italic m-2">you just won a grammy!</p>
-      <Image
-        className="mask mask-squircle float-left"
-        src="/grammy.jpg"
-        alt="TS Grammy"
-        width={550}
-        height={380}
-      />
+    <div className="grid h-screen place-items-center">
+      <div className="grid grid-flow-row-dense place-items-center space-y-5">
+        <p className="text-4xl font-extrabold font-mono text-center ">
+          And the Top Swiftie is...
+        </p>
+        <p className="text-4xl font-extrabold font-mono text-center text-primary">
+          {data?.players[0]?.name}
+        </p>
+        <p className="text-lg italic">you just won a grammy!</p>
+        <Image
+          className="mask mask-squircle float-left"
+          src="/grammy.jpg"
+          alt="TS Grammy"
+          width={550}
+          height={380}
+        />
 
-      <div className="card-body text-2xl bg-accent shadow-2xl rounded-2xl p-3 m-2 text-center w-96">
-        {data?.players.map((player, i) => (
-          <PlayerScore
-            maxScore={maxScore}
-            player={player}
-            key={i}></PlayerScore>
-        ))}
-      </div>
-      <div className="btn-group m-10">
-        <button
-          className="btn btn-secondary"
-          onClick={() => {
-            mutate({ lobbyCode: lobbyCode });
-          }}>
-          Play again
-        </button>
-        <button className="btn">
-          <a href={"/"}>Home</a>
-        </button>
+        <div className="card-body text-2xl bg-accent shadow-2xl rounded-2xl p-3 m-2 text-center w-96">
+          {data?.players.map((player, i) => (
+            <PlayerScore
+              maxScore={maxScore}
+              player={player}
+              key={i}></PlayerScore>
+          ))}
+        </div>
+        <div className="btn-group m-10">
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              mutate({ lobbyCode: lobbyCode });
+            }}>
+            Play again
+          </button>
+          <button className="btn">
+            <a href={"/"}>Home</a>
+          </button>
+        </div>
       </div>
     </div>
   );
