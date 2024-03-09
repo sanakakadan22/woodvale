@@ -15,11 +15,6 @@ export const scoreRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         include: {
-          rounds: {
-            select: {
-              id: true,
-            },
-          },
           players: {
             select: {
               name: true,
@@ -36,8 +31,6 @@ export const scoreRouter = createRouter()
       }
 
       const players = lobby.players;
-      const numberOfRounds = lobby.rounds.length;
-
       const response = players
         .map((player) => {
           return {
@@ -49,7 +42,7 @@ export const scoreRouter = createRouter()
 
       return {
         players: response,
-        numberOfRounds: numberOfRounds,
+        numberOfRounds: lobby.maxRounds,
         roundLength: lobby.roundLength - 1,
       };
     },

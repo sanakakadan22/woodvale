@@ -19,8 +19,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     channel.detach(() => router.push(`/lobby/${message.data}`));
   });
 
-  const maxScore = data?.players[0]?.score || 0;
-
+  const maxScore = data ? data.roundLength * data.numberOfRounds : 0;
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.hasFocus()) {

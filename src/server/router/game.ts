@@ -66,6 +66,13 @@ export const gameRouter = createRouter()
         });
       }
 
+      if (lobby.totalRounds === lobby.maxRounds) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Game has ended already",
+        });
+      }
+
       const [question, selected, answerIndex] = makeQuestion();
 
       const choices = selected.map((choice) => {
