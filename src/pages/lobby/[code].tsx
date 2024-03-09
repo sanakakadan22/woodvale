@@ -19,6 +19,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         if (data?.status == "inGame") {
           router.push(`/game/${lobbyCode}`);
         }
+        if (data?.status == "ended") {
+          router.push(`/score/${lobbyCode}`);
+        }
       },
     }
   );

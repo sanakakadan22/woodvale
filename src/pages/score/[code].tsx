@@ -33,7 +33,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="grid place-items-center">
+    <div className="grid place-items-center space-y-5">
       <p className="text-4xl font-extrabold font-mono text-center m-4 ">
         And the Top Swiftie is...
       </p>
@@ -49,7 +49,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         height={380}
       />
 
-      <div className="card-body text-2xl bg-accent shadow-2xl p-3 m-2 text-center w-3/5">
+      <div className="card-body text-2xl bg-accent shadow-2xl rounded-2xl p-3 m-2 text-center w-96">
         {data?.players.map((player, i) => (
           <PlayerScore
             maxScore={maxScore}
@@ -78,8 +78,8 @@ const PlayerScore: React.FC<{
   maxScore: number;
 }> = ({ player, maxScore }) => {
   return (
-    <div className="flex flex-row place-items-center w-100">
-      <div className="w-1/5">{player.name}:</div>
+    <div className="flex flex-row place-items-center w-full">
+      <div className="w-1/5 min-w-fit">{player.name}:</div>
       <progress
         className="progress progress-primary w-3/5 h-6 m-5"
         value={player.score}
