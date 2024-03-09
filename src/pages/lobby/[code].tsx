@@ -5,9 +5,14 @@ import { useEvent, useJoinLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
+import { useCookies } from "react-cookie";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const { data, refetch } = trpc.useQuery(
+  const [cookies, setCookie] = useCookies(["name"]);
+  const [name, setName] = useState<string>(cookies.name);
+
+  const joinLobby = trpc.useMutation("lobby.join").mutate;
+  const { data, refetch, isLoading, isSuccess } = trpc.useQuery(
     ["lobby.get-by-code", { lobbyCode }],
     {
       onSuccess: (data) => {
@@ -18,7 +23,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     }
   );
 
-  const [players, setPlayers] = useState<{ name: string; id: number }[]>([]);
+  const [players, setPlayers] = useState<
+    { name: string; id: number; isMe: boolean }[]
+  >([]);
   const [copied, setCopied] = useState(false);
   const [parent] = useAutoAnimate<HTMLUListElement>();
 
@@ -45,6 +52,32 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       setPlayers([...data.players]);
     }
   }, [data]);
+
+  if (!name || !data?.joined) {
+    return (
+      <div className="grid h-screen place-items-center content-center">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          placeholder={"Type name"}
+          className="input input-bordered input-primary w-100"
+        />
+        <div className="btn-group p-2">
+          <button
+            className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
+            onClick={() => {
+              setCookie("name", name, { sameSite: "strict", path: "/" });
+              joinLobby({ lobbyCode: lobbyCode, name: name });
+            }}>
+            Join
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid h-screen place-items-center">
@@ -85,7 +118,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <ul ref={parent}>
           {players.map((player) => (
             <div
-              className="card-body text-2xl bg-accent rounded shadow-2xl p-3 m-2 text-center flex-row justify-center"
+              className={`card-body text-2xl ${
+                player.isMe ? "bg-fuchsia-300" : "bg-accent"
+              } rounded shadow-2xl p-3 m-2 text-center flex-row justify-center`}
               key={player.id}>
               <p className="flex-grow">{player.name}</p>
               <button

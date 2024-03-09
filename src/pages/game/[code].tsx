@@ -5,6 +5,7 @@ import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
+import { useCookies } from "react-cookie";
 
 enum AnswerColor {
   Neutral,
@@ -108,6 +109,35 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
 
+  const joinLobby = trpc.useMutation("lobby.join").mutate;
+  const [cookies, setCookie] = useCookies(["name"]);
+  const [name, setName] = useState<string>(cookies.name);
+  if (!name || !data?.joined) {
+    return (
+      <div className="grid h-screen place-items-center content-center">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          placeholder={"Type name"}
+          className="input input-bordered input-primary w-100"
+        />
+        <div className="btn-group p-2">
+          <button
+            className={"btn " + (name ? "btn-secondary" : "btn-disabled")}
+            onClick={() => {
+              setCookie("name", name, { sameSite: "strict", path: "/" });
+              joinLobby({ lobbyCode: lobbyCode, name: name });
+            }}>
+            Join
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const round = data?.rounds[0];
   if (!round) {
     return null;
@@ -192,10 +222,13 @@ const GamePage = () => {
 export default GamePage;
 
 const PlayerScore: React.FC<{
-  player: { score: number; name: string };
+  player: { score: number; name: string; isMe: boolean };
 }> = ({ player }) => {
   return (
-    <div className="card shadow-2xl p-2 ml-2 bg-secondary">
+    <div
+      className={`card shadow-2xl p-2 ml-2 ${
+        player.isMe ? "bg-fuchsia-300" : "bg-secondary"
+      }`}>
       <p className="font-bold text-center">{player.name} </p>
       <span className="countdown justify-center">
         <span

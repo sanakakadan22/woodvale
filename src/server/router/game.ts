@@ -74,8 +74,10 @@ export const gameRouter = createRouter()
         };
       });
 
+      const answer = selected[answerIndex] ?? "";
+      const regEx = new RegExp(answer, "ig");
       const roundData = {
-        question: question,
+        question: question.replace(regEx, answer.replace(/[A-z]/g, "_")),
         answer: answerIndex,
         choices: {
           create: choices,
@@ -202,6 +204,7 @@ export const gameRouter = createRouter()
               id: true,
               name: true,
               answers: true,
+              token: true,
             },
           },
         },
@@ -232,16 +235,20 @@ export const gameRouter = createRouter()
           return {
             id: player.id,
             name: player.name,
+            isMe: player.token === ctx.token,
             score: _.sum(player.answers.map((answer) => answer.score)) || 0,
           };
         })
         .sort((a, b) => (a.score > b.score ? -1 : 1));
+
+      const joined = players.some((player) => player.isMe);
 
       return {
         ...lobby,
         players: players,
         secondsLeft:
           lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000,
+        joined,
       };
     },
   })

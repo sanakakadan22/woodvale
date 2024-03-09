@@ -21,12 +21,33 @@ export const lobbyRouter = createRouter()
             select: {
               id: true,
               name: true,
+              token: true,
             },
           },
         },
       });
 
-      return lobby;
+      if (lobby == null) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const players = lobby.players.map((player) => {
+        return {
+          id: player.id,
+          name: player.name,
+          isMe: player.token === ctx.token,
+        };
+      });
+
+      const joined = players.some((player) => player.isMe);
+
+      return {
+        ...lobby,
+        players,
+        joined,
+      };
     },
   })
   .mutation("create", {
@@ -52,9 +73,9 @@ export const lobbyRouter = createRouter()
     },
   })
   .mutation("join", {
-    input: z.object({ lobbyCode: z.string() }),
+    input: z.object({ lobbyCode: z.string(), name: z.string().optional() }),
     async resolve({ ctx, input }) {
-      const name = ctx.req?.cookies["name"];
+      const name = input.name ?? ctx.req?.cookies["name"];
       if (!ctx.token || !name) throw new Error("Unauthorized");
 
       const lobby = await ctx.prisma.lobby.update({
