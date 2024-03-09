@@ -146,7 +146,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
           return (
             <button
-              className={`btn ${buttonColor} btn-lg m-2`}
+              className={`btn ${buttonColor} btn-lg m-2 h-fit`}
               key={i}
               onClick={() => {
                 if (selected == -1) {
