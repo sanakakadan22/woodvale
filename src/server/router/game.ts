@@ -110,6 +110,7 @@ export const gameRouter = createRouter()
   .mutation("sendAnswer", {
     input: z.object({ lobbyCode: z.string(), answer: z.number() }),
     async resolve({ ctx, input }) {
+      const now = Date.now();
       const lobby = await ctx.prisma.lobby.findFirst({
         where: {
           lobbyCode: input.lobbyCode,
@@ -152,7 +153,7 @@ export const gameRouter = createRouter()
         });
       }
 
-      const elapsedSeconds = (Date.now() - round.createdAt.getTime()) / 1000;
+      const elapsedSeconds = (now - round.createdAt.getTime()) / 1000;
       if (elapsedSeconds > lobby.roundLength) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -163,8 +164,7 @@ export const gameRouter = createRouter()
       const correct = input.answer === round.answer;
       let score = 0;
       if (correct) {
-        score = Math.round((1 - elapsedSeconds / lobby.roundLength) * 10);
-        console.log(score);
+        score = Math.ceil(lobby.roundLength - elapsedSeconds);
       }
 
       const answer = await ctx.prisma.answer.create({
