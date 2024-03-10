@@ -73,7 +73,7 @@ export const gameRouter = createRouter()
         });
       }
 
-      const [question, selected, answerIndex] = makeQuestion();
+      const [question, selected, answerIndex] = makeFlagQuestion();
 
       const choices = selected.map((choice) => {
         return {
