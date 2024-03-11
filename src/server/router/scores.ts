@@ -87,6 +87,7 @@ export const scoreRouter = createRouter()
       const newLobby = await ctx.prisma.lobby.create({
         data: {
           lobbyCode: nanoid(5),
+          lobbyType: lobby.lobbyType,
           status: GameStatus.InLobby,
           roundLength: lobby.roundLength,
           maxRounds: lobby.maxRounds,
