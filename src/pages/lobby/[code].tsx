@@ -100,7 +100,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             <div
               className={`card-body text-2xl ${
                 player.isMe ? "bg-fuchsia-300" : "bg-accent"
-              } rounded shadow-2xl p-3 text-center flex-row justify-center`}
+              } rounded-md shadow-2xl p-3 text-center flex-row justify-center`}
               key={player.id}>
               <p className="flex-grow">{player.name}</p>
               <button
