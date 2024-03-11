@@ -3,6 +3,11 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 
+export enum LobbyType {
+  Taylor = "taylor",
+  Flags = "flags",
+}
+
 export enum GameStatus {
   InLobby = "inLobby",
   InGame = "inGame",
@@ -51,13 +56,17 @@ export const lobbyRouter = createRouter()
     },
   })
   .mutation("create", {
-    input: z.object({ name: z.string() }),
+    input: z.object({
+      name: z.string(),
+      lobbyType: z.enum(["taylor", "flags"]).optional(),
+    }),
     async resolve({ ctx, input }) {
       if (!ctx.token || !input.name) throw new Error("Unauthorized");
 
       return ctx.prisma.lobby.create({
         data: {
           lobbyCode: nanoid(5),
+          lobbyType: input.lobbyType ?? LobbyType.Taylor,
           status: GameStatus.InLobby,
           roundLength: 13 + 1,
           totalRounds: 0,

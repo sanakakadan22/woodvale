@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { makeFlagQuestion, makeQuestion } from "../lyrics/questionMaker";
+import { makeQuestion } from "../lyrics/questionMaker";
 import { GameStatus } from "./lobby";
 import _ from "lodash";
 
@@ -73,8 +73,7 @@ export const gameRouter = createRouter()
         });
       }
 
-      const [question, selected, answerIndex] = makeFlagQuestion();
-
+      const [question, selected, answerIndex] = makeQuestion(lobby.lobbyType);
       const choices = selected.map((choice) => {
         return {
           choice: choice,

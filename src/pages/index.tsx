@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
@@ -24,6 +24,7 @@ const Home: NextPage = () => {
   }).mutate;
 
   const [lobbyCode, setLobbyCode] = useState("");
+  const [lobbyType, setLobbyType] = useState<"taylor" | "flags">("taylor");
   const [name, setName] = useAtom(nameAtom);
 
   return (
@@ -52,7 +53,7 @@ const Home: NextPage = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              createLobby({ name });
+              createLobby({ name: name, lobbyType: lobbyType });
             }}>
             <input
               type="text"
@@ -102,6 +103,19 @@ const Home: NextPage = () => {
             placeholder={"Join lobby code"}
             className="input input-bordered w-full max-w-xs"
           />
+        </div>
+        <div className="tooltip" data-tip={lobbyType}>
+          <button
+            className="btn btn-ghost btn-sm text-2xl"
+            onClick={() => {
+              if (lobbyType == "taylor") {
+                setLobbyType("flags");
+              } else {
+                setLobbyType("taylor");
+              }
+            }}>
+            {lobbyType == "taylor" ? "💃" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+          </button>
         </div>
       </div>
     </div>

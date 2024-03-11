@@ -1,5 +1,6 @@
 import lyrics from "./lyrics.json";
 import flags from "./flags.json";
+import { LobbyType } from "../router/lobby";
 
 // const LyricMap = new Map(Object.entries(lyrics.reputation)); // by album
 const LyricMap = new Map(
@@ -18,7 +19,15 @@ function getRandomValue<Type>(array: Type[] | undefined) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-export function makeFlagQuestion(): [string, string[], number] {
+export function makeQuestion(lobbyType: string) {
+  if (lobbyType === LobbyType.Flags) {
+    return makeFlagQuestion();
+  }
+
+  return makeTaylorQuestion();
+}
+
+function makeFlagQuestion(): [string, string[], number] {
   // @ts-ignore
   const keys = <string[]>[...FlagMap.keys()];
   const shuffled = keys.sort(() => 0.5 - Math.random());
@@ -33,7 +42,7 @@ export function makeFlagQuestion(): [string, string[], number] {
   return [question, choices, answerIndex];
 }
 
-export function makeQuestion(): [string, string[], number] {
+function makeTaylorQuestion(): [string, string[], number] {
   // @ts-ignore
   const keys = [...LyricMap.keys()];
   const shuffled = keys.sort(() => 0.5 - Math.random());
