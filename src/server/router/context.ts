@@ -2,7 +2,7 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { prisma } from "../db/client";
-import { events, redisEvents } from "../events/client";
+import { redisEvents } from "../events/client";
 
 export const createContext = (opts?: trpcNext.CreateNextContextOptions) => {
   const req = opts?.req;
