@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { nameAtom } from "../index";
 import { PlayerNameInput } from "../../components/name_input";
+import { on, useSubscribeLobby } from "../../utils/events";
 
 enum AnswerColor {
   Neutral,
@@ -80,26 +80,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   }).mutate;
 
-  const newRound = trpc.useMutation("game.newRound", {
-    onSuccess: (data) => {
-      // newRoundCallBack();
-    },
-  }).mutate;
+  const newRound = trpc.useMutation("game.newRound").mutate;
 
   const router = useRouter();
-  const endGame = trpc.useMutation("game.endTheGame", {
-    onSettled: (data) => {
-      channel.detach(() => router.push(`/score/${lobbyCode}`));
-    },
-  }).mutate;
-
-  const channel = useEvent(lobbyCode, GameEvent.EndGame, () =>
-    channel.detach(() => router.push(`/score/${lobbyCode}`))
-  );
-
-  useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
-    setDisabled(false);
-  });
+  const endGame = trpc.useMutation("game.endTheGame").mutate;
 
   const newRoundCallBack = () => {
     refetch();
@@ -109,7 +93,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     setDisabled(true);
   };
 
-  useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
+  useSubscribeLobby(
+    lobbyCode,
+    on(GameEvent.NewRound, newRoundCallBack),
+    on(GameEvent.NewRoundReady, () => setDisabled(false)),
+    on(GameEvent.EndGame, () => router.push(`/score/${lobbyCode}`))
+  );
 
   const [name, setName] = useAtom(nameAtom);
   if (!name || !data?.joined) {

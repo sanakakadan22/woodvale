@@ -1,26 +1,44 @@
-import { Types } from "ably";
 import { GameEvent } from "./enums";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { useEffect } from "react";
 
-export const useJoinLobby = (
+const connectToStream = (
   lobbyCode: string,
-  onJoinedLobby: (playerName: string) => void
+  callbacks: Map<GameEvent, (msg: any) => void>
 ) => {
-  const callback = (message: Types.Message) => {
-    onJoinedLobby(<string>message.data);
-  };
-  useEvent(lobbyCode, GameEvent.JoinedLobby, callback);
+  // Connect to /api/stream as the SSE API source
+  const url = new URL("/api/stream", window.location.href);
+  url.searchParams.append("lobbyCode", lobbyCode);
+  const eventSource = new EventSource(url);
+
+  eventSource.addEventListener("message", (event) => {
+    const data = JSON.parse(event.data);
+    callbacks.get(data.event)?.(data.message);
+  });
+
+  eventSource.addEventListener("error", () => {
+    eventSource.close();
+    setTimeout(connectToStream, 1000);
+  });
+  return eventSource;
 };
 
-configureAbly({
-  authUrl: "/api/createTokenRequest",
-});
+export function on(eventName: GameEvent, callback: (msg: any) => void) {
+  return { eventName, callback };
+}
 
-export function useEvent(
+export function useSubscribeLobby(
   lobbyCode: string,
-  eventName: GameEvent,
-  callbackOnMessage: (message: Types.Message) => void
+  ...callbacks: { eventName: GameEvent; callback: (msg: any) => void }[]
 ) {
-  const [channel] = useChannel(lobbyCode, eventName, callbackOnMessage);
-  return channel;
+  useEffect(() => {
+    const m = new Map<GameEvent, (msg: any) => void>();
+    for (const { eventName, callback } of callbacks) {
+      m.set(eventName, callback);
+    }
+
+    const eventSource = connectToStream(lobbyCode, m);
+    return () => {
+      eventSource.close();
+    };
+  }, []);
 }

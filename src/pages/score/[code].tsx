@@ -3,21 +3,18 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
-import { useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
+import { on, useSubscribeLobby } from "../../utils/events";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
-  const { mutate } = trpc.useMutation("scores.create-new-lobby", {
-    onSuccess: (newLobbyCode) => {
-      // router.push(`/lobby/${newLobbyCode}`);
-    },
-  });
+  const { mutate } = trpc.useMutation("scores.create-new-lobby");
 
-  const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    channel.detach(() => router.push(`/lobby/${message.data}`));
-  });
+  useSubscribeLobby(
+    lobbyCode,
+    on(GameEvent.NewLobbyCreated, () => router.push(`/lobby/${lobbyCode}`))
+  );
 
   const maxScore = data ? data.roundLength * data.numberOfRounds : 0;
   useEffect(() => {

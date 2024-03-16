@@ -1,27 +1,34 @@
 // src/server/events/client.ts
-import Ably from "ably/promises";
 import { GameEvent } from "../../utils/enums";
+import { Redis } from "@upstash/redis";
 
-const ably = new Ably.Realtime(process.env.ABLY_API_KEY || "");
+const redis = Redis.fromEnv();
 
-const publish = (channel: string, event: string, message: any) => {
-  ably.channels.get(channel).publish(event, message);
+const redisPublish = (lobbyCode: string, event: string, message: string) => {
+  redis.publish(
+    "game",
+    JSON.stringify({
+      lobbyCode: lobbyCode,
+      event: event,
+      message: message,
+    })
+  );
 };
 
-export const events = {
+export const redisEvents = {
   emitJoinedLobby: (lobbyCode: string) => {
-    publish(lobbyCode, GameEvent.JoinedLobby, "");
+    redisPublish(lobbyCode, GameEvent.JoinedLobby, "");
   },
   newRound: (lobbyCode: string) => {
-    publish(lobbyCode, GameEvent.NewRound, "");
+    redisPublish(lobbyCode, GameEvent.NewRound, "");
   },
   endGame: (lobbyCode: string) => {
-    publish(lobbyCode, GameEvent.EndGame, "");
+    redisPublish(lobbyCode, GameEvent.EndGame, "");
   },
   newRoundReady: (lobbyCode: string) => {
-    publish(lobbyCode, GameEvent.NewRoundReady, "");
+    redisPublish(lobbyCode, GameEvent.NewRoundReady, "");
   },
   newLobbyCreated: (lobbyCode: string, newLobbyCode: string) => {
-    publish(lobbyCode, GameEvent.NewLobbyCreated, newLobbyCode);
+    redisPublish(lobbyCode, GameEvent.NewLobbyCreated, newLobbyCode);
   },
 };

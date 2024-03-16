@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { useEvent, useJoinLobby } from "../../utils/events";
+import { on, useSubscribeLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
@@ -12,7 +12,12 @@ import { PlayerNameInput } from "../../components/name_input";
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
 
-  const joinLobby = trpc.useMutation("lobby.join").mutate;
+  useSubscribeLobby(
+    lobbyCode,
+    on(GameEvent.JoinedLobby, () => refetch()),
+    on(GameEvent.NewRound, () => router.push(`/game/${lobbyCode}`))
+  );
+
   const { data, refetch } = trpc.useQuery(
     ["lobby.get-by-code", { lobbyCode }],
     {
@@ -45,11 +50,6 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       refetch();
     },
   }).mutate;
-
-  const channel = useEvent(lobbyCode, GameEvent.NewRound, () => {
-    channel.detach(() => router.push(`/game/${lobbyCode}`));
-  });
-  useJoinLobby(lobbyCode, (playerName) => refetch());
 
   useEffect(() => {
     if (data) {

@@ -84,19 +84,26 @@ export const scoreRouter = createRouter()
         });
       }
 
-      const newLobby = await ctx.prisma.lobby.create({
-        data: {
-          lobbyCode: nanoid(5),
-          lobbyType: lobby.lobbyType,
-          status: GameStatus.InLobby,
-          roundLength: lobby.roundLength,
-          maxRounds: lobby.maxRounds,
-          totalRounds: 0,
-          players: {
-            create: lobby.players,
+      const [_, newLobby] = await ctx.prisma.$transaction([
+        ctx.prisma.lobby.delete({
+          where: {
+            lobbyCode: input.lobbyCode,
           },
-        },
-      });
+        }),
+        ctx.prisma.lobby.create({
+          data: {
+            lobbyCode: lobby.lobbyCode,
+            lobbyType: lobby.lobbyType,
+            status: GameStatus.InLobby,
+            roundLength: lobby.roundLength,
+            maxRounds: lobby.maxRounds,
+            totalRounds: 0,
+            players: {
+              create: lobby.players,
+            },
+          },
+        }),
+      ]);
 
       ctx.events.newLobbyCreated(input.lobbyCode, newLobby.lobbyCode);
 
