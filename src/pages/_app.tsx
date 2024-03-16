@@ -11,9 +11,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="woodvale" />
-        <meta name="mobile-web-app-capable" content="yes" />
         <title>woodvale</title>
         <meta name="description" content="woodvale game" />
         <link rel="icon" href="/favicon.ico" />

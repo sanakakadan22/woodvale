@@ -19,6 +19,14 @@ const connectToStream = (
     eventSource.close();
     setTimeout(connectToStream, 1000);
   });
+
+  // As soon as SSE API source is closed, attempt to reconnect
+
+  // @ts-ignore
+  eventSource.onclose = () => {
+    setTimeout(connectToStream, 1);
+  };
+
   return eventSource;
 };
 
