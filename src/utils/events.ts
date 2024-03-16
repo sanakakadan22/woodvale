@@ -15,17 +15,11 @@ const connectToStream = (
     callbacks.get(data.event)?.(data.message);
   });
 
+  // reconnect when vercel function times out
   eventSource.addEventListener("error", () => {
     eventSource.close();
-    setTimeout(connectToStream, 1000);
+    setTimeout(() => connectToStream(lobbyCode, callbacks), 0);
   });
-
-  // As soon as SSE API source is closed, attempt to reconnect
-
-  // @ts-ignore
-  eventSource.onclose = () => {
-    setTimeout(connectToStream, 1);
-  };
 
   return eventSource;
 };
