@@ -48,8 +48,8 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           className="mask mask-squircle float-left"
           src="/ttpd_grammy_2.jpg"
           alt="TS Grammy"
-          width={500}
-          height={500}
+          width="430"
+          height="430"
         />
 
         <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-accent shadow-sm rounded-2xl p-3 text-center w-5/6">
