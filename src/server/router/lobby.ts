@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 export enum LobbyType {
   Taylor = "taylor",
   Flags = "flags",
+  TTPD = "ttpd",
 }
 
 export enum GameStatus {
@@ -58,7 +59,7 @@ export const lobbyRouter = createRouter()
   .mutation("create", {
     input: z.object({
       name: z.string(),
-      lobbyType: z.enum(["taylor", "flags"]).optional(),
+      lobbyType: z.enum(["taylor", "flags", "ttpd"]).optional(),
     }),
     async resolve({ ctx, input }) {
       if (!ctx.token || !input.name) throw new Error("Unauthorized");

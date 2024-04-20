@@ -136,7 +136,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           {Array.apply(null, Array(data.maxRounds)).map(function (_, i) {
             let bg = i < data.totalRounds ? "bg-secondary" : "bg-primary";
             if (i + 1 === data.totalRounds) {
-              bg = "bg-fuchsia-300";
+              bg = "bg-accent";
             }
             return (
               <li key={i} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
@@ -220,7 +220,7 @@ const PlayerScore: React.FC<{
   return (
     <div
       className={`card shadow-2xl p-2 ml-2 ${
-        player.isMe ? "bg-fuchsia-300" : "bg-secondary"
+        player.isMe ? "bg-accent" : "bg-secondary"
       }`}>
       <p className="font-bold text-center">{player.name} </p>
       <span className="countdown justify-center">

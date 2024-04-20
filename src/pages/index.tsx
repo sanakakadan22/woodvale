@@ -24,7 +24,9 @@ const Home: NextPage = () => {
   }).mutate;
 
   const [lobbyCode, setLobbyCode] = useState("");
-  const [lobbyType, setLobbyType] = useState<"taylor" | "flags">("taylor");
+  const [lobbyType, setLobbyType] = useState<"taylor" | "flags" | "ttpd">(
+    "ttpd"
+  );
   const [name, setName] = useAtom(nameAtom);
 
   return (
@@ -39,15 +41,17 @@ const Home: NextPage = () => {
               Sana
             </a>
           </div>
-          &apos;s Swiftie Game hub
+          &apos;s Tortured Game hub
         </div>
-        <p className="text-lg italic text-center">let the games begin...</p>
+        <p className="text-lg italic text-center">
+          It's just a game, but really (Really)
+        </p>
         <Image
-          className="mask mask-squircle float-left"
-          src="/homepage.jpeg"
-          alt="TS 1989"
-          width={650}
-          height={430}
+          className="mask mask-squircle"
+          src="/ttpd_face.jpeg"
+          alt="TS TTPD"
+          width="500"
+          height="500"
         />
         <div>
           <form
@@ -110,11 +114,13 @@ const Home: NextPage = () => {
             onClick={() => {
               if (lobbyType == "taylor") {
                 setLobbyType("flags");
+              } else if (lobbyType == "flags") {
+                setLobbyType("ttpd");
               } else {
                 setLobbyType("taylor");
               }
             }}>
-            {lobbyType == "taylor" ? "💃" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+            {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
           </button>
         </div>
       </div>

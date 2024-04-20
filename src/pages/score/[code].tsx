@@ -40,10 +40,12 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <p className="text-4xl font-extrabold font-mono text-center text-primary">
           {data?.players[0]?.name}
         </p>
-        <p className="text-lg italic">you just won a grammy!</p>
+        <p className="text-lg italic">
+          You wish you could un-recall how you almost had it all...
+        </p>
         <Image
           className="mask mask-squircle float-left"
-          src="/grammy.jpg"
+          src="/ttpd_grammy.jpg"
           alt="TS Grammy"
           width={550}
           height={380}

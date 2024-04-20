@@ -64,13 +64,15 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   return (
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
-        <p className="text-lg italic text-center">...are you ready for it?</p>
+        <p className="text-lg italic text-center">
+          are you gonna loose the game of chance, what are the chances?
+        </p>
         <Image
           className="mask mask-squircle float-left"
-          src="/ready.jpeg"
-          alt="TS 1989"
-          width={600}
-          height={400}
+          src="/ttpd_tattoo.jpeg"
+          alt="TS TTPD Tattoo"
+          width={500}
+          height={500}
         />
         <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">
@@ -99,7 +101,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           {players.map((player) => (
             <div
               className={`card-body text-2xl ${
-                player.isMe ? "bg-fuchsia-300" : "bg-accent"
+                player.isMe ? "bg-accent" : "bg-secondary"
               } rounded-md shadow-2xl p-3 text-center flex-row justify-center`}
               key={player.id}>
               <p className="flex-grow">{player.name}</p>
