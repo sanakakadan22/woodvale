@@ -76,16 +76,16 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         />
         <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">
-            Code: {data?.lobbyCode}
+            Invite an Albatross
           </p>
           <div className="tooltip" data-tip={copied ? "copied" : "copy"}>
             <button
               className="btn btn-sm text-2xl"
               onClick={() => {
-                navigator.clipboard.writeText(lobbyCode);
+                navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
               }}>
-              {copied ? "💃" : "📋"}
+              {copied ? "🦅" : "📋"}
             </button>
           </div>
         </div>

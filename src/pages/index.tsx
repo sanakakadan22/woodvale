@@ -41,7 +41,7 @@ const Home: NextPage = () => {
               Sana
             </a>
           </div>
-          &apos;s Tortured Game hub
+          &apos;s Tortured Game Department
         </div>
         <p className="text-lg italic text-center">
           It&apos;s just a game, but really (Really)
