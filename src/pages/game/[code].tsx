@@ -186,9 +186,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={isDisabled || gameOver || !newRound.isIdle}
+          disabled={isDisabled || gameOver}
           className="btn btn-secondary"
           onClick={() => {
+            setDisabled(true);
             newRound.mutate({ lobbyCode: lobbyCode });
           }}>
           {gameOver ? "Last Round!" : "Next Round"}
