@@ -50,8 +50,8 @@ const Home: NextPage = () => {
           className="mask mask-squircle"
           src="/ttpd_face.jpeg"
           alt="TS TTPD"
-          width="430"
-          height="430"
+          width="380"
+          height="380"
         />
         <div>
           <form

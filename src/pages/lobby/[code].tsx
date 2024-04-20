@@ -71,8 +71,8 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           className="mask mask-squircle float-left"
           src="/ttpd_tattoo.jpeg"
           alt="TS TTPD Tattoo"
-          width="430"
-          height="430"
+          width="380"
+          height="380"
         />
         <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">

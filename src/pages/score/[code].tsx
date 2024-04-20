@@ -48,11 +48,10 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           className="mask mask-squircle float-left"
           src="/ttpd_grammy_2.jpg"
           alt="TS Grammy"
-          width="430"
-          height="430"
+          width="380"
+          height="380"
         />
-
-        <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-accent shadow-sm rounded-2xl p-3 text-center w-5/6">
+        <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-secondary shadow-sm rounded-2xl p-3 text-center w-5/6">
           {data?.players.map((player, i) => (
             <PlayerScore
               maxScore={maxScore}
@@ -62,7 +61,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </div>
         <div className="btn-group m-10">
           <button
-            className="btn btn-secondary"
+            className="btn btn-accent"
             disabled={!playAgain.isIdle}
             onClick={() => {
               playAgain.mutate({ lobbyCode: lobbyCode });
