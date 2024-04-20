@@ -25,6 +25,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       if (document.hasFocus()) {
         confetti({
           spread: 100,
+          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
         });
       }
     }, 2000);
@@ -35,20 +36,20 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <p className="text-4xl font-extrabold font-mono text-center ">
-          And the Top Swiftie is...
+          And the most Tortured Poet is...
         </p>
         <p className="text-4xl font-extrabold font-mono text-center text-primary">
           {data?.players[0]?.name}
         </p>
         <p className="text-lg italic">
-          You wish you could un-recall how you almost had it all...
+          You wish you could un-recall how you almost had it all
         </p>
         <Image
           className="mask mask-squircle float-left"
-          src="/ttpd_grammy.jpg"
+          src="/ttpd_grammy_2.jpg"
           alt="TS Grammy"
-          width={550}
-          height={380}
+          width={500}
+          height={500}
         />
 
         <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-accent shadow-sm rounded-2xl p-3 text-center w-5/6">

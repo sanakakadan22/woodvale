@@ -60,17 +60,21 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, variables) => {
       if (data.correct) {
-        confetti();
+        confetti({
+          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+        });
         confetti({
           angle: 60,
           spread: 100,
           origin: { x: 0 },
+          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
         });
         // and launch a few from the right edge
         confetti({
           angle: 120,
           spread: 100,
           origin: { x: 1 },
+          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
         });
         setCorrect(AnswerColor.Correct);
       } else {
