@@ -33,15 +33,15 @@ const Home: NextPage = () => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <div className="text-4xl font-extrabold font-mono text-center">
-          Welcome to{" "}
+          The{" "}
           <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
             <a
               href="https://github.com/sanakakadan22"
               className="link link-hover link-primary">
-              Sana
+              Woodvale
             </a>
-          </div>
-          &apos;s Tortured Game Department
+          </div>{" "}
+          Tortured Game Department
         </div>
         <p className="text-lg italic text-center">
           It&apos;s just a game, but really (Really)

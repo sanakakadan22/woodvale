@@ -3128,18 +3128,18 @@
       {
         "lyric": "And your suit and tie, in the nick of time",
         "prev": "",
-        "next": "You [?], stand-up guy",
+        "next": "You low-down boy, you stand-up guy",
         "multiplicity": 1
       },
       {
-        "lyric": "You [?], stand-up guy",
+        "lyric": "You low-down boy, you stand-up guy",
         "prev": "And your suit and tie, in the nick of time",
         "next": "Holy ghost, you told me I'm the love of your life",
         "multiplicity": 1
       },
       {
         "lyric": "Holy ghost, you told me I'm the love of your life",
-        "prev": "You [?], stand-up guy",
+        "prev": "You low-down boy, you stand-up guy",
         "next": "You said I'm the love of your life",
         "multiplicity": 1
       },
@@ -3182,18 +3182,18 @@
       {
         "lyric": "And all at once, the ink bleeds",
         "prev": "Well, you took me to hell too",
-        "next": "A [?], a \"get love quick\" scheme",
+        "next": "A con man sells a fool a get-love-quick scheme",
         "multiplicity": 1
       },
       {
-        "lyric": "A [?], a \"get love quick\" scheme",
+        "lyric": "A con man sells a fool a get-love-quick scheme",
         "prev": "And all at once, the ink bleeds",
         "next": "I felt a hole like this, never before and ever since",
         "multiplicity": 1
       },
       {
         "lyric": "I felt a hole like this, never before and ever since",
-        "prev": "A [?], a \"get love quick\" scheme",
+        "prev": "A con man sells a fool a get-love-quick scheme",
         "next": "",
         "multiplicity": 1
       },
@@ -3332,30 +3332,30 @@
       {
         "lyric": "The coward claimed he was a lion",
         "prev": "What a bland goodbye",
-        "next": "I'm [coming ?] through the braids of lies",
+        "next": "I'm combing through the braids of lies",
         "multiplicity": 1
       },
       {
-        "lyric": "I'm [coming ?] through the braids of lies",
+        "lyric": "I'm combing through the braids of lies",
         "prev": "The coward claimed he was a lion",
         "next": "I'll never leave, never mind",
         "multiplicity": 1
       },
       {
         "lyric": "I'll never leave, never mind",
-        "prev": "I'm [coming ?] through the braids of lies",
-        "next": "I'll fill their dreams, in golden [?]",
+        "prev": "I'm combing through the braids of lies",
+        "next": "Our field of dreams engulfed in fire",
         "multiplicity": 1
       },
       {
-        "lyric": "I'll fill their dreams, in golden [?]",
+        "lyric": "Our field of dreams engulfed in fire",
         "prev": "I'll never leave, never mind",
         "next": "Your arson's match, your sober eyes",
         "multiplicity": 1
       },
       {
         "lyric": "Your arson's match, your sober eyes",
-        "prev": "I'll fill their dreams, in golden [?]",
+        "prev": "Our field of dreams engulfed in fire",
         "next": "And I'll still see until I die",
         "multiplicity": 1
       },
