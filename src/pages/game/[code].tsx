@@ -88,14 +88,14 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     onSuccess: (data) => {
       // newRoundCallBack();
     },
-  }).mutate;
+  });
 
   const router = useRouter();
   const endGame = trpc.useMutation("game.endTheGame", {
     onSettled: (data) => {
       channel.detach(() => router.push(`/score/${lobbyCode}`));
     },
-  }).mutate;
+  });
 
   const channel = useEvent(lobbyCode, GameEvent.EndGame, () =>
     channel.detach(() => router.push(`/score/${lobbyCode}`))
@@ -106,11 +106,11 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   });
 
   const newRoundCallBack = () => {
+    setDisabled(true);
     refetch();
     setCorrect(AnswerColor.Neutral);
     setSelected(-1);
     setCorrectAnswer(-1);
-    setDisabled(true);
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -186,17 +186,18 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={isDisabled || gameOver}
+          disabled={isDisabled || gameOver || !newRound.isIdle}
           className="btn btn-secondary"
           onClick={() => {
-            newRound({ lobbyCode: lobbyCode });
+            newRound.mutate({ lobbyCode: lobbyCode });
           }}>
           {gameOver ? "Last Round!" : "Next Round"}
         </button>
         <button
           className="btn btn-primary"
+          disabled={!endGame.isIdle}
           onClick={() => {
-            endGame({ lobbyCode: lobbyCode });
+            endGame.mutate({ lobbyCode: lobbyCode });
           }}>
           End Game
         </button>

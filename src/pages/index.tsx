@@ -15,7 +15,7 @@ const Home: NextPage = () => {
     onSuccess: (data) => {
       router.push(`/lobby/${data.lobbyCode}`);
     },
-  }).mutate;
+  });
 
   const joinLobby = trpc.useMutation("lobby.join", {
     onSuccess: (data) => {
@@ -57,7 +57,7 @@ const Home: NextPage = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              createLobby({ name: name, lobbyType: lobbyType });
+              createLobby.mutate({ name: name, lobbyType: lobbyType });
             }}>
             <input
               type="text"
@@ -72,7 +72,7 @@ const Home: NextPage = () => {
             <div className="btn-group w-full p-2">
               <button
                 className="btn btn-secondary w-1/2"
-                disabled={!name}
+                disabled={!name || !createLobby.isIdle}
                 type="submit">
                 Create
               </button>

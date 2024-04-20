@@ -9,7 +9,7 @@ import { GameEvent } from "../../utils/enums";
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
-  const { mutate } = trpc.useMutation("scores.create-new-lobby", {
+  const playAgain = trpc.useMutation("scores.create-new-lobby", {
     onSuccess: (newLobbyCode) => {
       // router.push(`/lobby/${newLobbyCode}`);
     },
@@ -63,8 +63,9 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <div className="btn-group m-10">
           <button
             className="btn btn-secondary"
+            disabled={!playAgain.isIdle}
             onClick={() => {
-              mutate({ lobbyCode: lobbyCode });
+              playAgain.mutate({ lobbyCode: lobbyCode });
             }}>
             Play again
           </button>

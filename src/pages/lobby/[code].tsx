@@ -36,9 +36,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      // router.push(`/game/${data.lobbyCode}`);
+      router.push(`/game/${data.lobbyCode}`);
     },
-  }).mutate;
+  });
 
   const removePlayer = trpc.useMutation("lobby.remove-player-by-id", {
     onSuccess: (data) => {
@@ -92,8 +92,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
         <button
           className="btn btn-primary btn-lg"
+          disabled={!newRound.isIdle}
           onClick={() => {
-            newRound({ lobbyCode: lobbyCode });
+            newRound.mutate({ lobbyCode: lobbyCode });
           }}>
           Start
         </button>
