@@ -48,8 +48,8 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           className="mask mask-squircle float-left"
           src="/ttpd_grammy_2.jpg"
           alt="TS Grammy"
-          width="380"
-          height="380"
+          width="350"
+          height="350"
         />
         <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-secondary shadow-sm rounded-2xl p-3 text-center w-5/6">
           {data?.players.map((player, i) => (
@@ -68,8 +68,12 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             }}>
             Play again
           </button>
-          <button className="btn">
-            <a href={"/"}>Home</a>
+          <button
+            className="btn"
+            onClick={() => {
+              channel.detach(() => router.push("/"));
+            }}>
+            Home
           </button>
         </div>
       </div>
