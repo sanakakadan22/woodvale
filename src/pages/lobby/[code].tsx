@@ -65,7 +65,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <p className="text-lg italic text-center">
-          are you gonna loose the game of chance, what are the chances?
+          are you gonna lose the game of chance, what are the chances?
         </p>
         <Image
           className="mask mask-squircle float-left"
