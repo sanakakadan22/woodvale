@@ -44,7 +44,7 @@ const Home: NextPage = () => {
           &apos;s Tortured Game hub
         </div>
         <p className="text-lg italic text-center">
-          It's just a game, but really (Really)
+          It&apos;s just a game, but really (Really)
         </p>
         <Image
           className="mask mask-squircle"
