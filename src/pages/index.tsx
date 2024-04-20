@@ -53,61 +53,30 @@ const Home: NextPage = () => {
           width="350"
           height="350"
         />
-        <div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              createLobby.mutate({ name: name, lobbyType: lobbyType });
-            }}>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-              placeholder={"Type name"}
-              className="input input-bordered input-primary w-full"
-            />
-
-            <div className="btn-group w-full p-2">
-              <button
-                className="btn btn-secondary w-1/2"
-                disabled={!name || !createLobby.isIdle}
-                type="submit">
-                Create
-              </button>
-              <button
-                className="btn w-1/2"
-                disabled={!lobbyCode || !name}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    joinLobby({
-                      lobbyCode: lobbyCode,
-                      name: name,
-                    });
-                  }
-                }}
-                onClick={() => {
-                  joinLobby({
-                    lobbyCode: lobbyCode,
-                    name: name,
-                  });
-                }}>
-                Join
-              </button>
-            </div>
-          </form>
+        {/*<div>*/}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            createLobby.mutate({ name: name, lobbyType: lobbyType });
+          }}
+          className="grid place-items-center space-y-5">
           <input
-            value={lobbyCode}
-            onChange={(e) => {
-              setLobbyCode(e.target.value);
-            }}
             type="text"
-            placeholder={"Join lobby code"}
-            className="input input-bordered w-full max-w-xs"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            placeholder={"Type name"}
+            className="input input-bordered input-primary w-full"
           />
-        </div>
+
+          <button
+            className="btn btn-secondary w-1/2"
+            disabled={!name || !createLobby.isIdle}
+            type="submit">
+            Host
+          </button>
+        </form>
         <div className="tooltip" data-tip={lobbyType}>
           <button
             className="btn btn-ghost btn-sm text-2xl"
