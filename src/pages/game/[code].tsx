@@ -82,7 +82,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         setCorrectAnswer(data.correctAnswer);
       }
     },
-  }).mutate;
+  });
 
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
@@ -174,10 +174,11 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               <button
                 className={`btn ${buttonColor} btn-lg m-2 h-fit`}
                 key={i}
+                disabled={sendAnswer.isLoading}
                 onClick={() => {
                   if (selected == -1) {
                     setSelected(i);
-                    sendAnswer({ lobbyCode: lobbyCode, answer: i });
+                    sendAnswer.mutate({ lobbyCode: lobbyCode, answer: i });
                   }
                 }}>
                 {choice.choice}
