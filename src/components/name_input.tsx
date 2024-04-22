@@ -6,7 +6,7 @@ import { nameAtom } from "../pages";
 export const PlayerNameInput: React.FC<{
   lobbyCode: string;
 }> = ({ lobbyCode }) => {
-  const joinLobby = trpc.useMutation("lobby.join").mutate;
+  const joinLobby = trpc.useMutation("lobby.join");
   const [name, setName] = useAtom(nameAtom);
 
   return (
@@ -15,7 +15,7 @@ export const PlayerNameInput: React.FC<{
         className="grid grid-flow-row-dense place-items-center space-y-5"
         onSubmit={(e) => {
           e.preventDefault();
-          joinLobby({ lobbyCode: lobbyCode, name: name });
+          joinLobby.mutate({ lobbyCode: lobbyCode, name: name });
         }}>
         <input
           type="text"
@@ -28,7 +28,7 @@ export const PlayerNameInput: React.FC<{
         />
         <button
           className="btn btn-secondary w-1/2"
-          disabled={!name}
+          disabled={!name || joinLobby.isLoading}
           type="submit">
           Join
         </button>
