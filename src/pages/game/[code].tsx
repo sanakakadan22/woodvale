@@ -134,7 +134,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const gameOver = data.totalRounds >= data.maxRounds;
   return (
-    <div className="grid h-[calc(100dvh)] w-full place-items-center">
+    <div className="grid h-[calc(100svh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <ul ref={parent} className="flex flex-row">
           {Array.apply(null, Array(data.maxRounds)).map(function (_, i) {
