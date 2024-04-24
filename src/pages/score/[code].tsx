@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
@@ -12,12 +12,15 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
   const playAgain = trpc.useMutation("scores.create-new-lobby", {
     onSuccess: (newLobbyCode) => {
-      // router.push(`/lobby/${newLobbyCode}`);
+      channel.detach().then(() => router.push(`/lobby/${newLobbyCode}`));
     },
   });
 
+  const [newLobbyCode, setNewLobbyCode] = useState("");
+
   const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    channel.detach().then(() => router.push(`/lobby/${message.data}`));
+    // channel.detach().then(() => router.push(`/lobby/${message.data}`));
+    setNewLobbyCode(message.data);
   });
 
   const maxScore = data ? data.roundLength * data.numberOfRounds : 0;
@@ -65,9 +68,15 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             className="btn btn-accent"
             disabled={!playAgain.isIdle}
             onClick={() => {
-              playAgain.mutate({ lobbyCode: lobbyCode });
+              if (newLobbyCode) {
+                channel
+                  .detach()
+                  .then(() => router.push(`/lobby/${newLobbyCode}`));
+              } else {
+                playAgain.mutate({ lobbyCode: lobbyCode });
+              }
             }}>
-            Play again
+            {newLobbyCode ? "Join Game" : "Play again"}
           </button>
           <button
             className="btn"
