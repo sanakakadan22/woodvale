@@ -36,6 +36,7 @@ model Player {
 
   name String
   token String
+  presence String
   answers Answer[]
 
   lobby   Lobby @relation(fields: [lobbyId], references: [id])

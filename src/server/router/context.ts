@@ -8,14 +8,16 @@ export const createContext = (opts?: trpcNext.CreateNextContextOptions) => {
   const req = opts?.req;
   const res = opts?.res;
 
-  const token = opts?.req.cookies["user-token"]
+  const token = opts?.req.cookies["user-token"];
+  const presence = opts?.req.cookies["presence-token"];
 
   return {
     req,
     res,
     prisma,
     events,
-    token
+    token,
+    presence,
   };
 };
 

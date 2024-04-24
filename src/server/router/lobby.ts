@@ -28,6 +28,7 @@ export const lobbyRouter = createRouter()
               id: true,
               name: true,
               token: true,
+              presence: true,
             },
           },
         },
@@ -62,7 +63,8 @@ export const lobbyRouter = createRouter()
       lobbyType: z.enum(["taylor", "flags", "ttpd"]).optional(),
     }),
     async resolve({ ctx, input }) {
-      if (!ctx.token || !input.name) throw new Error("Unauthorized");
+      if (!ctx.token || !input.name || !ctx.presence)
+        throw new Error("Unauthorized");
 
       return ctx.prisma.lobby.create({
         data: {
@@ -77,6 +79,7 @@ export const lobbyRouter = createRouter()
               {
                 name: input.name,
                 token: ctx.token,
+                presence: ctx.presence,
               }, // Populates authorId with user's id
             ],
           },
@@ -88,7 +91,7 @@ export const lobbyRouter = createRouter()
     input: z.object({ lobbyCode: z.string(), name: z.string() }),
     async resolve({ ctx, input }) {
       const name = input.name;
-      if (!ctx.token || !name) throw new Error("Unauthorized");
+      if (!ctx.token || !name || !ctx.presence) throw new Error("Unauthorized");
 
       const lobby = await ctx.prisma.lobby.update({
         where: {
@@ -97,7 +100,7 @@ export const lobbyRouter = createRouter()
         data: {
           players: {
             create: [
-              { name: name, token: ctx.token }, // Populates authorId with user's id
+              { name: name, token: ctx.token, presence: ctx.presence }, // Populates authorId with user's id
             ],
           },
         },
