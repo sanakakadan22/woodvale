@@ -59,6 +59,7 @@ export const scoreRouter = createRouter()
             select: {
               name: true,
               token: true,
+              presence: true,
             },
           },
         },
