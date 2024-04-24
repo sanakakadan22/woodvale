@@ -3,8 +3,9 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
-import { useEvent } from "../../utils/events";
+import { client, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
+import { AblyProvider } from "ably/react";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   });
 
   const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    channel.detach(() => router.push(`/lobby/${message.data}`));
+    channel.detach().then(() => router.push(`/lobby/${message.data}`));
   });
 
   const maxScore = data ? data.roundLength * data.numberOfRounds : 0;
@@ -71,7 +72,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           <button
             className="btn"
             onClick={() => {
-              channel.detach(() => router.push("/"));
+              channel.detach().then(() => router.push("/"));
             }}>
             Home
           </button>
@@ -106,7 +107,11 @@ const ScoreBoardPage = () => {
     return null;
   }
 
-  return <ScoreBoard lobbyCode={code} />;
+  return (
+    <AblyProvider client={client}>
+      <ScoreBoard lobbyCode={code} />
+    </AblyProvider>
+  );
 };
 
 export default ScoreBoardPage;

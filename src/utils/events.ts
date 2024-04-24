@@ -1,6 +1,11 @@
 import { Types } from "ably";
 import { GameEvent } from "./enums";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { useChannel } from "ably/react";
+import Ably from "ably/promises";
+
+export const client = new Ably.Realtime.Promise({
+  authUrl: `/api/createTokenRequest`,
+});
 
 export const useJoinLobby = (
   lobbyCode: string,
@@ -12,15 +17,11 @@ export const useJoinLobby = (
   useEvent(lobbyCode, GameEvent.JoinedLobby, callback);
 };
 
-configureAbly({
-  authUrl: "/api/createTokenRequest",
-});
-
 export function useEvent(
   lobbyCode: string,
   eventName: GameEvent,
   callbackOnMessage: (message: Types.Message) => void
 ) {
-  const [channel] = useChannel(lobbyCode, eventName, callbackOnMessage);
+  const { channel } = useChannel(lobbyCode, eventName, callbackOnMessage);
   return channel;
 }

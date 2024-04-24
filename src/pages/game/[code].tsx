@@ -1,13 +1,14 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { useEvent } from "../../utils/events";
+import { client, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { nameAtom } from "../index";
 import { PlayerNameInput } from "../../components/name_input";
+import { AblyProvider } from "ably/react";
 
 enum AnswerColor {
   Neutral,
@@ -93,12 +94,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const endGame = trpc.useMutation("game.endTheGame", {
     onSettled: (data) => {
-      channel.detach(() => router.push(`/score/${lobbyCode}`));
+      channel.detach().then(() => router.push(`/score/${lobbyCode}`));
     },
   });
 
   const channel = useEvent(lobbyCode, GameEvent.EndGame, () =>
-    channel.detach(() => router.push(`/score/${lobbyCode}`))
+    channel.detach().then(() => router.push(`/score/${lobbyCode}`))
   );
 
   useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
@@ -216,7 +217,11 @@ const GamePage = () => {
     return null;
   }
 
-  return <GameContent lobbyCode={code} />;
+  return (
+    <AblyProvider client={client}>
+      <GameContent lobbyCode={code} />
+    </AblyProvider>
+  );
 };
 
 export default GamePage;

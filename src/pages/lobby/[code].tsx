@@ -1,13 +1,14 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { useEvent, useJoinLobby } from "../../utils/events";
+import { client, useEvent, useJoinLobby } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { nameAtom } from "../index";
 import { useAtom } from "jotai";
 import { PlayerNameInput } from "../../components/name_input";
+import { AblyProvider, usePresence } from "ably/react";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
@@ -36,7 +37,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      router.push(`/game/${data.lobbyCode}`);
+      channel.detach().then(() => router.push(`/game/${lobbyCode}`));
     },
   });
 
@@ -47,7 +48,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }).mutate;
 
   const channel = useEvent(lobbyCode, GameEvent.NewRound, () => {
-    channel.detach(() => router.push(`/game/${lobbyCode}`));
+    channel.detach().then(() => router.push(`/game/${lobbyCode}`));
   });
   useJoinLobby(lobbyCode, (playerName) => refetch());
 
@@ -112,7 +113,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                 onClick={() => {
                   removePlayer({ lobbyCode: lobbyCode, playerId: player.id });
                 }}>
-                ✖️
+                ✖
               </button>
             </div>
           ))}
@@ -130,7 +131,11 @@ const LobbyPage = () => {
     return null;
   }
 
-  return <LobbyContent lobbyCode={code} />;
+  return (
+    <AblyProvider client={client}>
+      <LobbyContent lobbyCode={code} />;
+    </AblyProvider>
+  );
 };
 
 export default LobbyPage;
