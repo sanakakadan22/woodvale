@@ -14,6 +14,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>woodvale</title>
         <meta name="description" content="woodvale game" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <Component {...pageProps} />
     </>
