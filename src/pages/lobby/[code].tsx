@@ -110,7 +110,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               className={`card-body text-2xl ${
                 player.isMe ? "bg-accent" : "bg-secondary"
               } rounded-md shadow-2xl p-3 text-center flex-row justify-center ${
-                playerPresence.has(player.presence)
+                presenceData.length === 0 || playerPresence.has(player.presence)
                   ? ""
                   : "animate-pulse bg-warning"
               }`}

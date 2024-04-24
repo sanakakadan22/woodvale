@@ -162,7 +162,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             <PlayerScore
               player={player}
               key={player.id}
-              isPresent={playerPresence.has(player.presence)}
+              isPresent={
+                presenceData.length === 0 || playerPresence.has(player.presence)
+              }
             />
           ))}
         </ul>
