@@ -106,6 +106,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     setDisabled(false);
   });
 
+  useEvent(lobbyCode, GameEvent.PlayerAnswered, () => {
+    refetch();
+  });
+
   const { presenceData } = usePresence(lobbyCode);
   const playerPresence = useMemo(() => {
     const playerPresence = new Set<string>();

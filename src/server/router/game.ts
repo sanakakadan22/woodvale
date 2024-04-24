@@ -178,6 +178,8 @@ export const gameRouter = createRouter()
         round.answers.length + 1 === lobby.players.length;
       if (everyoneAnswered) {
         ctx.events.newRoundReady(input.lobbyCode);
+      } else {
+        ctx.events.playerAnswered(input.lobbyCode);
       }
 
       return {

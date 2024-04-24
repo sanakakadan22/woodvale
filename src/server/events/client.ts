@@ -21,6 +21,9 @@ export const events = {
   newRoundReady: (lobbyCode: string) => {
     publish(lobbyCode, GameEvent.NewRoundReady, "");
   },
+  playerAnswered: (lobbyCode: string) => {
+    publish(lobbyCode, GameEvent.PlayerAnswered, "");
+  },
   newLobbyCreated: (lobbyCode: string, newLobbyCode: string) => {
     publish(lobbyCode, GameEvent.NewLobbyCreated, newLobbyCode);
   },
