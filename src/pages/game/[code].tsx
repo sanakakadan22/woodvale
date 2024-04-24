@@ -163,7 +163,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               player={player}
               key={player.id}
               isPresent={
-                presenceData.length === 0 || playerPresence.has(player.presence)
+                playerPresence.size === 0 || playerPresence.has(player.presence)
               }
             />
           ))}

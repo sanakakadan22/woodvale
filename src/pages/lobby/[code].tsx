@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
@@ -110,7 +110,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               className={`card-body text-2xl ${
                 player.isMe ? "bg-accent" : "bg-secondary"
               } rounded-md shadow-2xl p-3 text-center flex-row justify-center ${
-                presenceData.length === 0 || playerPresence.has(player.presence)
+                playerPresence.size === 0 || playerPresence.has(player.presence)
                   ? ""
                   : "animate-pulse bg-warning"
               }`}
