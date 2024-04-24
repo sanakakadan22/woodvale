@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getClient, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
@@ -8,7 +8,7 @@ import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { nameAtom } from "../index";
 import { PlayerNameInput } from "../../components/name_input";
-import { AblyProvider } from "ably/react";
+import { AblyProvider, usePresence } from "ably/react";
 
 enum AnswerColor {
   Neutral,
@@ -106,6 +106,15 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     setDisabled(false);
   });
 
+  const { presenceData } = usePresence(lobbyCode);
+  const playerPresence = useMemo(() => {
+    const playerPresence = new Set<string>();
+    for (const msg of presenceData) {
+      playerPresence.add(msg.clientId);
+    }
+    return playerPresence;
+  }, [presenceData]);
+
   const newRoundCallBack = () => {
     setDisabled(true);
     refetch();
@@ -150,7 +159,11 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </ul>
         <ul ref={parent} className="flex flex-row m-5">
           {data.players.map((player) => (
-            <PlayerScore player={player} key={player.id}></PlayerScore>
+            <PlayerScore
+              player={player}
+              key={player.id}
+              isPresent={playerPresence.has(player.presence)}
+            />
           ))}
         </ul>
         <span className="countdown text-2xl sm:text-6xl font-mono">
@@ -227,13 +240,14 @@ const GamePage = () => {
 export default GamePage;
 
 const PlayerScore: React.FC<{
+  isPresent: boolean;
   player: { score: number; name: string; isMe: boolean };
-}> = ({ player }) => {
+}> = ({ player, isPresent }) => {
   return (
     <div
       className={`card shadow-2xl p-2 ml-2 ${
         player.isMe ? "bg-accent" : "bg-secondary"
-      }`}>
+      } ${isPresent ? "" : "animate-pulse bg-warning"}`}>
       <p className="font-bold text-center">{player.name} </p>
       <span className="countdown justify-center">
         <span

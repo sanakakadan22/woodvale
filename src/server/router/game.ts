@@ -212,6 +212,7 @@ export const gameRouter = createRouter()
               name: true,
               answers: true,
               token: true,
+              presence: true,
             },
           },
         },
@@ -243,6 +244,7 @@ export const gameRouter = createRouter()
             id: player.id,
             name: player.name,
             isMe: player.token === ctx.token,
+            presence: player.presence,
             score: _.sum(player.answers.map((answer) => answer.score)) || 0,
           };
         })
