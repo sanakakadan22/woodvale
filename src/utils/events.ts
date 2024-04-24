@@ -2,10 +2,15 @@ import { Types } from "ably";
 import { GameEvent } from "./enums";
 import { useChannel } from "ably/react";
 import Ably from "ably/promises";
+import { nanoid } from "nanoid";
 
-export const client = new Ably.Realtime.Promise({
-  authUrl: `/api/createTokenRequest`,
-});
+const PRESENCE_STORAGE_KEY = "presence-client-id";
+
+export const getClient = () => {
+  return new Ably.Realtime.Promise({
+    authUrl: `/api/createTokenRequest`,
+  });
+};
 
 export const useJoinLobby = (
   lobbyCode: string,

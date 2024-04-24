@@ -45,6 +45,7 @@ export const lobbyRouter = createRouter()
           id: player.id,
           name: player.name,
           isMe: player.token === ctx.token,
+          presence: player.presence,
         };
       });
 

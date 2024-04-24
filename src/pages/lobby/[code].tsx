@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import React, { useEffect, useState } from "react";
-import { client, useEvent, useJoinLobby } from "../../utils/events";
+import React, { useEffect, useMemo, useState } from "react";
 import { GameEvent } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
@@ -9,6 +8,7 @@ import { nameAtom } from "../index";
 import { useAtom } from "jotai";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";
+import { getClient, useEvent, useJoinLobby } from "../../utils/events";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
@@ -28,11 +28,22 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     }
   );
 
-  const [players, setPlayers] = useState<
-    { name: string; id: number; isMe: boolean }[]
-  >([]);
+  const me = useMemo(
+    () => data?.players.find((player) => player.isMe),
+    [data?.players]
+  );
+
   const [copied, setCopied] = useState(false);
   const [parent] = useAutoAnimate<HTMLUListElement>();
+
+  const { presenceData } = usePresence(lobbyCode);
+  const playerPresence = useMemo(() => {
+    const playerPresence = new Set<string>();
+    for (const msg of presenceData) {
+      playerPresence.add(msg.clientId);
+    }
+    return playerPresence;
+  }, [presenceData]);
 
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
@@ -51,12 +62,6 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     channel.detach().then(() => router.push(`/game/${lobbyCode}`));
   });
   useJoinLobby(lobbyCode, (playerName) => refetch());
-
-  useEffect(() => {
-    if (data) {
-      setPlayers([...data.players]);
-    }
-  }, [data]);
 
   if (!name || !data?.joined) {
     return <PlayerNameInput lobbyCode={lobbyCode} />;
@@ -100,11 +105,15 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           Start
         </button>
         <ul ref={parent} className="space-y-2">
-          {players.map((player) => (
+          {data?.players.map((player) => (
             <div
               className={`card-body text-2xl ${
                 player.isMe ? "bg-accent" : "bg-secondary"
-              } rounded-md shadow-2xl p-3 text-center flex-row justify-center`}
+              } rounded-md shadow-2xl p-3 text-center flex-row justify-center ${
+                playerPresence.has(player.presence)
+                  ? ""
+                  : "animate-pulse bg-warning"
+              }`}
               key={player.id}>
               <p className="flex-grow">{player.name}</p>
               <button
@@ -130,6 +139,8 @@ const LobbyPage = () => {
   if (!code || typeof code !== "string") {
     return null;
   }
+
+  const client = getClient();
 
   return (
     <AblyProvider client={client}>

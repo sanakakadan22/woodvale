@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useEffect, useState } from "react";
-import { client, useEvent } from "../../utils/events";
+import { getClient, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
@@ -218,7 +218,7 @@ const GamePage = () => {
   }
 
   return (
-    <AblyProvider client={client}>
+    <AblyProvider client={getClient()}>
       <GameContent lobbyCode={code} />
     </AblyProvider>
   );

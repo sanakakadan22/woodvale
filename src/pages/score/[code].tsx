@@ -3,7 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
-import { client, useEvent } from "../../utils/events";
+import { getClient, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { AblyProvider } from "ably/react";
 
@@ -76,7 +76,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                 playAgain.mutate({ lobbyCode: lobbyCode });
               }
             }}>
-            {newLobbyCode ? "Join Game" : "Play again"}
+            {newLobbyCode ? "Join Game" : "Play Again"}
           </button>
           <button
             className="btn"
@@ -117,7 +117,7 @@ const ScoreBoardPage = () => {
   }
 
   return (
-    <AblyProvider client={client}>
+    <AblyProvider client={getClient()}>
       <ScoreBoard lobbyCode={code} />
     </AblyProvider>
   );
