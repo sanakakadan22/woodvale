@@ -166,7 +166,7 @@ export const gameRouter = createRouter()
         score = Math.ceil(lobby.roundLength - elapsedSeconds);
       }
 
-      const answer = await ctx.prisma.answer.create({
+      await ctx.prisma.answer.create({
         data: {
           answer: input.answer,
           roundId: round.id,
@@ -174,13 +174,8 @@ export const gameRouter = createRouter()
           score: score,
         },
       });
-      const everyoneAnswered =
-        round.answers.length + 1 === lobby.players.length;
-      if (everyoneAnswered) {
-        ctx.events.newRoundReady(input.lobbyCode);
-      } else {
-        ctx.events.playerAnswered(input.lobbyCode);
-      }
+
+      ctx.events.playerAnswered(input.lobbyCode);
 
       return {
         correct: correct,
@@ -235,15 +230,9 @@ export const gameRouter = createRouter()
 
       const secondsLeft =
         lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
-
       const everyoneAnswered = round.answers.length === lobby.players.length;
-      if (
-        !everyoneAnswered &&
-        (Date.now() - round.createdAt.getTime()) / 1000 <= lobby.roundLength
-      ) {
-        round.answer = -1;
-      }
 
+      const roundOver = secondsLeft <= 0 || everyoneAnswered;
       const players = lobby.players
         .map((player) => {
           return {
@@ -261,6 +250,11 @@ export const gameRouter = createRouter()
         ? round.answers.find((a) => a.playerId === me.id)
         : undefined;
 
+      const correct = myAnswer?.answer === round.answer;
+      if (!roundOver) {
+        round.answer = -1;
+      }
+
       return {
         totalRounds: lobby.totalRounds,
         maxRounds: lobby.maxRounds,
@@ -270,8 +264,8 @@ export const gameRouter = createRouter()
         joined: me !== undefined,
         me: me,
         selected: myAnswer?.answer ?? -1,
-        correct: myAnswer?.answer === round.answer,
-        roundOver: secondsLeft <= 0 || everyoneAnswered,
+        correct: correct,
+        roundOver: roundOver,
       };
     },
   })
