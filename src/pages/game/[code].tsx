@@ -110,7 +110,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   });
 
-  const channel = useEvent(lobbyCode, GameEvent.EndGame, () =>
+  useEvent(lobbyCode, GameEvent.EndGame, () =>
     router.push(`/score/${lobbyCode}`)
   );
 
@@ -224,7 +224,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </div>
         <button
           disabled={!data.roundOver || gameOver}
-          className={`btn ${gameOver ? "btn-warning" : "btn-secondary"}`}
+          className="btn btn-secondary"
           onClick={() => {
             newRound.mutate({ lobbyCode: lobbyCode });
           }}>
