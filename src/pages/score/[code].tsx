@@ -3,7 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
-import { getClient, useEvent } from "../../utils/events";
+import { client, useEvent } from "../../utils/events";
 import { GameEvent } from "../../utils/enums";
 import { AblyProvider } from "ably/react";
 
@@ -117,7 +117,7 @@ const ScoreBoardPage = () => {
   }
 
   return (
-    <AblyProvider client={getClient()}>
+    <AblyProvider client={client}>
       <ScoreBoard lobbyCode={code} />
     </AblyProvider>
   );

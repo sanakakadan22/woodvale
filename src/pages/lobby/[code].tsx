@@ -8,7 +8,7 @@ import { nameAtom } from "../index";
 import { useAtom } from "jotai";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";
-import { getClient, useEvent, useJoinLobby } from "../../utils/events";
+import { client, useEvent, useJoinLobby } from "../../utils/events";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
@@ -140,11 +140,9 @@ const LobbyPage = () => {
     return null;
   }
 
-  const client = getClient();
-
   return (
     <AblyProvider client={client}>
-      <LobbyContent lobbyCode={code} />;
+      <LobbyContent lobbyCode={code} />
     </AblyProvider>
   );
 };

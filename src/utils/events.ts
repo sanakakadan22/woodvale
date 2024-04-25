@@ -4,13 +4,9 @@ import { useChannel } from "ably/react";
 import Ably from "ably/promises";
 import { nanoid } from "nanoid";
 
-const PRESENCE_STORAGE_KEY = "presence-client-id";
-
-export const getClient = () => {
-  return new Ably.Realtime.Promise({
-    authUrl: `/api/createTokenRequest`,
-  });
-};
+export const client = new Ably.Realtime.Promise({
+  authUrl: `/api/createTokenRequest`,
+});
 
 export const useJoinLobby = (
   lobbyCode: string,
