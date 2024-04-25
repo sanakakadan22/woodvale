@@ -15,6 +15,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [seconds, setSeconds] = useState(0);
   const [parent] = useAutoAnimate();
 
+  const [selected, setSelected] = useState(-1);
+  const [correct, setCorrect] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState(-1);
+
   const { data, refetch, isFetched } = trpc.useQuery(
     ["game.get-round-by-code", { lobbyCode }],
     {
@@ -25,11 +29,13 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
         return data.secondsLeft * 1000;
       },
+      onSuccess: (data) => {
+        setSelected(data.selected);
+        setCorrect(data.correct);
+        setCorrectAnswer(data.currentRound.answer);
+      },
     }
   );
-  const selected = data?.selected ?? -1;
-  const correctAnswer = data?.currentRound?.answer ?? -1;
-  const correct = data?.correct ?? false;
 
   useEffect(() => {
     const secondsLeft = data?.secondsLeft ?? 0;
@@ -68,7 +74,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           };
         }
       );
+      setSelected(request.answer);
+      setCorrect(data.correct);
       if (data.correct) {
+        setCorrectAnswer(request.answer);
         confetti({
           colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
         });
@@ -126,7 +135,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return playerPresence;
   }, [presenceData]);
 
-  const [name, setName] = useAtom(nameAtom);
+  const [name] = useAtom(nameAtom);
   if (!name || (isFetched && !data?.joined)) {
     return <PlayerNameInput lobbyCode={lobbyCode} />;
   }
