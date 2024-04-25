@@ -7,6 +7,14 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 
 export const nameAtom = atomWithStorage<string>("name", "");
+export const lobbyTypeAtom = atomWithStorage<"taylor" | "flags" | "ttpd">(
+  "name",
+  "ttpd",
+  undefined,
+  {
+    getOnInit: true,
+  }
+);
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -17,16 +25,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const joinLobby = trpc.useMutation("lobby.join", {
-    onSuccess: (data) => {
-      router.push(`/lobby/${data.lobbyCode}`);
-    },
-  }).mutate;
-
-  const [lobbyCode, setLobbyCode] = useState("");
-  const [lobbyType, setLobbyType] = useState<"taylor" | "flags" | "ttpd">(
-    "ttpd"
-  );
+  const [lobbyType, setLobbyType] = useAtom(lobbyTypeAtom);
   const [name, setName] = useAtom(nameAtom);
 
   return (
@@ -90,6 +89,15 @@ const Home: NextPage = () => {
               }
             }}>
             {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+          </button>
+        </div>
+        <div className="tooltip" data-tip="trophies">
+          <button
+            className="btn btn-ghost btn-sm text-2xl"
+            onClick={() => {
+              router.push("/leader");
+            }}>
+            🏆
           </button>
         </div>
       </div>

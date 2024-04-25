@@ -103,4 +103,55 @@ export const scoreRouter = createRouter()
 
       return newLobby.lobbyCode;
     },
+  })
+  .query("leaderboard", {
+    input: z.object({ lobbyType: z.string() }),
+    async resolve({ ctx, input }) {
+      const scores = await ctx.prisma.answer.groupBy({
+        by: ["playerId"],
+        _sum: {
+          score: true,
+        },
+        where: {
+          player: {
+            lobby: {
+              lobbyType: input.lobbyType,
+            },
+          },
+        },
+        orderBy: {
+          _sum: {
+            score: "desc",
+          },
+        },
+        take: 10,
+      });
+
+      const players = await ctx.prisma.player.findMany({
+        where: {
+          id: {
+            in: scores.map((score) => score.playerId),
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+
+      const idToName = new Map<number, string>();
+      players.forEach((player) => {
+        idToName.set(player.id, player.name);
+      });
+
+      const leaders: { name: string; score: number }[] = scores.map((score) => {
+        const name = idToName.get(score.playerId) ?? "Unknown";
+        return {
+          name: name,
+          score: score._sum.score ?? 0,
+        };
+      });
+
+      return leaders;
+    },
   });
