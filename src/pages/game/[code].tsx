@@ -57,8 +57,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     };
   }, [data, refetch]);
 
-  const utils = trpc.useContext();
-
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, request) => {
       setSelected(request.answer);

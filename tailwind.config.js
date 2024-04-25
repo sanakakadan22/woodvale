@@ -10,14 +10,14 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          primary: "#9ca3af",
-          secondary: "#78716c",
-          accent: "#A79F95",
-          neutral: "#1a1f2e",
+          primary: "rgba(156,163,175,0.7)",
+          secondary: "#5d5854",
+          accent: "rgba(167,159,149,0.7)",
+          neutral: "rgba(30,30,54,0.6)",
           "base-100": "#2b2b2b",
           info: "#06405EFF",
           success: "#3f6212",
-          warning: "#7c2d12",
+          warning: "rgba(121,44,18,0.77)",
           error: "#7f1d1d",
         },
       },
