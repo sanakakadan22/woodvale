@@ -53,11 +53,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     onSuccess: (data, request) => {
       utils.setQueryData(
         ["game.get-round-by-code", { lobbyCode: lobbyCode }],
+        // @ts-ignore
         (old) => {
           return {
             ...old,
             currentRound: {
-              ...old!.currentRound,
+              ...old?.currentRound,
               answer: data.correct ? request.answer : -1,
             },
             selected: request.answer,
@@ -90,6 +91,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     onMutate: (data) => {
       utils.setQueryData(
         ["game.get-round-by-code", { lobbyCode: lobbyCode }],
+        // @ts-ignore
         (old) => {
           return {
             ...old,
