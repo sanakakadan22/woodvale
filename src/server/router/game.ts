@@ -81,7 +81,7 @@ export const gameRouter = createRouter()
       });
 
       const answer = selected[answerIndex] ?? "";
-      const regEx = new RegExp(answer, "ig");
+      const regEx = new RegExp(answer, "igu");
       const roundData = {
         question: question.replace(regEx, answer.replace(/[A-z]/g, "_")),
         answer: answerIndex,
