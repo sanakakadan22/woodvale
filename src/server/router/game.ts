@@ -184,7 +184,6 @@ export const gameRouter = createRouter()
 
       return {
         correct: correct,
-        correctAnswer: round.answer,
       };
     },
   })
@@ -202,6 +201,7 @@ export const gameRouter = createRouter()
               question: true,
               choices: true,
               answer: true,
+              answers: true,
             },
             orderBy: {
               createdAt: "desc",
@@ -233,9 +233,10 @@ export const gameRouter = createRouter()
         });
       }
 
+      const everyoneAnswered = round.answers.length === lobby.players.length;
       if (
-        (Date.now() - round.createdAt.getTime()) / 1000 <=
-        lobby.roundLength
+        !everyoneAnswered &&
+        (Date.now() - round.createdAt.getTime()) / 1000 <= lobby.roundLength
       ) {
         round.answer = -1;
       }

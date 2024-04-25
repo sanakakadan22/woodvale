@@ -80,7 +80,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         setCorrect(AnswerColor.Correct);
       } else {
         setCorrect(AnswerColor.Wrong);
-        setCorrectAnswer(data.correctAnswer);
       }
     },
   });
@@ -104,6 +103,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
     setDisabled(false);
+    refetch();
   });
 
   useEvent(lobbyCode, GameEvent.PlayerAnswered, () => {
@@ -120,11 +120,11 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }, [presenceData]);
 
   const newRoundCallBack = () => {
+    // setCorrect(AnswerColor.Neutral);
     setDisabled(true);
-    refetch();
-    setCorrect(AnswerColor.Neutral);
     setSelected(-1);
-    setCorrectAnswer(-1);
+    // setCorrectAnswer(-1);
+    refetch();
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -208,7 +208,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </div>
         <button
           disabled={isDisabled || gameOver}
-          className="btn btn-secondary"
+          className={`btn ${gameOver ? "btn-warning" : "btn-secondary"}`}
           onClick={() => {
             setDisabled(true);
             newRound.mutate({ lobbyCode: lobbyCode });
