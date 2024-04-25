@@ -13,7 +13,6 @@ import { client, useEvent, useJoinLobby } from "../../utils/events";
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name, setName] = useAtom(nameAtom);
 
-  const joinLobby = trpc.useMutation("lobby.join").mutate;
   const { data, refetch } = trpc.useQuery(
     ["lobby.get-by-code", { lobbyCode }],
     {
@@ -26,11 +25,6 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         }
       },
     }
-  );
-
-  const me = useMemo(
-    () => data?.players.find((player) => player.isMe),
-    [data?.players]
   );
 
   const [copied, setCopied] = useState(false);
@@ -48,7 +42,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
-      channel.detach().then(() => router.push(`/game/${lobbyCode}`));
+      router.push(`/game/${lobbyCode}`);
     },
   });
 
@@ -59,7 +53,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }).mutate;
 
   const channel = useEvent(lobbyCode, GameEvent.NewRound, () => {
-    channel.detach().then(() => router.push(`/game/${lobbyCode}`));
+    router.push(`/game/${lobbyCode}`);
   });
   useJoinLobby(lobbyCode, (playerName) => refetch());
 

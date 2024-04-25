@@ -12,14 +12,13 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
   const playAgain = trpc.useMutation("scores.create-new-lobby", {
     onSuccess: (newLobbyCode) => {
-      channel.detach().then(() => router.push(`/lobby/${newLobbyCode}`));
+      router.push(`/lobby/${newLobbyCode}`);
     },
   });
 
   const [newLobbyCode, setNewLobbyCode] = useState("");
 
   const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    // channel.detach().then(() => router.push(`/lobby/${message.data}`));
     setNewLobbyCode(message.data);
   });
 
@@ -81,7 +80,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           <button
             className="btn"
             onClick={() => {
-              channel.detach().then(() => router.push("/"));
+              router.push("/");
             }}>
             Home
           </button>
