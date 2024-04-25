@@ -44,7 +44,7 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <p className="text-4xl font-extrabold font-mono text-center text-primary">
           {data?.players[0]?.name}
         </p>
-        <p className="text-lg italic">
+        <p className="text-lg text-center italic">
           You wish you could un-recall how you almost had it all
         </p>
         <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
