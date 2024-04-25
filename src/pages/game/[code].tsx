@@ -33,13 +33,15 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   useEffect(() => {
     const secondsLeft = data?.secondsLeft ?? 0;
-    if (secondsLeft <= 0) {
+
+    const floorSecondsLeft = Math.floor(secondsLeft);
+    if (floorSecondsLeft <= 0) {
       return;
     }
 
-    setSeconds(Math.floor(secondsLeft));
+    setSeconds(floorSecondsLeft);
     const interval = setInterval(() => {
-      setSeconds((seconds) => seconds - 1);
+      setSeconds((seconds) => Math.max(seconds - 1, 0));
     }, 1000);
 
     return () => {
@@ -168,7 +170,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             />
           ))}
         </ul>
-        <span className="countdown text-2xl sm:text-6xl font-mono">
+        <span
+          className={`countdown text-2xl sm:text-6xl font-mono ${
+            seconds < 7 ? "text-warning-content" : "text-neutral-content"
+          } ${seconds <= 0 ? "animate-pulse" : ""}`}>
           <span style={{ "--value": seconds } as React.CSSProperties}></span>
         </span>
         <h1 className="text-2xl sm:text-6xl p-5 text-center">
