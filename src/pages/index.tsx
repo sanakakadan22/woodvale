@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 
 export const nameAtom = atomWithStorage<string>("name", "");
 export const lobbyTypeAtom = atomWithStorage<"taylor" | "flags" | "ttpd">(
-  "name",
+  "lobbyType",
   "ttpd",
   undefined,
   {
