@@ -10,36 +10,30 @@ import { nameAtom } from "../index";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";
 
-enum AnswerColor {
-  Neutral,
-  Correct,
-  Wrong,
-}
-
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const [correct, setCorrect] = useState(AnswerColor.Neutral);
-  const [selected, setSelected] = useState(-1);
-  const [correctAnswer, setCorrectAnswer] = useState(-1);
+  // const [correct, setCorrect] = useState(AnswerColor.Neutral);
   const [seconds, setSeconds] = useState(0);
-  const [isDisabled, setDisabled] = useState(true);
   const [parent] = useAutoAnimate();
 
-  const { data, refetch } = trpc.useQuery([
-    "game.get-round-by-code",
-    { lobbyCode },
-  ]);
+  const { data, refetch } = trpc.useQuery(
+    ["game.get-round-by-code", { lobbyCode }],
+    {
+      refetchInterval: (data) => {
+        if (data === undefined || data?.roundOver) {
+          return false;
+        }
+
+        return data.secondsLeft * 1000;
+      },
+    }
+  );
+  const selected = data?.selected ?? -1;
+  const correctAnswer = data?.currentRound?.answer ?? -1;
+  const correct = data?.correct ?? false;
 
   useEffect(() => {
-    if (!data) {
-      return;
-    }
-    const round = data?.rounds[0];
-    if (!round) {
-      return;
-    }
-    const secondsLeft = data.secondsLeft;
+    const secondsLeft = data?.secondsLeft ?? 0;
     if (secondsLeft <= 0) {
-      setDisabled(false);
       return;
     }
 
@@ -48,18 +42,29 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       setSeconds((seconds) => seconds - 1);
     }, 1000);
 
-    const timeout = setTimeout(() => {
-      refetch();
-    }, secondsLeft * 1000);
-
     return () => {
       clearInterval(interval);
-      clearTimeout(timeout);
     };
   }, [data, refetch]);
 
+  const utils = trpc.useContext();
+
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
-    onSuccess: (data, variables) => {
+    onSuccess: (data, request) => {
+      utils.setQueryData(
+        ["game.get-round-by-code", { lobbyCode: lobbyCode }],
+        (old) => {
+          return {
+            ...old,
+            currentRound: {
+              ...old!.currentRound,
+              answer: data.correct ? request.answer : -1,
+            },
+            selected: request.answer,
+            correct: data.correct,
+          };
+        }
+      );
       if (data.correct) {
         confetti({
           colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
@@ -77,9 +82,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           origin: { x: 1 },
           colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
         });
-        setCorrect(AnswerColor.Correct);
-      } else {
-        setCorrect(AnswerColor.Wrong);
       }
     },
   });
@@ -87,6 +89,17 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const newRound = trpc.useMutation("game.newRound", {
     onSuccess: (data) => {
       // newRoundCallBack();
+    },
+    onMutate: (data) => {
+      utils.setQueryData(
+        ["game.get-round-by-code", { lobbyCode: lobbyCode }],
+        (old) => {
+          return {
+            ...old,
+            roundOver: false,
+          };
+        }
+      );
     },
   });
 
@@ -102,12 +115,17 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   );
 
   useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
-    setDisabled(false);
-    refetch();
+    utils.invalidateQueries([
+      "game.get-round-by-code",
+      { lobbyCode: lobbyCode },
+    ]);
   });
 
   useEvent(lobbyCode, GameEvent.PlayerAnswered, () => {
-    refetch();
+    utils.invalidateQueries([
+      "game.get-round-by-code",
+      { lobbyCode: lobbyCode },
+    ]);
   });
 
   const { presenceData } = usePresence(lobbyCode);
@@ -120,11 +138,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }, [presenceData]);
 
   const newRoundCallBack = () => {
-    // setCorrect(AnswerColor.Neutral);
-    setDisabled(true);
-    setSelected(-1);
-    // setCorrectAnswer(-1);
-    refetch();
+    utils.invalidateQueries([
+      "game.get-round-by-code",
+      { lobbyCode: lobbyCode },
+    ]);
   };
 
   useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
@@ -134,15 +151,15 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return <PlayerNameInput lobbyCode={lobbyCode} />;
   }
 
-  const round = data?.rounds[0];
+  const round = data?.currentRound;
   if (!round) {
     return null;
   }
 
   let color = "btn";
-  if (AnswerColor.Correct === correct) {
+  if (correct) {
     color = "btn-success";
-  } else if (AnswerColor.Wrong === correct) {
+  } else {
     color = "btn-error";
   }
 
@@ -197,7 +214,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                 disabled={sendAnswer.isLoading}
                 onClick={() => {
                   if (selected == -1) {
-                    setSelected(i);
                     sendAnswer.mutate({ lobbyCode: lobbyCode, answer: i });
                   }
                 }}>
@@ -207,10 +223,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={isDisabled || gameOver}
+          disabled={!data.roundOver || gameOver}
           className={`btn ${gameOver ? "btn-warning" : "btn-secondary"}`}
           onClick={() => {
-            setDisabled(true);
             newRound.mutate({ lobbyCode: lobbyCode });
           }}>
           {gameOver ? "Last Round!" : "Next Round"}

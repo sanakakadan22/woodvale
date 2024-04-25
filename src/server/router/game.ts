@@ -233,6 +233,9 @@ export const gameRouter = createRouter()
         });
       }
 
+      const secondsLeft =
+        lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
+
       const everyoneAnswered = round.answers.length === lobby.players.length;
       if (
         !everyoneAnswered &&
@@ -253,14 +256,22 @@ export const gameRouter = createRouter()
         })
         .sort((a, b) => (a.score > b.score ? -1 : 1));
 
-      const joined = players.some((player) => player.isMe);
+      const me = players.find((p) => p.isMe);
+      const myAnswer = me
+        ? round.answers.find((a) => a.playerId === me.id)
+        : undefined;
 
       return {
-        ...lobby,
+        totalRounds: lobby.totalRounds,
+        maxRounds: lobby.maxRounds,
+        currentRound: round,
         players: players,
-        secondsLeft:
-          lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000,
-        joined,
+        secondsLeft: secondsLeft,
+        joined: me !== undefined,
+        me: me,
+        selected: myAnswer?.answer ?? -1,
+        correct: myAnswer?.answer === round.answer,
+        roundOver: secondsLeft <= 0 || everyoneAnswered,
       };
     },
   })
