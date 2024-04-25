@@ -14,6 +14,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   // const [correct, setCorrect] = useState(AnswerColor.Neutral);
   const [seconds, setSeconds] = useState(0);
   const [parent] = useAutoAnimate();
+  const [parent2] = useAutoAnimate();
 
   const [selected, setSelected] = useState(-1);
   const [correct, setCorrect] = useState(false);
@@ -130,14 +131,18 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   return (
     <div className="grid h-[calc(100svh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
-        <ul ref={parent} className="flex flex-row">
+        <ul ref={parent2} className="flex flex-row">
           {Array.apply(null, Array(data.maxRounds)).map(function (_, i) {
             let bg = i < data.totalRounds ? "bg-primary" : "bg-secondary";
+            let key = i;
             if (i + 1 === data.totalRounds) {
               bg = "bg-accent animate-bounce";
+              key = -1;
+            } else if (i + 1 > data.totalRounds) {
+              key = i - 1;
             }
             return (
-              <li key={i} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
+              <li key={key} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
             );
           })}
         </ul>
