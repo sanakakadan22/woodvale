@@ -18,6 +18,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [selected, setSelected] = useState(-1);
   const [correct, setCorrect] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
+  const [roundOver, setRoundOver] = useState(false);
 
   const { data, refetch, isFetched } = trpc.useQuery(
     ["game.get-round-by-code", { lobbyCode }],
@@ -33,6 +34,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         setSelected(data.selected);
         setCorrect(data.correct);
         setCorrectAnswer(data.currentRound.answer);
+        setRoundOver(data.roundOver);
       },
     }
   );
@@ -84,18 +86,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   });
 
   const newRound = trpc.useMutation("game.newRound", {
-    onMutate: (data) => {
-      utils.setQueryData(
-        ["game.get-round-by-code", { lobbyCode: lobbyCode }],
-        // @ts-ignore
-        (old) => {
-          return {
-            ...old,
-            roundOver: false,
-          };
-        }
-      );
-    },
+    onMutate: () => setRoundOver(false),
   });
 
   const router = useRouter();
@@ -200,7 +191,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={!data.roundOver || gameOver}
+          disabled={!roundOver || gameOver}
           className="btn btn-secondary"
           onClick={() => {
             newRound.mutate({ lobbyCode: lobbyCode });
