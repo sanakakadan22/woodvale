@@ -87,9 +87,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   });
 
   const newRound = trpc.useMutation("game.newRound", {
-    onSuccess: (data) => {
-      // newRoundCallBack();
-    },
     onMutate: (data) => {
       utils.setQueryData(
         ["game.get-round-by-code", { lobbyCode: lobbyCode }],
@@ -113,20 +110,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   useEvent(lobbyCode, GameEvent.EndGame, () =>
     router.push(`/score/${lobbyCode}`)
   );
-
-  useEvent(lobbyCode, GameEvent.NewRoundReady, () => {
-    utils.invalidateQueries([
-      "game.get-round-by-code",
-      { lobbyCode: lobbyCode },
-    ]);
-  });
-
-  useEvent(lobbyCode, GameEvent.PlayerAnswered, () => {
-    utils.invalidateQueries([
-      "game.get-round-by-code",
-      { lobbyCode: lobbyCode },
-    ]);
-  });
+  useEvent(lobbyCode, GameEvent.NewRound, () => refetch());
+  useEvent(lobbyCode, GameEvent.NewRoundReady, () => refetch());
+  useEvent(lobbyCode, GameEvent.PlayerAnswered, () => refetch());
 
   const { presenceData } = usePresence(lobbyCode);
   const playerPresence = useMemo(() => {
@@ -136,15 +122,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     }
     return playerPresence;
   }, [presenceData]);
-
-  const newRoundCallBack = () => {
-    utils.invalidateQueries([
-      "game.get-round-by-code",
-      { lobbyCode: lobbyCode },
-    ]);
-  };
-
-  useEvent(lobbyCode, GameEvent.NewRound, newRoundCallBack);
 
   const [name, setName] = useAtom(nameAtom);
   if (!name || !data?.joined) {
