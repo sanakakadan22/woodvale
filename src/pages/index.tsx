@@ -9,11 +9,7 @@ import { useAtom } from "jotai";
 export const nameAtom = atomWithStorage<string>("name", "");
 export const lobbyTypeAtom = atomWithStorage<"taylor" | "flags" | "ttpd">(
   "lobbyType",
-  "ttpd",
-  undefined,
-  {
-    getOnInit: true,
-  }
+  "ttpd"
 );
 
 const Home: NextPage = () => {
@@ -31,7 +27,7 @@ const Home: NextPage = () => {
   return (
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
-        <div className="text-4xl font-extrabold font-mono text-center">
+        <div className="text-3xl font-extrabold font-mono text-center">
           The{" "}
           <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
             <a
@@ -45,14 +41,17 @@ const Home: NextPage = () => {
         <p className="text-lg italic text-center">
           It&apos;s just a game, but really (Really)
         </p>
-        <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
-          <Image
-            className="mask mask-squircle"
-            src="/ttpd_face.jpeg"
-            alt="TS TTPD"
-            fill
-          />
-        </div>
+        <Image
+          style={{
+            width: "37svh",
+            height: "auto",
+          }}
+          className="mask mask-squircle w-auto"
+          src="/ttpd_face.jpeg"
+          alt="TS TTPD"
+          height={350}
+          width={350}
+        />
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -38,23 +38,26 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   return (
     <div className="grid h-[calc(100svh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
-        <p className="text-4xl font-extrabold font-mono text-center ">
+        <p className="text-3xl font-extrabold font-mono text-center ">
           And the most Tortured Poet is...
         </p>
-        <p className="text-4xl font-extrabold font-mono text-center text-primary">
+        <p className="text-3xl font-extrabold font-mono text-center text-primary">
           {data?.players[0]?.name}
         </p>
         <p className="text-lg text-center italic">
           You wish you could un-recall how you almost had it all
         </p>
-        <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
-          <Image
-            className="mask mask-squircle"
-            src="/ttpd_grammy_2.jpg"
-            alt="TS Grammy"
-            fill
-          />
-        </div>
+        <Image
+          style={{
+            width: "37svh",
+            height: "auto",
+          }}
+          className="mask mask-squircle w-auto"
+          src="/ttpd_grammy_2.jpg"
+          alt="TS Grammy"
+          height={350}
+          width={350}
+        />
         <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-secondary shadow-sm rounded-2xl p-3 text-center w-5/6">
           {data?.players.map((player, i) => (
             <PlayerScore
