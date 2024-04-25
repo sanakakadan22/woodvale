@@ -132,9 +132,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <ul ref={parent} className="flex flex-row">
           {Array.apply(null, Array(data.maxRounds)).map(function (_, i) {
-            let bg = i < data.totalRounds ? "bg-secondary" : "bg-primary";
+            let bg = i < data.totalRounds ? "bg-primary" : "bg-secondary";
             if (i + 1 === data.totalRounds) {
-              bg = "bg-accent";
+              bg = "bg-accent animate-bounce";
             }
             return (
               <li key={i} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
