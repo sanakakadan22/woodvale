@@ -51,6 +51,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, request) => {
+      utils.cancelQuery(["game.get-round-by-code", { lobbyCode: lobbyCode }]);
       utils.setQueryData(
         ["game.get-round-by-code", { lobbyCode: lobbyCode }],
         // @ts-ignore
@@ -89,6 +90,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const newRound = trpc.useMutation("game.newRound", {
     onMutate: (data) => {
+      utils.cancelQuery(["game.get-round-by-code", { lobbyCode: lobbyCode }]);
       utils.setQueryData(
         ["game.get-round-by-code", { lobbyCode: lobbyCode }],
         // @ts-ignore
