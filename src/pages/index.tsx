@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
   const [name, setName] = useAtom(nameAtom);
 
   return (
-    <div className="grid h-[calc(100svh)] w-full place-items-center">
+    <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <div className="text-4xl font-extrabold font-mono text-center">
           The{" "}
@@ -45,14 +45,14 @@ const Home: NextPage = () => {
         <p className="text-lg italic text-center">
           It&apos;s just a game, but really (Really)
         </p>
-        <Image
-          className="mask mask-squircle"
-          src="/ttpd_face.jpeg"
-          alt="TS TTPD"
-          width="350"
-          height="350"
-        />
-        {/*<div>*/}
+        <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
+          <Image
+            className="mask mask-squircle"
+            src="/ttpd_face.jpeg"
+            alt="TS TTPD"
+            fill
+          />
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();

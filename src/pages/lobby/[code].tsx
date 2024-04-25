@@ -67,13 +67,14 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <p className="text-lg italic text-center">
           are you gonna lose the game of chance, what are the chances?
         </p>
-        <Image
-          className="mask mask-squircle float-left"
-          src="/ttpd_tattoo.jpeg"
-          alt="TS TTPD Tattoo"
-          width="350"
-          height="350"
-        />
+        <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
+          <Image
+            className="mask mask-squircle"
+            src="/ttpd_tattoo.jpeg"
+            alt="TS TTPD Tattoo"
+            fill
+          />
+        </div>
         <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">
             Invite an Albatross

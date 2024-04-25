@@ -47,13 +47,14 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         <p className="text-lg italic">
           You wish you could un-recall how you almost had it all
         </p>
-        <Image
-          className="mask mask-squircle float-left"
-          src="/ttpd_grammy_2.jpg"
-          alt="TS Grammy"
-          width="350"
-          height="350"
-        />
+        <div className="relative h-[calc(37vh)] w-[calc(37svh)]">
+          <Image
+            className="mask mask-squircle"
+            src="/ttpd_grammy_2.jpg"
+            alt="TS Grammy"
+            fill
+          />
+        </div>
         <div className="grid grid-flow-row grid-cols-6 place-items-center card-body text-2xl bg-secondary shadow-sm rounded-2xl p-3 text-center w-5/6">
           {data?.players.map((player, i) => (
             <PlayerScore
