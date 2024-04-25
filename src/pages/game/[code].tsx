@@ -59,21 +59,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (data, request) => {
-      utils.setQueryData(
-        ["game.get-round-by-code", { lobbyCode: lobbyCode }],
-        // @ts-ignore
-        (old) => {
-          return {
-            ...old,
-            currentRound: {
-              ...old?.currentRound,
-              answer: data.correct ? request.answer : -1,
-            },
-            selected: request.answer,
-            correct: data.correct,
-          };
-        }
-      );
       setSelected(request.answer);
       setCorrect(data.correct);
       if (data.correct) {
