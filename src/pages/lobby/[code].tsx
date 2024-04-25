@@ -11,9 +11,9 @@ import { AblyProvider, usePresence } from "ably/react";
 import { client, useEvent, useJoinLobby } from "../../utils/events";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  const [name, setName] = useAtom(nameAtom);
+  const [name] = useAtom(nameAtom);
 
-  const { data, refetch } = trpc.useQuery(
+  const { data, refetch, isSuccess } = trpc.useQuery(
     ["lobby.get-by-code", { lobbyCode }],
     {
       onSuccess: (data) => {
@@ -57,8 +57,12 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   });
   useJoinLobby(lobbyCode, (playerName) => refetch());
 
-  if (!name || !data?.joined) {
+  if (!name || (isSuccess && !data?.joined)) {
     return <PlayerNameInput lobbyCode={lobbyCode} />;
+  }
+
+  if (!data) {
+    return null;
   }
 
   return (

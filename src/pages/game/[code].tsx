@@ -15,7 +15,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [seconds, setSeconds] = useState(0);
   const [parent] = useAutoAnimate();
 
-  const { data, refetch } = trpc.useQuery(
+  const { data, refetch, isFetched } = trpc.useQuery(
     ["game.get-round-by-code", { lobbyCode }],
     {
       refetchInterval: (data) => {
@@ -127,7 +127,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }, [presenceData]);
 
   const [name, setName] = useAtom(nameAtom);
-  if (!name || !data?.joined) {
+  if (!name || (isFetched && !data?.joined)) {
     return <PlayerNameInput lobbyCode={lobbyCode} />;
   }
 
