@@ -107,7 +107,7 @@ export const lobbyRouter = createRouter()
         },
       });
 
-      ctx.events.emitJoinedLobby(input.lobbyCode);
+      await ctx.events.emitJoinedLobby(input.lobbyCode);
       return lobby;
     },
   })
@@ -149,7 +149,7 @@ export const lobbyRouter = createRouter()
         },
       });
 
-      ctx.events.emitJoinedLobby(input.lobbyCode);
+      await ctx.events.emitJoinedLobby(input.lobbyCode);
       return;
     },
   });

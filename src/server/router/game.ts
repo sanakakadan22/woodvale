@@ -102,7 +102,7 @@ export const gameRouter = createRouter()
           },
         },
       });
-      ctx.events.newRound(input.lobbyCode);
+      await ctx.events.newRound(input.lobbyCode);
       return newRound;
     },
   })
@@ -175,7 +175,7 @@ export const gameRouter = createRouter()
         },
       });
 
-      ctx.events.playerAnswered(input.lobbyCode);
+      await ctx.events.playerAnswered(input.lobbyCode);
 
       return {
         correct: correct,
@@ -310,7 +310,7 @@ export const gameRouter = createRouter()
         },
       });
 
-      ctx.events.endGame(input.lobbyCode);
+      await ctx.events.endGame(input.lobbyCode);
 
       return updatedLobby;
     },
