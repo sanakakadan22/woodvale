@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { lobbyTypeAtom } from "../index";
 import { useRouter } from "next/router";
 
-const medals = ["🥇", "🥈", "🥉"];
+const medals = ["🥇", "🥈", "🥉", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 const Home: NextPage = () => {
   const [lobbyType, setLobbyType] = useAtom(lobbyTypeAtom);
   const router = useRouter();
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   ]);
 
   return (
-    <div className="flex h-[calc(100dvh)] w-full flex-col place-items-center p-10">
+    <div className="flex h-[calc(100dvh)] w-full flex-col place-items-center p-10 space-y-5">
       <div className="tooltip" data-tip={lobbyType}>
         <button
           className="btn btn-ghost btn-sm text-2xl"
@@ -32,19 +32,21 @@ const Home: NextPage = () => {
           {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
         </button>
       </div>
-      <div className="grid grid-cols-3 grid-flow-row place-items-center text-center space-y-2 text-xl p-5">
-        {leaders.data?.map((player, i) => (
-          <>
-            <span className="text-3xl" key={i}>
-              {medals[i]}
-            </span>
-            <span key={i}>{player.name}</span>
-            <span key={i + "score"}>{player.score}</span>
-          </>
-        ))}
-      </div>
+      {leaders.data ? (
+        <div className="grid grid-cols-3 grid-flow-row place-items-center text-center space-y-2 text-xl bg-secondary shadow-sm rounded-2xl p-5">
+          {leaders.data.map((player, i) => (
+            <>
+              <span className="text-3xl" key={i}>
+                {medals[i]}
+              </span>
+              <span key={i + "name"}>{player.name}</span>
+              <span key={i + "score"}>{player.score}</span>
+            </>
+          ))}
+        </div>
+      ) : null}
       <button
-        className="btn mt-5"
+        className="btn"
         onClick={() => {
           router.push("/");
         }}>
