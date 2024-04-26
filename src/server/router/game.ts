@@ -199,6 +199,7 @@ export const gameRouter = createRouter()
         include: {
           rounds: {
             select: {
+              id: true,
               createdAt: true,
               question: true,
               choices: true,
@@ -247,7 +248,12 @@ export const gameRouter = createRouter()
             name: player.name,
             isMe: player.token === ctx.token,
             presence: player.presence,
-            score: _.sum(player.answers.map((answer) => answer.score)) || 0,
+            score:
+              _.sum(
+                player.answers.map((answer) =>
+                  roundOver || answer.roundId !== round.id ? answer.score : 0
+                )
+              ) || 0,
           };
         })
         .sort((a, b) => (a.score > b.score ? -1 : 1));
@@ -265,7 +271,14 @@ export const gameRouter = createRouter()
       return {
         totalRounds: lobby.totalRounds,
         maxRounds: lobby.maxRounds,
-        currentRound: round,
+        currentRound: {
+          ...round,
+          answers: round.answers.map((answer) => ({
+            ...answer,
+            answer: roundOver ? answer.answer : -1,
+            score: roundOver ? answer.score : 0,
+          })),
+        },
         players: players,
         secondsLeft: secondsLeft,
         joined: me !== undefined,
