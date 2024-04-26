@@ -16,12 +16,6 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   });
 
-  const [newLobbyCode, setNewLobbyCode] = useState("");
-
-  const channel = useEvent(lobbyCode, GameEvent.NewLobbyCreated, (message) => {
-    setNewLobbyCode(message.data);
-  });
-
   const maxScore = data ? data.roundLength * data.numberOfRounds : 0;
   useEffect(() => {
     const interval = setInterval(() => {
@@ -71,15 +65,9 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             className="btn btn-accent"
             disabled={!playAgain.isIdle}
             onClick={() => {
-              if (newLobbyCode) {
-                channel
-                  .detach()
-                  .then(() => router.push(`/lobby/${newLobbyCode}`));
-              } else {
-                playAgain.mutate({ lobbyCode: lobbyCode });
-              }
+              playAgain.mutate({ lobbyCode: lobbyCode });
             }}>
-            {newLobbyCode ? "Join Game" : "Play Again"}
+            Play Again
           </button>
           <button
             className="btn"

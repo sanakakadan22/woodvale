@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
 import { GameStatus } from "./lobby";
 import { GameEvent } from "../../utils/enums";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const scoreRouter = createRouter()
   .query("get-by-code", {
@@ -64,7 +65,6 @@ export const scoreRouter = createRouter()
           },
         },
       });
-
       if (!lobby) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -85,23 +85,42 @@ export const scoreRouter = createRouter()
         });
       }
 
-      const newLobby = await ctx.prisma.lobby.create({
-        data: {
-          lobbyCode: nanoid(5),
-          lobbyType: lobby.lobbyType,
-          status: GameStatus.InLobby,
-          roundLength: lobby.roundLength,
-          maxRounds: lobby.maxRounds,
-          totalRounds: 0,
-          players: {
-            create: lobby.players,
-          },
+      const count = await ctx.prisma.lobby.count({
+        where: {
+          lobbyCode: lobby.nextLobbyCode,
         },
       });
 
-      ctx.events.newLobbyCreated(input.lobbyCode, newLobby.lobbyCode);
+      // Check if the next lobby code is already in use
+      if (count > 0) {
+        return lobby.nextLobbyCode;
+      }
 
-      return newLobby.lobbyCode;
+      try {
+        const newLobby = await ctx.prisma.lobby.create({
+          data: {
+            lobbyCode: lobby.nextLobbyCode,
+            nextLobbyCode: nanoid(6),
+            lobbyType: lobby.lobbyType,
+            status: GameStatus.InLobby,
+            roundLength: lobby.roundLength,
+            maxRounds: lobby.maxRounds,
+            totalRounds: 0,
+            players: {
+              create: lobby.players,
+            },
+          },
+        });
+
+        return newLobby.lobbyCode;
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === "P2002") {
+            return lobby.nextLobbyCode; // Lobby already exists
+          }
+        }
+        throw e;
+      }
     },
   })
   .query("leaderboard", {

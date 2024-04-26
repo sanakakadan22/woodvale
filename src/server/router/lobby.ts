@@ -69,7 +69,8 @@ export const lobbyRouter = createRouter()
 
       return ctx.prisma.lobby.create({
         data: {
-          lobbyCode: nanoid(5),
+          lobbyCode: nanoid(6),
+          nextLobbyCode: nanoid(6),
           lobbyType: input.lobbyType ?? LobbyType.Taylor,
           status: GameStatus.InLobby,
           roundLength: 13 + 1,

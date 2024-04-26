@@ -18,6 +18,7 @@ model Lobby {
     createdAt DateTime @default(now())
 
     lobbyCode String
+    nextLobbyCode String @default("")
     lobbyType String // Taylor / Flag
     status String // InLobby / InGame / Ended
     players Player[]
