@@ -33,13 +33,15 @@ const Home: NextPage = () => {
         </button>
       </div>
       {leaders.data ? (
-        <div className="grid grid-cols-3 grid-flow-row place-items-center text-center space-y-2 text-xl bg-secondary shadow-sm rounded-2xl p-5">
+        <div className="grid grid-cols-3 grid-flow-row place-items-center text-center text-xl bg-secondary shadow-sm rounded-2xl p-5">
           {leaders.data.map((player, i) => (
             <>
-              <span className={i < 3 ? `text-3xl` : "text-xl"} key={i}>
+              <span className={i < 3 ? "text-3xl" : "text-xl"} key={i}>
                 {medals[i]}
               </span>
-              <span key={i + "name"}>{player.name}</span>
+              <span key={i + "name"} className="p-2">
+                {player.name}
+              </span>
               <span key={i + "score"}>{player.score}</span>
             </>
           ))}
