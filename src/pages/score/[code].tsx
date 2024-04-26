@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
-import { client, useEvent } from "../../utils/events";
-import { GameEvent } from "../../utils/enums";
-import { AblyProvider } from "ably/react";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
@@ -107,11 +104,7 @@ const ScoreBoardPage = () => {
     return null;
   }
 
-  return (
-    <AblyProvider client={client}>
-      <ScoreBoard lobbyCode={code} />
-    </AblyProvider>
-  );
+  return <ScoreBoard lobbyCode={code} />;
 };
 
 export default ScoreBoardPage;

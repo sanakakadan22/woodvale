@@ -179,7 +179,8 @@ export const gameRouter = createRouter()
 
       const secondsLeft =
         lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
-      const everyoneAnswered = round.answers.length === lobby.players.length;
+      const everyoneAnswered =
+        round.answers.length + 1 === lobby.players.length;
       const roundOver = secondsLeft <= 0 || everyoneAnswered;
 
       return {

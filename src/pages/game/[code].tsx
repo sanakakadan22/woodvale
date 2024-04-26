@@ -33,7 +33,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       },
       onSuccess: (data) => {
         setSelected(data.selected);
-        // setCorrect(data.correct);
         setCorrectAnswer(data.currentRound.answer);
         setRoundOver(data.roundOver);
       },
@@ -88,7 +87,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }, [selected, correct, roundOver]);
 
   const newRound = trpc.useMutation("game.newRound", {
-    onMutate: () => setRoundOver(false),
+    onMutate: () => {
+      setRoundOver(false);
+    },
   });
 
   const router = useRouter();
@@ -124,9 +125,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   }
 
   let color = "btn-info animate-pulse";
-  if (roundOver && selected === correctAnswer) {
+  if (selected === correctAnswer) {
     color = "btn-success";
-  } else if (roundOver && selected !== correctAnswer) {
+  } else if (selected !== correctAnswer) {
     color = "btn-error";
   }
 
@@ -176,8 +177,6 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             if (i === selected) {
               buttonColor = color;
             } else if (i === correctAnswer) {
-              buttonColor = "btn-warning";
-            } else if (i === round.answer) {
               buttonColor = "btn-warning";
             }
 
