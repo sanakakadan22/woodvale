@@ -21,6 +21,8 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [roundOver, setRoundOver] = useState(false);
   const correct = selected === correctAnswer;
 
+  const [areYouSure, setAreYouSure] = useState(false);
+
   const { data, refetch, isFetched } = trpc.useQuery(
     ["game.get-round-by-code", { lobbyCode }],
     {
@@ -104,6 +106,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   );
   useEvent(lobbyCode, GameEvent.NewRound, () => refetch());
   useEvent(lobbyCode, GameEvent.PlayerAnswered, () => refetch());
+  useEvent(lobbyCode, GameEvent.JoinedLobby, () => refetch());
 
   const { presenceData } = usePresence(lobbyCode);
   const playerPresence = useMemo(() => {
@@ -131,7 +134,8 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     color = "btn-error";
   }
 
-  const gameOver = data.totalRounds >= data.maxRounds;
+  const lastRound = data.totalRounds >= data.maxRounds;
+  const gameOver = data.totalRounds >= data.maxRounds && roundOver;
   return (
     <div className="grid h-[calc(100svh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
@@ -196,20 +200,31 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           })}
         </div>
         <button
-          disabled={!roundOver || gameOver}
-          className="btn btn-secondary"
+          disabled={!roundOver}
+          className="btn btn-primary"
           onClick={() => {
-            newRound.mutate({ lobbyCode: lobbyCode });
+            if (!lastRound) {
+              newRound.mutate({ lobbyCode: lobbyCode });
+            }
           }}>
-          {gameOver ? "Last Round!" : "Next Round"}
+          {lastRound ? (gameOver ? "Game Over!" : "Last Round!") : "Next Round"}
         </button>
         <button
-          className="btn btn-primary"
+          className={`btn btn-secondary ${
+            areYouSure ? "btn-error animate-pulse" : ""
+          } `}
           disabled={!endGame.isIdle}
           onClick={() => {
-            endGame.mutate({ lobbyCode: lobbyCode });
+            if (gameOver || areYouSure) {
+              endGame.mutate({ lobbyCode: lobbyCode });
+            } else {
+              setAreYouSure(true);
+              setTimeout(() => {
+                setAreYouSure(false);
+              }, 3000);
+            }
           }}>
-          End Game
+          {areYouSure ? "Really???" : "End Game"}
         </button>
       </div>
     </div>
