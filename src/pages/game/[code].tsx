@@ -58,11 +58,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     };
   }, [data, refetch]);
 
+  const util = trpc.useContext();
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
-    onSuccess: (data, request) => {
+    onSuccess: (response, request) => {
       setSelected(request.answer);
-      setCorrect(data.correct);
-      if (data.correct) {
+      setCorrect(response.correct);
+      if (response.correct) {
         setCorrectAnswer(request.answer);
         confetti({
           colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],

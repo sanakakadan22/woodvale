@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 
 export const client = new Ably.Realtime.Promise({
   authUrl: `/api/createTokenRequest`,
+  disconnectedRetryTimeout: 1000,
 });
 
 export const useJoinLobby = (
