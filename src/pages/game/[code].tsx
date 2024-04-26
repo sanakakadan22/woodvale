@@ -127,7 +127,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   let color = "btn-info animate-pulse";
   if (selected === correctAnswer) {
     color = "btn-success";
-  } else if (selected !== correctAnswer) {
+  } else if (correctAnswer !== -1 && selected !== correctAnswer) {
     color = "btn-error";
   }
 
