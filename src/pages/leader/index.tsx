@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         <div className="grid grid-cols-3 grid-flow-row place-items-center text-center space-y-2 text-xl bg-secondary shadow-sm rounded-2xl p-5">
           {leaders.data.map((player, i) => (
             <>
-              <span className="text-3xl" key={i}>
+              <span className={i < 3 ? `text-3xl` : "text-xl"} key={i}>
                 {medals[i]}
               </span>
               <span key={i + "name"}>{player.name}</span>
