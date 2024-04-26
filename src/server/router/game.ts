@@ -177,8 +177,14 @@ export const gameRouter = createRouter()
 
       await ctx.events.playerAnswered(input.lobbyCode);
 
+      const secondsLeft =
+        lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
+      const everyoneAnswered = round.answers.length === lobby.players.length;
+      const roundOver = secondsLeft <= 0 || everyoneAnswered;
+
       return {
-        correct: correct,
+        roundOver: roundOver,
+        correctAnswer: roundOver ? round.answer : -1,
       };
     },
   })
@@ -250,7 +256,7 @@ export const gameRouter = createRouter()
         ? round.answers.find((a) => a.playerId === me.id)
         : undefined;
 
-      const correct = myAnswer?.answer === round.answer;
+      // Hide the correct answer if the round is not over
       if (!roundOver) {
         round.answer = -1;
       }
@@ -264,7 +270,6 @@ export const gameRouter = createRouter()
         joined: me !== undefined,
         me: me,
         selected: myAnswer?.answer ?? -1,
-        correct: correct,
         roundOver: roundOver,
       };
     },

@@ -17,9 +17,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [parent2] = useAutoAnimate();
 
   const [selected, setSelected] = useState(-1);
-  const [correct, setCorrect] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
   const [roundOver, setRoundOver] = useState(false);
+  const correct = selected === correctAnswer;
 
   const { data, refetch, isFetched } = trpc.useQuery(
     ["game.get-round-by-code", { lobbyCode }],
@@ -33,7 +33,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       },
       onSuccess: (data) => {
         setSelected(data.selected);
-        setCorrect(data.correct);
+        // setCorrect(data.correct);
         setCorrectAnswer(data.currentRound.answer);
         setRoundOver(data.roundOver);
       },
@@ -58,32 +58,34 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     };
   }, [data, refetch]);
 
-  const util = trpc.useContext();
   const sendAnswer = trpc.useMutation("game.sendAnswer", {
     onSuccess: (response, request) => {
       setSelected(request.answer);
-      setCorrect(response.correct);
-      if (response.correct) {
-        setCorrectAnswer(request.answer);
-        confetti({
-          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
-        });
-        confetti({
-          angle: 60,
-          spread: 100,
-          origin: { x: 0 },
-          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
-        });
-        // and launch a few from the right edge
-        confetti({
-          angle: 120,
-          spread: 100,
-          origin: { x: 1 },
-          colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
-        });
-      }
+      setRoundOver(response.roundOver);
+      setCorrectAnswer(response.correctAnswer);
     },
   });
+
+  useEffect(() => {
+    if (roundOver && correct) {
+      confetti({
+        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+      });
+      confetti({
+        angle: 60,
+        spread: 100,
+        origin: { x: 0 },
+        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+      });
+      // and launch a few from the right edge
+      confetti({
+        angle: 120,
+        spread: 100,
+        origin: { x: 1 },
+        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+      });
+    }
+  }, [selected, correct, roundOver]);
 
   const newRound = trpc.useMutation("game.newRound", {
     onMutate: () => setRoundOver(false),
@@ -121,10 +123,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     return null;
   }
 
-  let color = "btn";
-  if (correct) {
+  let color = "btn-info animate-pulse";
+  if (roundOver && selected === correctAnswer) {
     color = "btn-success";
-  } else {
+  } else if (roundOver && selected !== correctAnswer) {
     color = "btn-error";
   }
 
