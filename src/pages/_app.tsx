@@ -6,6 +6,7 @@ import superjson from "superjson";
 import "../styles/globals.css";
 import Head from "next/head";
 import React from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -14,8 +15,34 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>woodvale</title>
         <meta name="description" content="woodvale game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="woodvale" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/favicon/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon/favicon-16x16.png"
+        />
+        <link
+          rel="mask-icon"
+          href="/favicon/safari-pinned-tab.svg"
+          color="#5bbad5"
+        />
       </Head>
+      <Analytics />
       <Component {...pageProps} />
     </>
   );

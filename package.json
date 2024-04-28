@@ -18,6 +18,7 @@
     "@trpc/react": "^9.25.3",
     "@trpc/server": "^9.25.3",
     "@types/lodash": "^4.14.182",
+    "@vercel/analytics": "^1.2.2",
     "ably": "^1.2.27",
     "canvas-confetti": "^1.5.1",
     "daisyui": "^2.18.1",
