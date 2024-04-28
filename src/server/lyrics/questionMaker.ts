@@ -2,6 +2,7 @@ import lyrics from "./lyrics.json";
 import ttpd from "./ttpd.json";
 import flags from "./flags.json";
 import { LobbyType } from "../router/lobby";
+import { sampleSize } from "lodash";
 
 // const LyricMap = new Map(Object.entries(lyrics.reputation)); // by album
 const TTPDMap = new Map(
@@ -66,13 +67,7 @@ function makeTTPDQuestion(): [string, string[], number] {
 }
 
 function makeTaylorQuestion(): [string, string[], number] {
-  // @ts-ignore
-  const keys = [...LyricMap.keys()];
-  const shuffled = keys.sort(() => 0.5 - Math.random());
-
-  // Get sub-array of first n elements after shuffled
-  let selected = shuffled.slice(0, 4);
-
+  const selected: any[] = sampleSize(LyricMap.keys(), 4);
   const answerIndex = getRandomIndex(selected);
   const answer = selected[answerIndex];
   const questionSong = LyricMap.get(answer);
