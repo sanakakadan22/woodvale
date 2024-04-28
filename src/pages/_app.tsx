@@ -15,15 +15,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>woodvale</title>
         <meta name="description" content="woodvale game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="woodvale" />
-        <meta name="apple-touch-fullscreen" content="yes" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/favicon/apple-touch-icon.png"
-        />
         <link
           rel="icon"
           type="image/png"
