@@ -8,12 +8,15 @@ import { sampleSize } from "lodash";
 const TTPDMap = new Map(
   Object.values(ttpd).flatMap((value) => Object.entries(value))
 );
+const TTPDKeys = [...TTPDMap.keys()];
 
 const LyricMap = new Map(
   Object.values(lyrics).flatMap((value) => Object.entries(value))
 );
+const LyricKeys = [...LyricMap.keys()];
 
 const FlagMap = new Map<string, string>(Object.entries(flags));
+const FlagKeys = [...FlagMap.keys()];
 
 const getRandomIndex = (array: any[]) =>
   Math.floor(Math.random() * array.length);
@@ -36,13 +39,7 @@ export function makeQuestion(lobbyType: string) {
 }
 
 function makeFlagQuestion(): [string, string[], number] {
-  // @ts-ignore
-  const keys = <string[]>[...FlagMap.keys()];
-  const shuffled = keys.sort(() => 0.5 - Math.random());
-
-  // Get sub-array of first n elements after shuffled
-  let selected = shuffled.slice(0, 4);
-
+  const selected: any[] = sampleSize(FlagKeys, 4);
   const answerIndex = getRandomIndex(selected);
   const question = selected[answerIndex] || "";
   const choices = selected.map((k) => FlagMap.get(k) || "");
@@ -51,13 +48,7 @@ function makeFlagQuestion(): [string, string[], number] {
 }
 
 function makeTTPDQuestion(): [string, string[], number] {
-  // @ts-ignore
-  const keys = [...TTPDMap.keys()];
-  const shuffled = keys.sort(() => 0.5 - Math.random());
-
-  // Get sub-array of first n elements after shuffled
-  let selected = shuffled.slice(0, 4);
-
+  const selected: any[] = sampleSize(TTPDKeys, 4);
   const answerIndex = getRandomIndex(selected);
   const answer = selected[answerIndex];
   const questionSong = LyricMap.get(answer);
@@ -67,7 +58,7 @@ function makeTTPDQuestion(): [string, string[], number] {
 }
 
 function makeTaylorQuestion(): [string, string[], number] {
-  const selected: any[] = sampleSize(LyricMap.keys(), 4);
+  const selected: any[] = sampleSize(LyricKeys, 4);
   const answerIndex = getRandomIndex(selected);
   const answer = selected[answerIndex];
   const questionSong = LyricMap.get(answer);
