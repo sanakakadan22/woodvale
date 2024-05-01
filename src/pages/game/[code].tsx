@@ -101,6 +101,12 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   });
 
+  const nextGame = trpc.useMutation(["scores.create-new-lobby"], {
+    onSuccess: (newLobbyCode, req) => {
+      router.push(`/game/${newLobbyCode}`);
+    },
+  });
+
   useEvent(lobbyCode, GameEvent.EndGame, () =>
     router.push(`/score/${lobbyCode}`)
   );
@@ -209,23 +215,45 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           }}>
           {lastRound ? (gameOver ? "Game Over!" : "Last Round!") : "Next Round"}
         </button>
-        <button
-          className={`btn btn-secondary ${
-            areYouSure ? "btn-error animate-pulse" : ""
-          } `}
-          disabled={!endGame.isIdle}
-          onClick={() => {
-            if (gameOver || areYouSure) {
-              endGame.mutate({ lobbyCode: lobbyCode });
-            } else {
-              setAreYouSure(true);
-              setTimeout(() => {
-                setAreYouSure(false);
-              }, 3000);
-            }
-          }}>
-          {areYouSure ? "Really???" : "End Game"}
-        </button>
+        {!areYouSure ? (
+          <button
+            className={`btn btn-secondary ${
+              areYouSure ? "btn-error animate-pulse" : ""
+            } `}
+            disabled={!endGame.isIdle}
+            onClick={() => {
+              if (gameOver) {
+                endGame.mutate({ lobbyCode: lobbyCode });
+              } else {
+                setAreYouSure(true);
+                setTimeout(() => {
+                  setAreYouSure(false);
+                }, 3000);
+              }
+            }}>
+            End Game
+          </button>
+        ) : (
+          <div className="btn-group">
+            {playerPresence.size <= 1 ? (
+              <button
+                className="btn btn-info animate-pulse"
+                onClick={() => {
+                  setAreYouSure(false);
+                  nextGame.mutate({ lobbyCode: lobbyCode, quickPlay: true });
+                }}>
+                Quick!!!
+              </button>
+            ) : null}
+            <button
+              className="btn btn-error animate-pulse"
+              onClick={() => {
+                endGame.mutate({ lobbyCode: lobbyCode });
+              }}>
+              Really???
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

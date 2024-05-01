@@ -4,8 +4,9 @@ import _ from "lodash";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
 import { GameStatus } from "./lobby";
-import { GameEvent } from "../../utils/enums";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { makeQuestion } from "../lyrics/questionMaker";
+import type { Round } from "@prisma/client";
 
 export const scoreRouter = createRouter()
   .query("get-by-code", {
@@ -49,7 +50,10 @@ export const scoreRouter = createRouter()
     },
   })
   .mutation("create-new-lobby", {
-    input: z.object({ lobbyCode: z.string() }),
+    input: z.object({
+      lobbyCode: z.string(),
+      quickPlay: z.boolean().optional().default(false),
+    }),
     async resolve({ ctx, input }) {
       const lobby = await ctx.prisma.lobby.findFirst({
         where: {
@@ -71,7 +75,7 @@ export const scoreRouter = createRouter()
         });
       }
 
-      if (lobby.status !== GameStatus.Ended) {
+      if (!input.quickPlay && lobby.status !== GameStatus.Ended) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Game not over yet",
@@ -96,18 +100,43 @@ export const scoreRouter = createRouter()
         return lobby.nextLobbyCode;
       }
 
+      let roundData: any | undefined;
+      if (input.quickPlay) {
+        const [question, selected, answerIndex] = makeQuestion(lobby.lobbyType);
+        const choices = selected.map((choice) => {
+          return {
+            choice: choice,
+          };
+        });
+
+        const answer = selected[answerIndex] ?? "";
+        const regEx = new RegExp(answer, "igu");
+        roundData = {
+          question: question.replace(regEx, answer.replace(/[A-z]/g, "_")),
+          answer: answerIndex,
+          choices: {
+            create: choices,
+          },
+        };
+      }
+
       try {
         const newLobby = await ctx.prisma.lobby.create({
           data: {
             lobbyCode: lobby.nextLobbyCode,
             nextLobbyCode: nanoid(6),
             lobbyType: lobby.lobbyType,
-            status: GameStatus.InLobby,
+            status: input.quickPlay ? GameStatus.InGame : GameStatus.InLobby,
             roundLength: lobby.roundLength,
             maxRounds: lobby.maxRounds,
-            totalRounds: 0,
+            totalRounds: input.quickPlay ? 1 : 0,
+            rounds: input.quickPlay
+              ? {
+                  create: [roundData],
+                }
+              : undefined,
             players: {
-              create: lobby.players,
+              create: input.quickPlay ? [player] : lobby.players,
             },
           },
         });
