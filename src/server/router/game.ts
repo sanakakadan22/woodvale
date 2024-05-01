@@ -296,7 +296,18 @@ export const gameRouter = createRouter()
           lobbyCode: input.lobbyCode,
         },
         include: {
-          players: true,
+          players: {
+            select: {
+              name: true,
+              token: true,
+              presence: true,
+              answers: {
+                select: {
+                  score: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -327,6 +338,19 @@ export const gameRouter = createRouter()
         data: {
           status: GameStatus.Ended,
         },
+      });
+
+      // update leaderboard
+      await ctx.prisma.leaderboard.createMany({
+        data: lobby.players.map((p) => {
+          return {
+            lobbyType: lobby.lobbyType,
+            name: p.name,
+            score: _.sum(p.answers.map((answer) => answer.score)) || 0,
+            token: p.token,
+            presence: p.presence,
+          };
+        }),
       });
 
       await ctx.events.endGame(input.lobbyCode);

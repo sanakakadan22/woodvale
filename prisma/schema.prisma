@@ -83,3 +83,14 @@ model Answer {
 
   @@unique([roundId, playerId])
 }
+
+model Leaderboard {
+  id Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  lobbyType String
+  name String
+  token String
+  presence String
+  score Int
+}
