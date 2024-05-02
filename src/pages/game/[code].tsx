@@ -236,7 +236,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             End Game
           </button>
         ) : (
-          <div className="btn-group">
+          <div className="flex flex-row space-x-5">
             {playerPresence.size <= 1 ? (
               <button
                 className="btn btn-info animate-pulse"
@@ -244,7 +244,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                   setAreYouSure(false);
                   nextGame.mutate({ lobbyCode: lobbyCode, quickPlay: true });
                 }}>
-                Quick!!!
+                Next 💃🏼💃🏼
               </button>
             ) : null}
             <button
