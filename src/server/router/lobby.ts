@@ -126,6 +126,7 @@ export const lobbyRouter = createRouter()
         include: {
           players: {
             select: {
+              id: true,
               name: true,
               token: true,
               presence: true,
