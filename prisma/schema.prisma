@@ -40,7 +40,7 @@ model Player {
   presence String
   answers Answer[]
 
-  lobby   Lobby @relation(fields: [lobbyId], references: [id])
+  lobby   Lobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
   lobbyId Int
 
   @@index([token])
@@ -56,7 +56,7 @@ model Round {
   choices Choice[]
   answers Answer[]
 
-  lobby   Lobby @relation(fields: [lobbyId], references: [id])
+  lobby   Lobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
   lobbyId Int
 }
 
@@ -64,7 +64,7 @@ model Choice {
   id Int  @id @default(autoincrement())
   choice String
 
-  round Round @relation(fields: [roundId], references: [id])
+  round Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
   roundId Int
 }
 
@@ -75,10 +75,10 @@ model Answer {
   answer Int
   score Int
 
-  round Round @relation(fields: [roundId], references: [id])
+  round Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
   roundId Int
 
-  player Player @relation(fields: [playerId], references: [id])
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId Int
 
   @@unique([roundId, playerId])

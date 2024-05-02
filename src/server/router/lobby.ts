@@ -2,6 +2,8 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
+import { makeQuestion } from "../lyrics/questionMaker";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export enum LobbyType {
   Taylor = "taylor",
@@ -110,6 +112,95 @@ export const lobbyRouter = createRouter()
 
       await ctx.events.emitJoinedLobby(input.lobbyCode);
       return lobby;
+    },
+  })
+  .mutation("restart", {
+    input: z.object({
+      lobbyCode: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const lobby = await ctx.prisma.lobby.findFirst({
+        where: {
+          lobbyCode: input.lobbyCode,
+        },
+        include: {
+          players: {
+            select: {
+              name: true,
+              token: true,
+              presence: true,
+            },
+          },
+        },
+      });
+      if (!lobby) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (lobby.status !== GameStatus.InGame) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Game Not In Progress",
+        });
+      }
+
+      const player = lobby.players.find((player) => player.token == ctx.token);
+      if (!player) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const [question, selected, answerIndex] = makeQuestion(lobby.lobbyType);
+      const choices = selected.map((choice) => {
+        return {
+          choice: choice,
+        };
+      });
+
+      const answer = selected[answerIndex] ?? "";
+      const regEx = new RegExp(answer, "igu");
+      const roundData = {
+        question: question.replace(regEx, answer.replace(/[A-z]/g, "_")),
+        answer: answerIndex,
+        choices: {
+          create: choices,
+        },
+      };
+
+      await ctx.prisma.$transaction([
+        ctx.prisma.round.deleteMany({
+          where: {
+            lobbyId: lobby.id,
+          },
+        }),
+        ctx.prisma.player.deleteMany({
+          where: {
+            lobbyId: lobby.id,
+          },
+        }),
+        ctx.prisma.lobby.update({
+          where: {
+            lobbyCode: input.lobbyCode,
+          },
+          data: {
+            status: GameStatus.InGame,
+            roundLength: lobby.roundLength,
+            maxRounds: lobby.maxRounds,
+            totalRounds: 1,
+            rounds: {
+              create: [roundData],
+            },
+            players: {
+              create: [player],
+            },
+          },
+        }),
+      ]);
+
+      return;
     },
   })
   .mutation("remove-player-by-id", {

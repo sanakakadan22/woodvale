@@ -101,9 +101,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     },
   });
 
-  const nextGame = trpc.useMutation(["scores.create-new-lobby"], {
+  const restart = trpc.useMutation(["lobby.restart"], {
     onSuccess: (newLobbyCode, req) => {
-      router.push(`/game/${newLobbyCode}`);
+      refetch();
+      setAreYouSure(false);
     },
   });
 
@@ -113,6 +114,15 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   useEvent(lobbyCode, GameEvent.NewRound, () => refetch());
   useEvent(lobbyCode, GameEvent.PlayerAnswered, () => refetch());
   useEvent(lobbyCode, GameEvent.JoinedLobby, () => refetch());
+
+  useEffect(() => {
+    if (areYouSure) {
+      const timer = setTimeout(() => {
+        setAreYouSure(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [areYouSure]);
 
   const { presenceData } = usePresence(lobbyCode);
   const playerPresence = useMemo(() => {
@@ -228,26 +238,24 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                 endGame.mutate({ lobbyCode: lobbyCode });
               } else {
                 setAreYouSure(true);
-                setTimeout(() => {
-                  setAreYouSure(false);
-                }, 3000);
               }
             }}>
             End Game
           </button>
         ) : (
-          <div className="flex flex-row space-x-5">
+          <div className="flex flex-row space-x-1">
             {playerPresence.size <= 1 ? (
               <button
+                disabled={endGame.isLoading || restart.isLoading}
                 className="btn btn-info animate-pulse"
                 onClick={() => {
-                  setAreYouSure(false);
-                  nextGame.mutate({ lobbyCode: lobbyCode, quickPlay: true });
+                  restart.mutate({ lobbyCode: lobbyCode });
                 }}>
-                Next 💃🏼💃🏼
+                Restart💃🏼
               </button>
             ) : null}
             <button
+              disabled={endGame.isLoading || restart.isLoading}
               className="btn btn-error animate-pulse"
               onClick={() => {
                 endGame.mutate({ lobbyCode: lobbyCode });
