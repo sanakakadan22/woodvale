@@ -160,7 +160,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             );
           })}
         </ul>
-        <ul ref={parent} className="flex flex-row m-5">
+        <ul
+          ref={parent}
+          className="flex flex-row max-w-[calc(100dvw)] overflow-auto">
           {data.players.map((player) => (
             <PlayerScore
               player={player}
@@ -282,7 +284,7 @@ const PlayerScore: React.FC<{
 }> = ({ player, isPresent }) => {
   return (
     <div
-      className={`card shadow-2xl p-2 ml-2 ${
+      className={`card min-w-fit p-2 ml-2 ${
         player.isMe ? "bg-accent" : "bg-secondary"
       } ${isPresent ? "" : "animate-pulse bg-warning"}`}>
       <p className="font-bold text-center">{player.name} </p>
