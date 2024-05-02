@@ -175,13 +175,15 @@ export const gameRouter = createRouter()
         },
       });
 
-      await ctx.events.playerAnswered(input.lobbyCode);
-
       const secondsLeft =
         lobby.roundLength - (Date.now() - round.createdAt.getTime()) / 1000;
       const everyoneAnswered =
         round.answers.length + 1 === lobby.players.length;
       const roundOver = secondsLeft <= 0 || everyoneAnswered;
+
+      if (roundOver) {
+        await ctx.events.playerAnswered(input.lobbyCode);
+      }
 
       return {
         roundOver: roundOver,
@@ -202,9 +204,18 @@ export const gameRouter = createRouter()
               id: true,
               createdAt: true,
               question: true,
-              choices: true,
+              choices: {
+                select: {
+                  choice: true,
+                },
+              },
               answer: true,
-              answers: true,
+              answers: {
+                select: {
+                  playerId: true,
+                  answer: true,
+                },
+              },
             },
             orderBy: {
               createdAt: "desc",
@@ -215,7 +226,13 @@ export const gameRouter = createRouter()
             select: {
               id: true,
               name: true,
-              answers: true,
+              answers: {
+                select: {
+                  roundId: true,
+                  answer: true,
+                  score: true,
+                },
+              },
               token: true,
               presence: true,
             },
@@ -258,31 +275,20 @@ export const gameRouter = createRouter()
         })
         .sort((a, b) => (a.score > b.score ? -1 : 1));
 
-      const me = players.find((p) => p.isMe);
-      const myAnswer = me
-        ? round.answers.find((a) => a.playerId === me.id)
-        : undefined;
-
-      // Hide the correct answer if the round is not over
-      if (!roundOver) {
-        round.answer = -1;
-      }
+      const me = lobby.players.find((p) => p.token === ctx.token);
+      const myAnswer = me?.answers.find((a) => a.roundId === round.id);
 
       return {
         totalRounds: lobby.totalRounds,
         maxRounds: lobby.maxRounds,
         currentRound: {
-          ...round,
-          answers: round.answers.map((answer) => ({
-            ...answer,
-            answer: roundOver ? answer.answer : -1,
-            score: roundOver ? answer.score : 0,
-          })),
+          choices: round.choices,
+          question: round.question,
+          answer: roundOver ? round.answer : -1,
         },
         players: players,
         secondsLeft: secondsLeft,
         joined: me !== undefined,
-        me: me,
         selected: myAnswer?.answer ?? -1,
         roundOver: roundOver,
       };
