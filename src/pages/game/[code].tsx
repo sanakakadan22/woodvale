@@ -70,19 +70,22 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   useEffect(() => {
     if (roundOver && correct) {
       confetti({
+        origin: { y: 1.2 },
+        spread: 100,
+        startVelocity: 90,
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
       confetti({
-        angle: 60,
         spread: 100,
-        origin: { x: 0 },
+        startVelocity: 90,
+        origin: { x: 0.25, y: 1.2 },
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
       // and launch a few from the right edge
       confetti({
-        angle: 120,
         spread: 100,
-        origin: { x: 1 },
+        startVelocity: 90,
+        origin: { x: 0.75, y: 1.2 },
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
     }
@@ -147,7 +150,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   if (correctAnswer !== -1 && selected === correctAnswer) {
     color = "btn-success";
   } else if (correctAnswer !== -1 && selected !== correctAnswer) {
-    color = "btn-error";
+    color = "btn-error animate-shake";
   }
 
   const lastRound = data.totalRounds >= data.maxRounds;
@@ -160,7 +163,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             let bg = i < data.totalRounds ? "bg-primary" : "bg-secondary";
             let key = i;
             if (i + 1 === data.totalRounds) {
-              bg = "bg-accent animate-bounce";
+              bg = "bg-accent animate-heartbeat";
               key = -1;
             } else if (i + 1 > data.totalRounds) {
               key = i - 1;
