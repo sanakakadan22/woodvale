@@ -186,9 +186,6 @@ export const lobbyRouter = createRouter()
             lobbyCode: input.lobbyCode,
           },
           data: {
-            status: GameStatus.InGame,
-            roundLength: lobby.roundLength,
-            maxRounds: lobby.maxRounds,
             totalRounds: 1,
             rounds: {
               create: [roundData],
