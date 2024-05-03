@@ -181,9 +181,7 @@ export const gameRouter = createRouter()
         round.answers.length + 1 === lobby.players.length;
       const roundOver = secondsLeft <= 0 || everyoneAnswered;
 
-      if (roundOver) {
-        await ctx.events.playerAnswered(input.lobbyCode);
-      }
+      await ctx.events.playerAnswered(input.lobbyCode);
 
       return {
         roundOver: roundOver,
