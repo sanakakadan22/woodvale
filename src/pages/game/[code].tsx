@@ -192,7 +192,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           } ${seconds <= 0 ? "animate-pulse" : ""}`}>
           <span style={{ "--value": seconds } as React.CSSProperties}></span>
         </span>
-        <h1 className="text-2xl sm:text-6xl p-5 text-center">
+        <h1
+          className={` ${
+            data?.lobbyType === "flags" ? "text-8xl" : "text-2xl sm:text-4xl"
+          } p-5 text-center`}>
           {round.question}
         </h1>
 

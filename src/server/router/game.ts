@@ -284,6 +284,7 @@ export const gameRouter = createRouter()
           question: round.question,
           answer: roundOver ? round.answer : -1,
         },
+        lobbyType: lobby.lobbyType,
         players: players,
         secondsLeft: secondsLeft,
         joined: me !== undefined,
