@@ -7,6 +7,7 @@ import "../styles/globals.css";
 import Head from "next/head";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { ThemeButton } from "../components/themeButton";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -37,6 +38,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <Analytics />
       <Component {...pageProps} />
+      <ThemeButton />
     </>
   );
 };

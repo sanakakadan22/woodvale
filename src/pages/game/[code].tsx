@@ -168,9 +168,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             } else if (i + 1 > data.totalRounds) {
               key = i - 1;
             }
-            return (
-              <li key={key} className={`card shadow-2xl p-2 ml-2 ${bg}`}></li>
-            );
+            return <li key={key} className={`card p-2 ml-2 ${bg}`}></li>;
           })}
         </ul>
         <ul

@@ -37,7 +37,7 @@ module.exports = {
   daisyui: {
     themes: [
       {
-        mytheme: {
+        anthology: {
           primary: "rgba(156,163,175,0.7)",
           secondary: "#5d5854",
           accent: "rgba(167,159,149,0.7)",
@@ -47,6 +47,19 @@ module.exports = {
           success: "#3f6212",
           warning: "rgba(121,44,18,0.77)",
           error: "#7f1d1d",
+        },
+      },
+      {
+        ttpd: {
+          primary: "rgba(156,163,175,0.7)",
+          secondary: "#c7c7c6",
+          accent: "rgba(167,159,149,0.7)",
+          neutral: "rgba(30,30,54,0.6)",
+          "base-100": "#f5f5f5",
+          info: "#0b6ea1",
+          success: "#69a41e",
+          warning: "rgba(211,84,30,0.77)",
+          error: "#d73131",
         },
       },
     ],
