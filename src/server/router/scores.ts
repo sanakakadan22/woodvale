@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import { GameStatus } from "./lobby";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { makeQuestion } from "../lyrics/questionMaker";
+import { LeaderType } from "../../utils/enums";
 
 export const scoreRouter = createRouter()
   .query("get-by-code", {
@@ -152,16 +153,29 @@ export const scoreRouter = createRouter()
     },
   })
   .query("leaderboard", {
-    input: z.object({ lobbyType: z.string() }),
+    input: z.object({
+      lobbyType: z.string(),
+      type: z.nativeEnum(LeaderType).default(LeaderType.AllTime),
+    }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.leaderboard.findMany({
         select: {
+          createdAt: true,
           name: true,
           score: true,
           presence: true,
         },
         where: {
           lobbyType: input.lobbyType,
+          createdAt: {
+            gte: new Date(
+              input.type === LeaderType.Daily
+                ? new Date().setHours(0, 0, 0, 0)
+                : input.type === LeaderType.Monthly
+                ? new Date().setDate(0)
+                : 0
+            ),
+          },
         },
         orderBy: {
           score: "desc",

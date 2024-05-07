@@ -1,37 +1,69 @@
 import type { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
-import React from "react";
+import React, { useState } from "react";
 import { useAtom } from "jotai";
 import { lobbyTypeAtom } from "../index";
 import { useRouter } from "next/router";
+import { LeaderType } from "../../utils/enums";
+import { LobbyType } from "../../server/router/lobby";
 
 const medals = ["🥇", "🥈", "🥉", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 const Home: NextPage = () => {
   const [lobbyType, setLobbyType] = useAtom(lobbyTypeAtom);
+  const [leaderType, setLeaderType] = useState(LeaderType.Monthly);
   const router = useRouter();
 
   const leaders = trpc.useQuery([
     "scores.leaderboard",
-    { lobbyType: lobbyType },
+    { lobbyType: lobbyType, type: leaderType },
   ]);
 
   return (
     <div className="flex h-[calc(100dvh)] w-full flex-col place-items-center p-10 space-y-5">
-      <div className="tooltip" data-tip={lobbyType}>
-        <button
-          className="btn btn-ghost btn-sm text-2xl"
+      <button
+        className="btn btn-ghost btn-sm text-2xl tooltip"
+        data-tip={lobbyType}
+        onClick={() => {
+          if (lobbyType == "taylor") {
+            setLobbyType("flags");
+          } else if (lobbyType == "flags") {
+            setLobbyType("ttpd");
+          } else {
+            setLobbyType("taylor");
+          }
+        }}>
+        {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+      </button>
+      <div role="tablist" className="tabs tabs-boxed">
+        <a
+          className={`tab ${
+            leaderType === LeaderType.Daily ? "tab-active" : ""
+          }`}
           onClick={() => {
-            if (lobbyType == "taylor") {
-              setLobbyType("flags");
-            } else if (lobbyType == "flags") {
-              setLobbyType("ttpd");
-            } else {
-              setLobbyType("taylor");
-            }
+            setLeaderType(LeaderType.Daily);
           }}>
-          {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
-        </button>
+          Today
+        </a>
+        <a
+          className={`tab ${
+            leaderType === LeaderType.Monthly ? "tab-active" : ""
+          }`}
+          onClick={() => {
+            setLeaderType(LeaderType.Monthly);
+          }}>
+          {LeaderType.Monthly}
+        </a>
+        <a
+          className={`tab ${
+            leaderType === LeaderType.AllTime ? "tab-active" : ""
+          }`}
+          onClick={() => {
+            setLeaderType(LeaderType.AllTime);
+          }}>
+          {LeaderType.AllTime}
+        </a>
       </div>
+
       {leaders.data ? (
         <div className="grid grid-cols-3 grid-flow-row place-items-center text-center text-xl bg-secondary shadow-sm rounded-2xl p-5">
           {leaders.data.map((player, i) => (

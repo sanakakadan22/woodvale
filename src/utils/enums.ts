@@ -6,3 +6,8 @@ export enum GameEvent {
   NewRoundReady = "NewRoundReady",
   NewLobbyCreated = "NewLobbyCreated",
 }
+export enum LeaderType {
+  Daily = "Daily",
+  Monthly = "Monthly",
+  AllTime = "All Time",
+}
