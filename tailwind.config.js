@@ -51,7 +51,7 @@ module.exports = {
       },
       {
         ttpd: {
-          primary: "rgba(156,163,175,0.7)",
+          primary: "rgb(173,180,194)",
           secondary: "#c7c7c6",
           accent: "rgba(167,159,149,0.7)",
           neutral: "rgba(30,30,54,0.6)",
