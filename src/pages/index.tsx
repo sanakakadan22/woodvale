@@ -61,6 +61,7 @@ const Home: NextPage = () => {
           <input
             type="text"
             value={name}
+            maxLength={32}
             onChange={(e) => {
               setName(e.target.value);
             }}

@@ -97,6 +97,13 @@ export const lobbyRouter = createRouter()
       const name = input.name;
       if (!ctx.token || !name || !ctx.presence) throw new Error("Unauthorized");
 
+      if (name.length > 32) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Name too long",
+        });
+      }
+
       const lobby = await ctx.prisma.lobby.update({
         where: {
           lobbyCode: input.lobbyCode,
