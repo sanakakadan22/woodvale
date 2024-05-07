@@ -7,7 +7,7 @@ export const lightModeAtom = atomWithStorage("lightMode", false);
 export const ThemeButton = () => {
   const [lightMode, setLightMode] = useAtom(lightModeAtom);
   return (
-    <label className="swap swap-rotate absolute left-5 bottom-5">
+    <label className="swap swap-rotate fixed left-5 bottom-5">
       <input
         type="checkbox"
         className="theme-controller"

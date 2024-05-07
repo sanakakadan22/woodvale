@@ -64,7 +64,7 @@ const Home: NextPage = () => {
       </div>
 
       {leaders.data && leaders.data.length > 0 ? (
-        <div className="grid grid-cols-3 grid-flow-row place-items-center text-center text-xl bg-secondary shadow-sm rounded-2xl p-5">
+        <div className="grid grid-cols-3 grid-flow-row place-items-center text-center text-xl bg-secondary rounded-2xl p-5">
           {leaders.data.map((player, i) => (
             <>
               <span className={i < 3 ? "text-3xl" : "text-xl"} key={i}>
