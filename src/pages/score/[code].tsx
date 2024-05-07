@@ -3,10 +3,18 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import confetti from "canvas-confetti";
 import Image from "next/image";
+import { LeaderBoardButton } from "../../components/leaderBoardButton";
+import {
+  lobbyTypeAtom,
+  LobbyTypeButton,
+} from "../../components/lobbyTypeButton";
+import { useAtom } from "jotai";
 
 const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const { data } = trpc.useQuery(["scores.get-by-code", { lobbyCode }]);
+
+  const [lobbyType] = useAtom(lobbyTypeAtom);
   const playAgain = trpc.useMutation("scores.create-new-lobby", {
     onSuccess: (newLobbyCode) => {
       router.push(`/lobby/${newLobbyCode}`);
@@ -57,23 +65,25 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               key={i}></PlayerScore>
           ))}
         </div>
-        <div className="btn-group m-10">
+        <div className="join">
           <button
-            className="btn btn-accent"
+            className="btn btn-accent join-item"
             disabled={!playAgain.isIdle}
             onClick={() => {
-              playAgain.mutate({ lobbyCode: lobbyCode });
+              playAgain.mutate({ lobbyCode: lobbyCode, lobbyType: lobbyType });
             }}>
             Play Again
           </button>
           <button
-            className="btn"
+            className="btn btn-secondary join-item"
             onClick={() => {
               router.push("/");
             }}>
             Home
           </button>
         </div>
+        <LobbyTypeButton />
+        <LeaderBoardButton />
       </div>
     </div>
   );

@@ -5,12 +5,10 @@ import React from "react";
 import Image from "next/image";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
+import { LeaderBoardButton } from "../components/leaderBoardButton";
+import { lobbyTypeAtom, LobbyTypeButton } from "../components/lobbyTypeButton";
 
 export const nameAtom = atomWithStorage<string>("name", "");
-export const lobbyTypeAtom = atomWithStorage<"taylor" | "flags" | "ttpd">(
-  "lobbyType",
-  "ttpd"
-);
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -21,7 +19,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const [lobbyType, setLobbyType] = useAtom(lobbyTypeAtom);
+  const [lobbyType] = useAtom(lobbyTypeAtom);
   const [name, setName] = useAtom(nameAtom);
 
   return (
@@ -76,30 +74,8 @@ const Home: NextPage = () => {
             Host
           </button>
         </form>
-        <div className="tooltip" data-tip={lobbyType}>
-          <button
-            className="btn btn-ghost btn-sm text-2xl"
-            onClick={() => {
-              if (lobbyType == "taylor") {
-                setLobbyType("flags");
-              } else if (lobbyType == "flags") {
-                setLobbyType("ttpd");
-              } else {
-                setLobbyType("taylor");
-              }
-            }}>
-            {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
-          </button>
-        </div>
-        <div className="tooltip" data-tip="trophies">
-          <button
-            className="btn btn-ghost btn-sm text-2xl"
-            onClick={() => {
-              router.push("/leader");
-            }}>
-            🏆
-          </button>
-        </div>
+        <LobbyTypeButton />
+        <LeaderBoardButton />
       </div>
     </div>
   );

@@ -2,10 +2,9 @@ import type { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import React, { useState } from "react";
 import { useAtom } from "jotai";
-import { lobbyTypeAtom } from "../index";
 import { useRouter } from "next/router";
 import { LeaderType } from "../../utils/enums";
-import { LobbyType } from "../../server/router/lobby";
+import { lobbyTypeAtom } from "../../components/lobbyTypeButton";
 
 const medals = ["🥇", "🥈", "🥉", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 const Home: NextPage = () => {
@@ -82,9 +81,9 @@ const Home: NextPage = () => {
       <button
         className="btn"
         onClick={() => {
-          router.push("/");
+          router.back();
         }}>
-        Home
+        Back
       </button>
     </div>
   );

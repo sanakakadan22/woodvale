@@ -131,6 +131,15 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             </div>
           ))}
         </ul>
+        {data?.lobbyType ? (
+          <p className="text-2xl tooltip" data-tip={data?.lobbyType}>
+            {data.lobbyType === "taylor"
+              ? "💃"
+              : data.lobbyType === "ttpd"
+              ? "🪶"
+              : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+          </p>
+        ) : null}
       </div>
     </div>
   );
