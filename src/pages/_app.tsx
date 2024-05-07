@@ -7,9 +7,11 @@ import "../styles/globals.css";
 import Head from "next/head";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
-import { ThemeButton } from "../components/themeButton";
+import { lightModeAtom, ThemeButton } from "../components/themeButton";
+import { useAtom } from "jotai";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const [lightMode] = useAtom(lightModeAtom);
   return (
     <>
       <Head>
@@ -17,7 +19,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="description" content="woodvale game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-title" content="woodvale" />
-        {/*<meta name="color-scheme" content="dark" />*/}
+        <meta name="color-scheme" content={lightMode ? undefined : "dark"} />
         <link
           rel="icon"
           type="image/png"
