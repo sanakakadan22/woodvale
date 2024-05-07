@@ -19,7 +19,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="description" content="woodvale game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-title" content="woodvale" />
-        <meta name="color-scheme" content={lightMode ? undefined : "dark"} />
+        <meta name="color-scheme" content={lightMode ? "light" : "dark"} />
         <link
           rel="icon"
           type="image/png"
