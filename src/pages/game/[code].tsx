@@ -247,16 +247,14 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           </button>
         ) : (
           <div className="flex flex-row space-x-1">
-            {playerPresence.size <= 1 ? (
-              <button
-                disabled={endGame.isLoading || restart.isLoading}
-                className="btn btn-info animate-pulse"
-                onClick={() => {
-                  restart.mutate({ lobbyCode: lobbyCode });
-                }}>
-                Restart💃🏼
-              </button>
-            ) : null}
+            <button
+              disabled={endGame.isLoading || restart.isLoading}
+              className="btn btn-info animate-pulse"
+              onClick={() => {
+                restart.mutate({ lobbyCode: lobbyCode });
+              }}>
+              Restart💃🏼
+            </button>
             <button
               disabled={endGame.isLoading || restart.isLoading}
               className="btn btn-error animate-pulse"

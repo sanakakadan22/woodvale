@@ -163,7 +163,7 @@ export const gameRouter = createRouter()
       const correct = input.answer === round.answer;
       let score = 0;
       if (correct) {
-        score = Math.ceil(lobby.roundLength - elapsedSeconds);
+        score = Math.min(Math.ceil(lobby.roundLength - elapsedSeconds), 13);
       }
 
       await ctx.prisma.answer.create({

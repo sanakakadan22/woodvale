@@ -126,10 +126,7 @@ export const lobbyRouter = createRouter()
         include: {
           players: {
             select: {
-              id: true,
-              name: true,
               token: true,
-              presence: true,
             },
           },
         },
@@ -177,11 +174,6 @@ export const lobbyRouter = createRouter()
             lobbyId: lobby.id,
           },
         }),
-        ctx.prisma.player.deleteMany({
-          where: {
-            lobbyId: lobby.id,
-          },
-        }),
         ctx.prisma.lobby.update({
           where: {
             lobbyCode: input.lobbyCode,
@@ -191,12 +183,13 @@ export const lobbyRouter = createRouter()
             rounds: {
               create: [roundData],
             },
-            players: {
-              create: [player],
-            },
           },
         }),
       ]);
+
+      if (lobby.players.length > 1) {
+        await ctx.events.newRound(input.lobbyCode);
+      }
 
       return;
     },

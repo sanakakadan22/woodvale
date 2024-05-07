@@ -100,7 +100,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
         <button
           className="btn btn-primary btn-lg"
-          disabled={!newRound.isIdle}
+          disabled={
+            !newRound.isIdle || playerPresence.size != data.players.length
+          }
           onClick={() => {
             newRound.mutate({ lobbyCode: lobbyCode });
           }}>
