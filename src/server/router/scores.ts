@@ -159,6 +159,7 @@ export const scoreRouter = createRouter()
       type: z.nativeEnum(LeaderType).default(LeaderType.AllTime),
     }),
     async resolve({ ctx, input }) {
+      const now = new Date();
       return await ctx.prisma.leaderboard.findMany({
         select: {
           createdAt: true,
@@ -171,9 +172,9 @@ export const scoreRouter = createRouter()
           createdAt: {
             gte: new Date(
               input.type === LeaderType.Daily
-                ? new Date().setHours(0, 0, 0, 0)
+                ? now.setDate(now.getDate() - 1)
                 : input.type === LeaderType.Monthly
-                ? new Date().setDate(0)
+                ? now.setDate(0)
                 : 0
             ),
           },
