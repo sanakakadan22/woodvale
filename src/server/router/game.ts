@@ -93,6 +93,7 @@ export const gameRouter = createRouter()
       const newRound = await ctx.prisma.lobby.update({
         where: {
           lobbyCode: input.lobbyCode,
+          totalRounds: lobby.totalRounds,
         },
         data: {
           totalRounds: lobby.totalRounds + 1,
@@ -102,8 +103,16 @@ export const gameRouter = createRouter()
           },
         },
       });
+
+      if (newRound == null) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "New round already exists",
+        });
+      }
+
       await ctx.events.newRound(input.lobbyCode);
-      return newRound;
+      return {};
     },
   })
   .mutation("sendAnswer", {
