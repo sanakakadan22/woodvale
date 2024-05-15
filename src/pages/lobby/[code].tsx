@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";
 import { client, useEvent, useJoinLobby } from "../../utils/events";
+import { Types } from "ably";
 
 const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const [name] = useAtom(nameAtom);
@@ -34,6 +35,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const playerPresence = useMemo(() => {
     const playerPresence = new Set<string>();
     for (const msg of presenceData) {
+      if (msg.action === "absent" || msg.action === "leave") {
+        continue;
+      }
       playerPresence.add(msg.clientId);
     }
     return playerPresence;
