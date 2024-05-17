@@ -179,9 +179,14 @@ export const scoreRouter = createRouter()
             ),
           },
         },
-        orderBy: {
-          score: "desc",
-        },
+        orderBy: [
+          {
+            score: "desc",
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
         take: 10,
       });
     },

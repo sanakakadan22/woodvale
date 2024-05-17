@@ -131,6 +131,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const playerPresence = useMemo(() => {
     const playerPresence = new Set<string>();
     for (const msg of presenceData) {
+      if (msg.action === "absent" || msg.action === "leave") {
+        continue;
+      }
       playerPresence.add(msg.clientId);
     }
     return playerPresence;
