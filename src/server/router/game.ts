@@ -215,6 +215,9 @@ export const gameRouter = createRouter()
                 select: {
                   choice: true,
                 },
+                orderBy: {
+                  id: "asc",
+                },
               },
               answer: true,
               answers: {
