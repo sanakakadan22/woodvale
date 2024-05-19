@@ -195,6 +195,7 @@ export const gameRouter = createRouter()
       return {
         roundOver: roundOver,
         correctAnswer: roundOver ? round.answer : -1,
+        score: roundOver ? score : -1,
       };
     },
   })
@@ -301,6 +302,7 @@ export const gameRouter = createRouter()
         secondsLeft: secondsLeft,
         joined: me !== undefined,
         selected: myAnswer?.answer ?? -1,
+        score: roundOver ? myAnswer?.score ?? -1 : -1,
         roundOver: roundOver,
       };
     },

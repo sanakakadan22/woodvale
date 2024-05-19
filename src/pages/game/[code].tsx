@@ -18,6 +18,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   const [selected, setSelected] = useState(-1);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
+  const [score, setScore] = useState(-1);
   const [roundOver, setRoundOver] = useState(false);
   const correct = selected === correctAnswer;
 
@@ -37,6 +38,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         setSelected(data.selected);
         setCorrectAnswer(data.currentRound.answer);
         setRoundOver(data.roundOver);
+        setScore(data.score);
       },
     }
   );
@@ -64,6 +66,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       setSelected(request.answer);
       setRoundOver(response.roundOver);
       setCorrectAnswer(response.correctAnswer);
+      setScore(response.score);
     },
   });
 
@@ -151,7 +154,10 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
 
   let color = "btn-info animate-pulse";
   if (correctAnswer !== -1 && selected === correctAnswer) {
-    color = "btn-success";
+    color =
+      score > 12
+        ? "bg-success-gold hover:bg-success-gold-hover glass"
+        : "btn-success";
   } else if (correctAnswer !== -1 && selected !== correctAnswer) {
     color = "btn-error animate-shake";
   }
