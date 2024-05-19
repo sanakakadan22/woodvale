@@ -76,12 +76,16 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         origin: { y: 1.2 },
         spread: 100,
         startVelocity: 90,
+        ticks: 100,
+        particleCount: 25,
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
       confetti({
         spread: 100,
         startVelocity: 90,
         origin: { x: 0.25, y: 1.2 },
+        ticks: 100,
+        particleCount: 25,
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
       // and launch a few from the right edge
@@ -89,6 +93,9 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         spread: 100,
         startVelocity: 90,
         origin: { x: 0.75, y: 1.2 },
+        // gravity: 2,
+        particleCount: 25,
+        ticks: 100,
         colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
       });
     }
