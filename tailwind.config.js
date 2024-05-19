@@ -6,7 +6,6 @@ module.exports = {
     extend: {
       colors: {
         "success-gold": "var(--success-gold)",
-        "success-gold-hover": "var(--success-gold-hover)",
       },
       animation: {
         shake: "shake 0.75s cubic-bezier(.36,.07,.19,.97) both",
@@ -53,8 +52,7 @@ module.exports = {
           success: "#3f6212",
           warning: "rgba(121,44,18,0.77)",
           error: "#7f1d1d",
-          "--success-gold": "#a17f4e",
-          "--success-gold-hover": "#7e633d",
+          "--success-gold": "#7e633d",
         },
       },
       {
@@ -70,8 +68,7 @@ module.exports = {
           success: "#69a41e",
           warning: "rgba(211,84,30,0.77)",
           error: "#d73131",
-          "--success-gold": "#d3a768",
-          "--success-gold-hover": "#b68f5a",
+          "--success-gold": "#b68f5a",
         },
       },
     ],

@@ -156,7 +156,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   if (correctAnswer !== -1 && selected === correctAnswer) {
     color =
       score > 12
-        ? "bg-success-gold hover:bg-success-gold-hover glass"
+        ? "bg-success-gold hover:bg-success-gold glass"
         : "btn-success";
   } else if (correctAnswer !== -1 && selected !== correctAnswer) {
     color = "btn-error animate-shake";
