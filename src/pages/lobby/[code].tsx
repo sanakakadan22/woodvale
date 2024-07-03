@@ -140,7 +140,9 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
               ? "💃"
               : data.lobbyType === "ttpd"
               ? "🪶"
-              : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+              : data.lobbyType === "flags"
+              ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+              : "💚"}
           </p>
         ) : null}
       </div>

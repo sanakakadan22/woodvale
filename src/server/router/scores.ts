@@ -52,7 +52,7 @@ export const scoreRouter = createRouter()
   .mutation("create-new-lobby", {
     input: z.object({
       lobbyCode: z.string(),
-      lobbyType: z.enum(["taylor", "flags", "ttpd"]).optional(),
+      lobbyType: z.enum(["taylor", "flags", "ttpd", "debut"]).optional(),
       quickPlay: z.boolean().optional().default(false),
     }),
     async resolve({ ctx, input }) {

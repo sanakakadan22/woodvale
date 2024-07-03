@@ -27,11 +27,19 @@ const Home: NextPage = () => {
             setLobbyType("flags");
           } else if (lobbyType == "flags") {
             setLobbyType("ttpd");
+          } else if (lobbyType == "ttpd") {
+            setLobbyType("debut");
           } else {
             setLobbyType("taylor");
           }
         }}>
-        {lobbyType === "taylor" ? "💃" : lobbyType === "ttpd" ? "🪶" : "🏴󠁧󠁢󠁷󠁬󠁳󠁿"}
+        {lobbyType === "taylor"
+          ? "💃"
+          : lobbyType === "ttpd"
+          ? "🪶"
+          : lobbyType === "flags"
+          ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+          : "💚"}
       </button>
       <div role="tablist" className="tabs tabs-boxed">
         <a
