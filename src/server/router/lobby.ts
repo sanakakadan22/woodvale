@@ -9,6 +9,7 @@ export enum LobbyType {
   Taylor = "taylor",
   Flags = "flags",
   TTPD = "ttpd",
+  Debut = "debut",
 }
 
 export enum GameStatus {
@@ -63,7 +64,7 @@ export const lobbyRouter = createRouter()
   .mutation("create", {
     input: z.object({
       name: z.string(),
-      lobbyType: z.enum(["taylor", "flags", "ttpd"]).optional(),
+      lobbyType: z.enum(["taylor", "flags", "ttpd", "debut"]).optional(),
     }),
     async resolve({ ctx, input }) {
       if (!ctx.token || !input.name || !ctx.presence)

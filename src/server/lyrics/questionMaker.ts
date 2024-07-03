@@ -1,6 +1,7 @@
 import lyrics from "./lyrics.json";
 import ttpd from "./ttpd.json";
 import flags from "./flags.json";
+import debut from "./debut.json";
 import { LobbyType } from "../router/lobby";
 import { sampleSize } from "lodash";
 
@@ -9,6 +10,11 @@ const TTPDMap = new Map(
   Object.values(ttpd).flatMap((value) => Object.entries(value))
 );
 const TTPDKeys = [...TTPDMap.keys()];
+
+const DebutMap = new Map(
+  Object.values(debut).flatMap((value) => Object.entries(value))
+);
+const DebutKeys = [...DebutMap.keys()];
 
 const LyricMap = new Map(
   Object.values(lyrics).flatMap((value) => Object.entries(value))
@@ -33,6 +39,8 @@ export function makeQuestion(lobbyType: string) {
     return makeFlagQuestion();
   } else if (lobbyType === LobbyType.TTPD) {
     return makeTTPDQuestion();
+  } else if (lobbyType === LobbyType.Debut) {
+    return makeDebutQuestion();
   }
 
   return makeTaylorQuestion();
@@ -49,6 +57,16 @@ function makeFlagQuestion(): [string, string[], number] {
 
 function makeTTPDQuestion(): [string, string[], number] {
   const selected: any[] = sampleSize(TTPDKeys, 4);
+  const answerIndex = getRandomIndex(selected);
+  const answer = selected[answerIndex];
+  const questionSong = LyricMap.get(answer);
+  const question = getRandomValue(questionSong)?.lyric || ""; // throw error instead?
+
+  return [question, selected, answerIndex];
+}
+
+function makeDebutQuestion(): [string, string[], number] {
+  const selected: any[] = sampleSize(DebutKeys, 4);
   const answerIndex = getRandomIndex(selected);
   const answer = selected[answerIndex];
   const questionSong = LyricMap.get(answer);
