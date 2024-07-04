@@ -3,7 +3,7 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 
 export const lobbyTypeAtom = atomWithStorage<
-  "taylor" | "flags" | "ttpd" | "debut"
+  "taylor" | "flags" | "ttpd" | "debut" | "fearless"
 >("lobbyType", "ttpd");
 
 export const LobbyTypeButton = () => {
@@ -20,6 +20,8 @@ export const LobbyTypeButton = () => {
             setLobbyType("ttpd");
           } else if (lobbyType == "ttpd") {
             setLobbyType("debut");
+          } else if (lobbyType == "debut") {
+            setLobbyType("fearless");
           } else {
             setLobbyType("taylor");
           }
@@ -30,7 +32,9 @@ export const LobbyTypeButton = () => {
           ? "🪶"
           : lobbyType === "flags"
           ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-          : "💚"}
+          : lobbyType === "debut"
+          ? "💚"
+          : "🫶"}
       </button>
     </div>
   );
