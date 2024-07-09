@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { GameStatus } from "./lobby";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { makeQuestion } from "../lyrics/questionMaker";
-import { LeaderType } from "../../utils/enums";
+import { LeaderType, LobbyType } from "../../utils/enums";
 
 export const scoreRouter = createRouter()
   .query("get-by-code", {
@@ -52,7 +52,7 @@ export const scoreRouter = createRouter()
   .mutation("create-new-lobby", {
     input: z.object({
       lobbyCode: z.string(),
-      lobbyType: z.enum(["taylor", "flags", "ttpd", "debut" , "fearless"]).optional(),
+      lobbyType: z.nativeEnum(LobbyType).optional(),
       quickPlay: z.boolean().optional().default(false),
     }),
     async resolve({ ctx, input }) {
