@@ -4,7 +4,10 @@ import React, { useState } from "react";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { LeaderType } from "../../utils/enums";
-import { lobbyTypeAtom } from "../../components/lobbyTypeButton";
+import {
+  LobbyTypeButton,
+  lobbyTypeAtom,
+} from "../../components/lobbyTypeButton";
 
 const medals = ["🥇", "🥈", "🥉", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 const Home: NextPage = () => {
@@ -19,32 +22,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex h-[calc(100dvh)] w-full flex-col place-items-center p-10 space-y-5">
-      <button
-        className="btn btn-ghost btn-sm text-2xl tooltip"
-        data-tip={lobbyType}
-        onClick={() => {
-          if (lobbyType == "taylor") {
-            setLobbyType("flags");
-          } else if (lobbyType == "flags") {
-            setLobbyType("ttpd");
-          } else if (lobbyType == "ttpd") {
-            setLobbyType("debut");
-          } else if (lobbyType == "debut") {
-            setLobbyType("fearless");
-          } else {
-            setLobbyType("taylor");
-          }
-        }}>
-        {lobbyType === "taylor"
-          ? "💃"
-          : lobbyType === "ttpd"
-          ? "🪶"
-          : lobbyType === "flags"
-          ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-          : lobbyType === "debut"
-          ? "💚"
-          : "🫶"}
-      </button>
+      <LobbyTypeButton />
       <div role="tablist" className="tabs tabs-boxed">
         <a
           className={`tab ${

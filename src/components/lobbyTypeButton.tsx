@@ -1,40 +1,30 @@
 import React from "react";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
+import { LobbyType, LobbyTypeToEmoji } from "../utils/enums";
 
-export const lobbyTypeAtom = atomWithStorage<
-  "taylor" | "flags" | "ttpd" | "debut" | "fearless"
->("lobbyType", "ttpd");
+export const lobbyTypeAtom = atomWithStorage<LobbyType>(
+  "lobbyType",
+  LobbyType.TTPD
+);
+
+const lobbyTypes = Object.values(LobbyType);
 
 export const LobbyTypeButton = () => {
   const [lobbyType, setLobbyType] = useAtom(lobbyTypeAtom);
+
+  const index = lobbyTypes.indexOf(lobbyType);
 
   return (
     <div className="tooltip" data-tip={lobbyType}>
       <button
         className="btn btn-ghost btn-sm text-2xl"
         onClick={() => {
-          if (lobbyType == "taylor") {
-            setLobbyType("flags");
-          } else if (lobbyType == "flags") {
-            setLobbyType("ttpd");
-          } else if (lobbyType == "ttpd") {
-            setLobbyType("debut");
-          } else if (lobbyType == "debut") {
-            setLobbyType("fearless");
-          } else {
-            setLobbyType("taylor");
-          }
+          const nextLobbyType =
+            lobbyTypes[(index + 1) % lobbyTypes.length] ?? lobbyType;
+          setLobbyType(nextLobbyType);
         }}>
-        {lobbyType === "taylor"
-          ? "💃"
-          : lobbyType === "ttpd"
-          ? "🪶"
-          : lobbyType === "flags"
-          ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-          : lobbyType === "debut"
-          ? "💚"
-          : "🫶"}
+        {LobbyTypeToEmoji(lobbyType)}
       </button>
     </div>
   );

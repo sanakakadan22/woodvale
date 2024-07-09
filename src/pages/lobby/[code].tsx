@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import React, { useMemo, useState } from "react";
-import { GameEvent } from "../../utils/enums";
+import { GameEvent, LobbyType, LobbyTypeToEmoji } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { nameAtom } from "../index";
@@ -136,15 +136,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         </ul>
         {data?.lobbyType ? (
           <p className="text-2xl tooltip" data-tip={data?.lobbyType}>
-            {data.lobbyType === "taylor"
-              ? "💃"
-              : data.lobbyType === "ttpd"
-              ? "🪶"
-              : data.lobbyType === "flags"
-              ? "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-              : data.lobbyType === "debut"
-              ? "💚"
-              : "🫶"}
+            {LobbyTypeToEmoji(data.lobbyType as LobbyType)}
           </p>
         ) : null}
       </div>

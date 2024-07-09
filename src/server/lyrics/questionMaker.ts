@@ -1,7 +1,8 @@
 import lyrics from "./lyrics.json";
 import flags from "./flags.json";
-import { LobbyType } from "../router/lobby";
 import { sampleSize } from "lodash";
+import { LobbyType, LobbyTypeToAlbum } from "../../utils/enums";
+import { TypeOf } from "zod";
 
 const LyricMap = new Map(
   Object.values(lyrics).flatMap((value) => Object.entries(value))
@@ -40,16 +41,11 @@ function makeFlagQuestion(): [string, string[], number] {
 
 function makeTaylorQuestion(lobbyType: string): [string, string[], number] {
   let lyricKeys: string[] = LyricKeys
-  switch (lobbyType) {
-    case LobbyType.TTPD:
-      lyricKeys = Object.keys(lyrics["The Tortured Poets Department"]);
-      break;
-    case LobbyType.Fearless:
-      lyricKeys = Object.keys(lyrics["Fearless"]);
-      break;
-    case LobbyType.Debut:
-      lyricKeys = Object.keys(lyrics["Taylor Swift"])
-      break;
+
+  const lobbyAlbum = LobbyTypeToAlbum(lobbyType)
+  if (lobbyAlbum !== undefined && lobbyAlbum in lyrics) {
+    // @ts-ignore
+    lyricKeys = Object.keys(lyrics[lobbyAlbum]);
   }
 
   const selected: any[] = sampleSize(lyricKeys, 4);

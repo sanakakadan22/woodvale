@@ -3,15 +3,7 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 import { makeQuestion } from "../lyrics/questionMaker";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-
-export enum LobbyType {
-  Taylor = "taylor",
-  Flags = "flags",
-  TTPD = "ttpd",
-  Debut = "debut",
-  Fearless = "fearless"
-}
+import { LobbyType } from "../../utils/enums";
 
 export enum GameStatus {
   InLobby = "inLobby",
@@ -65,7 +57,7 @@ export const lobbyRouter = createRouter()
   .mutation("create", {
     input: z.object({
       name: z.string(),
-      lobbyType: z.enum(["taylor", "flags", "ttpd", "debut", "fearless"]).optional(),
+      lobbyType: z.nativeEnum(LobbyType).optional(),
     }),
     async resolve({ ctx, input }) {
       if (!ctx.token || !input.name || !ctx.presence)
