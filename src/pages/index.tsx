@@ -30,7 +30,7 @@ const Home: NextPage = () => {
           <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
             <a
               href="https://github.com/sanakakadan22"
-              className="link link-hover link-primary">
+              className="link link-hover woodvale-text">
               Woodvale
             </a>
           </div>{" "}

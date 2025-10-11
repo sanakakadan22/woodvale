@@ -1,4 +1,4 @@
-curl https://raw.githubusercontent.com/shaynak/taylor-swift-lyrics/main/lyrics.json \
+curl https://raw.githubusercontent.com/sanakakadan22/taylor-swift-lyrics-searcher/main/lyrics.json \
 | sed 's# (Taylor\\u2019s Version)##g' \
 | sed "s# (Taylor's Version)##g" \
 | sed 's# \[From The Vault\]##g' \

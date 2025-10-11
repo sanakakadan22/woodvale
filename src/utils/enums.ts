@@ -18,17 +18,19 @@ export enum LobbyType {
   Flags = "flags",
   Debut = "debut",
   Fearless = "fearless",
-  Cats = "cats"
+  Cats = "cats",
+  Showgirl = "showgirl"
 }
 
 export function LobbyTypeToEmoji(lobbyType: LobbyType): string {
     return {
       [LobbyType.TTPD]: "🪶",
       [LobbyType.Taylor]: "💃",
-      [LobbyType.Flags]: "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+      [LobbyType.Flags]: "🏴",
       [LobbyType.Debut]: "💚",
       [LobbyType.Fearless]: "🫶",
       [LobbyType.Cats]: "🐈",
+      [LobbyType.Showgirl]: "❤️‍🔥",
     }[lobbyType];
 }
 
@@ -38,5 +40,6 @@ export function LobbyTypeToAlbum(lobbyType: string): string | undefined {
     [LobbyType.Debut]: "Taylor Swift",
     [LobbyType.Fearless]: "Fearless",
     [LobbyType.Cats]: "Cats",
+    [LobbyType.Showgirl]: "The Life of a Showgirl",
   }[lobbyType];
 }

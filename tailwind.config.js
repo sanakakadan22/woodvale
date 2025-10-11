@@ -40,6 +40,22 @@ module.exports = {
   daisyui: {
     themes: [
       {
+        glittery: {
+          primary: "#ff8c00",
+          secondary: "#f8d6d6ff", 
+          accent: "#ffa500",
+          neutral: "rgba(255,140,0,0.5)",
+          "base-100": "rgba(255,255,255,0.5)",
+          "base-200": "rgba(165, 221, 216, 1)",
+          "base-300": "rgba(255,140,0,0.5)",
+          info: "#40e0d0",
+          success: "#98fb98",
+          warning: "#e57f02ff",
+          error: "#ff6b6b",
+          "--success-gold": "#ffa500",
+        },
+      },
+      {
         anthology: {
           primary: "rgba(156,163,175,0.7)",
           secondary: "#5d5854",

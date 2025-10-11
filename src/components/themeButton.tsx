@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 
-export const lightModeAtom = atomWithStorage("lightMode", false);
+export const lightModeAtom = atomWithStorage("lightMode", true);
 
 export const ThemeButton = () => {
   const [lightMode, setLightMode] = useAtom(lightModeAtom);
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      lightMode ? "glittery" : "anthology"
+    );
+  }, [lightMode]);
+
   return (
     <label className="swap swap-rotate fixed left-5 bottom-5">
       <input
         type="checkbox"
         className="theme-controller"
-        value="ttpd"
         onChange={() => {
           setLightMode(!lightMode);
         }}
