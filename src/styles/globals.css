@@ -95,26 +95,9 @@ body {
 body {
     background: var(--bg-gradient);
     background-size: 400% 400%;
-    animation: glitterShift 10s e infinite;
+    animation: glitterShift 10s ease infinite;
     position: relative;
     color: var(--text-color);
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 80%, var(--sparkle-1) var(--sparkle-size-1), transparent var(--sparkle-size-1)),
-        radial-gradient(circle at 80% 20%, var(--sparkle-2) var(--sparkle-size-2), transparent var(--sparkle-size-2)),
-        radial-gradient(circle at 40% 40%, var(--sparkle-3) var(--sparkle-size-3), transparent var(--sparkle-size-3));
-    background-size: 50px 50px, 30px 30px, 70px 70px;
-    animation: sparkle 6s linear infinite;
-    pointer-events: none;
-    z-index: -1;
 }
 
 @keyframes glitterShift {
@@ -128,7 +111,7 @@ body::before {
 }
 
 .woodvale-text {
-    background: linear-gradient(45deg, #ff6b35, #40e0d0);
+    background: linear-gradient(45deg, #fb8a61, #7efff2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
