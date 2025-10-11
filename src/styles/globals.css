@@ -4,6 +4,44 @@
 
 .btn {
     text-transform: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.45) 1px, transparent 1px),
+        radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.7) 0.5px, transparent 0.5px),
+        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+        radial-gradient(circle at 60% 40%, rgba(255, 215, 0, 0.6) 0.8px, transparent 0.8px),
+        radial-gradient(circle at 20% 70%, rgba(255, 215, 0, 0.5) 1px, transparent 1px);
+    background-size: 20px 20px, 15px 15px, 25px 25px, 18px 18px, 22px 22px, 16px 16px;
+    animation: buttonGlitter 3s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.btn * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes buttonGlitter {
+    0%, 100% { 
+        opacity: 0.45;
+        transform: translateX(0) translateY(0);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: translateX(2px) translateY(-2px);
+    }
 }
 
 /* Light mode (default) - glittery orange/mint green */
