@@ -72,7 +72,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <p className="text-lg italic text-center">
-          are you gonna lose the game of chance, what are the chances?
+          are you ready to girl-boss too close to the sun?
         </p>
         <Image
           style={{
@@ -87,7 +87,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         />
         <div className="card flex flex-row bg-secondary p-3 overflow-visible w-[fit-content] m-3">
           <p className="text-2xl text-center text-bold mr-2">
-            Invite an Albatross
+            Invite a Showgirl
           </p>
           <div className="tooltip" data-tip={copied ? "copied" : "copy"}>
             <button
@@ -96,7 +96,7 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
                 navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
               }}>
-              {copied ? "🦅" : "📋"}
+              {copied ? "👠" : "📋"}
             </button>
           </div>
         </div>

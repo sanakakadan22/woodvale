@@ -38,7 +38,10 @@ const ScoreBoard: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <p className="text-3xl font-extrabold font-mono text-center ">
-          And the most Glamorous Showgirl is...
+          You pulled the wrong trigger
+        </p>
+        <p className="text-3xl font-extrabold font-mono text-center ">
+          This empire belongs to
         </p>
         <p className="text-3xl font-extrabold font-mono text-center text-primary">
           {data?.players[0]?.name}
