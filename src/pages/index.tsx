@@ -45,7 +45,7 @@ const Home: NextPage = () => {
             height: "auto",
           }}
           className="mask mask-squircle w-auto"
-          src="/tl_home.jpg"
+          src="/tl_home.JPG"
           alt="TL Home"
           height={350}
           width={350}
