@@ -80,8 +80,8 @@ const LobbyContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
             height: "auto",
           }}
           className="mask mask-squircle w-auto"
-          src="/ttpd_tattoo.jpeg"
-          alt="TS TTPD Tattoo"
+          src="/tl_lobby.PNG"
+          alt="TL Lobby"
           height={350}
           width={350}
         />

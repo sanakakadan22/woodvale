@@ -77,14 +77,14 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         spread: 100,
         startVelocity: 90,
         ticks: 100,
-        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+        colors: ["#FFD700", "#FF8C00", "#008080", "#C0C0C0"],
       });
       confetti({
         spread: 100,
         startVelocity: 90,
         origin: { x: 0.25, y: 1.2 },
         ticks: 100,
-        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+        colors: ["#FFD700", "#FF8C00", "#008080", "#C0C0C0"],
       });
       // and launch a few from the right edge
       confetti({
@@ -92,7 +92,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
         startVelocity: 90,
         origin: { x: 0.75, y: 1.2 },
         ticks: 100,
-        colors: ["#A79F95", "#78716c", "#f0f0f0", "#1a1f2e", "#06405EFF"],
+        colors: ["#FFD700", "#FF8C00", "#008080", "#C0C0C0"],
       });
     }
   }, [selected, correct, roundOver]);

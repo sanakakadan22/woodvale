@@ -95,7 +95,7 @@ body {
 body {
     background: var(--bg-gradient);
     background-size: 400% 400%;
-    animation: glitterShift 8s ease infinite;
+    animation: glitterShift 10s e infinite;
     position: relative;
     color: var(--text-color);
 }

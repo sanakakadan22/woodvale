@@ -42,7 +42,7 @@ module.exports = {
       {
         glittery: {
           primary: "#ff8c00",
-          secondary: "#f8d6d6ff", 
+          secondary: "#8af9d4ff", 
           accent: "#ffa500",
           neutral: "rgba(255,140,0,0.5)",
           "base-100": "rgba(255,255,255,0.5)",

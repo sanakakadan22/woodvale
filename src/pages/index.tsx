@@ -26,7 +26,7 @@ const Home: NextPage = () => {
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
       <div className="grid grid-flow-row-dense place-items-center space-y-5">
         <div className="text-3xl font-extrabold font-mono text-center">
-          The{" "}
+          The Life of a{" "}
           <div className="tooltip tooltip-bottom" data-tip="Sana's GitHub">
             <a
               href="https://github.com/sanakakadan22"
@@ -34,10 +34,10 @@ const Home: NextPage = () => {
               Woodvale
             </a>
           </div>{" "}
-          Tortured Game Department
+          Show Game
         </div>
         <p className="text-lg italic text-center">
-          It&apos;s just a game, but really (Really)
+          And, baby, that&apos;s show business for you!
         </p>
         <Image
           style={{
@@ -45,8 +45,8 @@ const Home: NextPage = () => {
             height: "auto",
           }}
           className="mask mask-squircle w-auto"
-          src="/ttpd_face.jpeg"
-          alt="TS TTPD"
+          src="/tl_home.jpg"
+          alt="TL Home"
           height={350}
           width={350}
         />
