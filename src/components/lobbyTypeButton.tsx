@@ -5,7 +5,7 @@ import { LobbyType, LobbyTypeToEmoji } from "../utils/enums";
 
 export const lobbyTypeAtom = atomWithStorage<LobbyType>(
   "lobbyType",
-  LobbyType.Showgirl
+  LobbyType.TTPD
 );
 
 const lobbyTypes = Object.values(LobbyType);
