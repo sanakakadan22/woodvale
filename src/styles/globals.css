@@ -73,6 +73,10 @@
 html {
   min-height: 100%;
   min-height: 100dvh;
+  background: linear-gradient(45deg, #ff6b35, #40e0d0, #ff6b35, #40e0d0);
+  background-size: 400% 400%;
+  background-attachment: fixed;
+  animation: glitterShift 10s ease infinite;
 }
 
 body {
@@ -84,9 +88,22 @@ body {
   --sparkle-size-1: 2px;
   --sparkle-size-2: 1px;
   --sparkle-size-3: 1.5px;
+  position: relative;
+  color: var(--text-color);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Dark mode - anthology theme */
+[data-theme="anthology"] html {
+  background: linear-gradient(45deg, #1a1a1a, #2d2d2d, #1a1a1a, #2d2d2d);
+  background-size: 400% 400%;
+  background-attachment: fixed;
+  animation: glitterShift 10s ease infinite;
+}
+
 [data-theme="anthology"] body {
   --bg-gradient: linear-gradient(45deg, #1a1a1a, #2d2d2d, #1a1a1a, #2d2d2d);
   --text-color: #e5e5e5;
@@ -116,20 +133,6 @@ body {
 [data-theme="anthology"] .btn-secondary:hover {
   background-color: #3a5a3a;
   border-color: #3a5a3a;
-}
-
-[data-theme="anthology"] .bg-secondary {
-  background-color: #1f3d3d;
-}
-
-body {
-  background: var(--bg-gradient);
-  background-size: 400% 400%;
-  animation: glitterShift 10s ease infinite;
-  position: relative;
-  color: var(--text-color);
-  min-height: 100vh;
-  min-height: 100dvh;
 }
 
 @keyframes glitterShift {
