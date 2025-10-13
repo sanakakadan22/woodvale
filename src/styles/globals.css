@@ -3,117 +3,158 @@
 @tailwind utilities;
 
 .btn {
-    text-transform: none;
-    position: relative;
-    overflow: hidden;
+  text-transform: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.45) 1px, transparent 1px),
-        radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.7) 0.5px, transparent 0.5px),
-        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
-        radial-gradient(circle at 60% 40%, rgba(255, 215, 0, 0.6) 0.8px, transparent 0.8px),
-        radial-gradient(circle at 20% 70%, rgba(255, 215, 0, 0.5) 1px, transparent 1px);
-    background-size: 20px 20px, 15px 15px, 25px 25px, 18px 18px, 22px 22px, 16px 16px;
-    animation: buttonGlitter 3s linear infinite;
-    pointer-events: none;
-    z-index: 1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.6) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 255, 255, 0.45) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(255, 255, 255, 0.7) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(255, 255, 255, 0.55) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 60% 40%,
+      rgba(255, 215, 0, 0.6) 0.8px,
+      transparent 0.8px
+    ),
+    radial-gradient(
+      circle at 20% 70%,
+      rgba(255, 215, 0, 0.5) 1px,
+      transparent 1px
+    );
+  background-size: 20px 20px, 15px 15px, 25px 25px, 18px 18px, 22px 22px,
+    16px 16px;
+  animation: buttonGlitter 3s linear infinite;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .btn * {
-    position: relative;
-    z-index: 2;
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes buttonGlitter {
-    0%, 100% { 
-        opacity: 0.45;
-        transform: translateX(0) translateY(0);
-    }
-    50% { 
-        opacity: 0.8;
-        transform: translateX(2px) translateY(-2px);
-    }
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(2px) translateY(-2px);
+  }
 }
 
 /* Light mode (default) - glittery orange/mint green */
+html {
+  height: 100%;
+}
+
 body {
-    --bg-gradient: linear-gradient(45deg, #ff6b35, #40e0d0, #ff6b35, #40e0d0);
-    --text-color: #000000;
-    --sparkle-1: rgba(255, 255, 255, 0.8);
-    --sparkle-2: rgba(255, 255, 255, 0.6);
-    --sparkle-3: rgba(255, 255, 255, 0.9);
-    --sparkle-size-1: 2px;
-    --sparkle-size-2: 1px;
-    --sparkle-size-3: 1.5px;
+  --bg-gradient: linear-gradient(45deg, #ff6b35, #40e0d0, #ff6b35, #40e0d0);
+  --text-color: #000000;
+  --sparkle-1: rgba(255, 255, 255, 0.8);
+  --sparkle-2: rgba(255, 255, 255, 0.6);
+  --sparkle-3: rgba(255, 255, 255, 0.9);
+  --sparkle-size-1: 2px;
+  --sparkle-size-2: 1px;
+  --sparkle-size-3: 1.5px;
 }
 
 /* Dark mode - anthology theme */
 [data-theme="anthology"] body {
-    --bg-gradient: linear-gradient(45deg, #1a1a1a, #2d2d2d, #1a1a1a, #2d2d2d);
-    --text-color: #e5e5e5;
-    --sparkle-1: rgba(139, 139, 139, 0.3);
-    --sparkle-2: rgba(105, 105, 105, 0.2);
-    --sparkle-3: rgba(169, 169, 169, 0.4);
-    --sparkle-size-1: 1px;
-    --sparkle-size-2: 0.5px;
-    --sparkle-size-3: 1px;
+  --bg-gradient: linear-gradient(45deg, #1a1a1a, #2d2d2d, #1a1a1a, #2d2d2d);
+  --text-color: #e5e5e5;
+  --sparkle-1: rgba(139, 139, 139, 0.3);
+  --sparkle-2: rgba(105, 105, 105, 0.2);
+  --sparkle-3: rgba(169, 169, 169, 0.4);
+  --sparkle-size-1: 1px;
+  --sparkle-size-2: 0.5px;
+  --sparkle-size-3: 1px;
 }
 
 [data-theme="anthology"] .btn-success {
-    background-color: #1f4f2f;
-    border-color: #1f4f2f;
+  background-color: #1f4f2f;
+  border-color: #1f4f2f;
 }
 
 [data-theme="anthology"] .btn-success:hover {
-    background-color: #2d5f3d;
-    border-color: #2d5f3d;
+  background-color: #2d5f3d;
+  border-color: #2d5f3d;
 }
 
 [data-theme="anthology"] .btn-secondary {
-    background-color: #2d4a2d;
-    border-color: #2d4a2d;
+  background-color: #2d4a2d;
+  border-color: #2d4a2d;
 }
 
 [data-theme="anthology"] .btn-secondary:hover {
-    background-color: #3a5a3a;
-    border-color: #3a5a3a;
+  background-color: #3a5a3a;
+  border-color: #3a5a3a;
 }
 
 [data-theme="anthology"] .bg-secondary {
-    background-color: #1f3d3d;
+  background-color: #1f3d3d;
 }
 
 body {
-    background: var(--bg-gradient);
-    background-size: 400% 400%;
-    animation: glitterShift 10s ease infinite;
-    position: relative;
-    color: var(--text-color);
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: glitterShift 10s ease infinite;
+  position: relative;
+  color: var(--text-color);
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 @keyframes glitterShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes sparkle {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .woodvale-text {
-    background: linear-gradient(45deg, #fb8a61, #7efff2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 900;
+  background: linear-gradient(45deg, #fb8a61, #7efff2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
 }
