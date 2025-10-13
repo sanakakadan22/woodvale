@@ -1,5 +1,6 @@
 import lyrics from "./lyrics.json";
 import flags from "./flags.json";
+import audioclips from "./audioclips.json";
 import { sampleSize } from "lodash";
 import { LobbyType, LobbyTypeToAlbum } from "../../utils/enums";
 import { TypeOf } from "zod";
@@ -11,6 +12,11 @@ const LyricKeys = [...LyricMap.keys()];
 
 const FlagMap = new Map<string, string>(Object.entries(flags));
 const FlagKeys = [...FlagMap.keys()];
+
+const AudioClipMap = new Map(
+  Object.values(audioclips).flatMap((value) => Object.entries(value))
+);
+const AudioClipKeys = [...AudioClipMap.keys()];
 
 const getRandomIndex = (array: any[]) =>
   Math.floor(Math.random() * array.length);
@@ -25,7 +31,11 @@ function getRandomValue<Type>(array: Type[] | undefined) {
 export function makeQuestion(lobbyType: string) {
   if (lobbyType === LobbyType.Flags) {
     return makeFlagQuestion();
-  } 
+  }
+
+  if (lobbyType === LobbyType.AudioClip) {
+    return makeAudioClipQuestion();
+  }
 
   return makeTaylorQuestion(lobbyType);
 }
@@ -40,9 +50,9 @@ function makeFlagQuestion(): [string, string[], number] {
 }
 
 function makeTaylorQuestion(lobbyType: string): [string, string[], number] {
-  let lyricKeys: string[] = LyricKeys
+  let lyricKeys: string[] = LyricKeys;
 
-  const lobbyAlbum = LobbyTypeToAlbum(lobbyType)
+  const lobbyAlbum = LobbyTypeToAlbum(lobbyType);
   if (lobbyAlbum !== undefined && lobbyAlbum in lyrics) {
     // @ts-ignore
     lyricKeys = Object.keys(lyrics[lobbyAlbum]);
@@ -52,7 +62,35 @@ function makeTaylorQuestion(lobbyType: string): [string, string[], number] {
   const answerIndex = getRandomIndex(selected);
   const answer = selected[answerIndex];
   const questionSong = LyricMap.get(answer);
-  const question = getRandomValue(questionSong)?.lyric || ""; // throw error instead?
+  const question = getRandomValue(questionSong)?.lyric || "";
 
   return [question, selected, answerIndex];
+}
+
+function makeAudioClipQuestion(): [string, string[], number] {
+  const selected: any[] = sampleSize(AudioClipKeys, 4);
+  const answerIndex = getRandomIndex(selected);
+  const answer = selected[answerIndex];
+  const audioData = AudioClipMap.get(answer);
+
+  const uri = audioData?.uri || "";
+  const duration_ms = audioData?.duration_ms || 180000;
+  const bufferMs = 10000;
+  const clipDuration = 5000;
+  const maxStartPosition = Math.max(
+    bufferMs,
+    duration_ms - bufferMs - clipDuration
+  );
+  const minStartPosition = bufferMs;
+  const randomStartMs =
+    Math.floor(Math.random() * (maxStartPosition - minStartPosition)) +
+    minStartPosition;
+
+  const questionData = JSON.stringify({
+    uri,
+    startMs: randomStartMs,
+    duration_ms,
+  });
+
+  return [questionData, selected, answerIndex];
 }

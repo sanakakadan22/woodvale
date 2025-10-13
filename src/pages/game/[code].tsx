@@ -1,20 +1,27 @@
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { client, useEvent } from "../../utils/events";
-import { GameEvent } from "../../utils/enums";
+import { GameEvent, LobbyType } from "../../utils/enums";
 import confetti from "canvas-confetti";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { nameAtom } from "../index";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";
+import Script from "next/script";
+import { useSession } from "next-auth/react"
 
 const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
-  // const [correct, setCorrect] = useState(AnswerColor.Neutral);
+  const { data: session, status } = useSession()
   const [seconds, setSeconds] = useState(0);
   const [parent] = useAutoAnimate();
   const [parent2] = useAutoAnimate();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [spotifyPlayer, setSpotifyPlayer] = useState<any>(null);
+  const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [spotifyReady, setSpotifyReady] = useState(false);
+  const lastPlayedQuestion = useRef<string | null>(null);
 
   const [selected, setSelected] = useState(-1);
   const [correctAnswer, setCorrectAnswer] = useState(-1);
@@ -42,6 +49,40 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
       },
     }
   );
+
+  useEffect(() => {
+    if (!session?.accessToken) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+    document.body.appendChild(script);
+    window.onSpotifyWebPlaybackSDKReady = () => {
+        const player = new window.Spotify.Player({
+            name: "Woodvale Game Player",
+            getOAuthToken: (cb: (token: string) => void) => {
+              cb(session?.accessToken);
+            },
+            volume: 0.5,
+        });
+
+        setSpotifyPlayer(player);
+
+        player.addListener('ready', ({ device_id }) => {
+            console.log('Ready with Device ID', device_id);
+            setDeviceId(device_id);
+            setTimeout(() => setSpotifyReady(true), 1000);
+        });
+
+        player.addListener('not_ready', ({ device_id }) => {
+            console.log('Device ID has gone offline', device_id);
+        });
+
+        player.connect();
+    };
+  }, [session?.accessToken]);
 
   useEffect(() => {
     const secondsLeft = data?.secondsLeft ?? 0;
@@ -106,6 +147,7 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
   const router = useRouter();
   const endGame = trpc.useMutation("game.endTheGame", {
     onSettled: (data) => {
+      spotifyPlayer?.pause();
       router.push(`/score/${lobbyCode}`);
     },
   });
@@ -144,6 +186,83 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     }
     return playerPresence;
   }, [presenceData]);
+
+  useEffect(() => {
+    console.log("Auto-play effect triggered", {
+      lobbyType: data?.lobbyType,
+      hasQuestion: !!data?.currentRound?.question,
+      hasToken: !!data?.spotifyAccessToken,
+      spotifyReady,
+      hasPlayer: !!spotifyPlayer,
+      deviceId,
+    });
+
+    if (
+      data?.lobbyType === LobbyType.AudioClip &&
+      data?.currentRound?.question &&
+      data?.spotifyAccessToken &&
+      spotifyReady &&
+      spotifyPlayer &&
+      deviceId
+    ) {
+      const currentQuestion = data.currentRound.question;
+      if (lastPlayedQuestion.current === currentQuestion) {
+        console.log("Already played this question, skipping");
+        return;
+      }
+
+      try {
+        const trackData = JSON.parse(currentQuestion);
+        console.log(
+          "Playing track:",
+          trackData,
+          "from position:",
+          trackData.startMs
+        );
+
+        lastPlayedQuestion.current = currentQuestion;
+
+        fetch(
+          `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${data.spotifyAccessToken}`,
+            },
+            body: JSON.stringify({
+              uris: [trackData.uri],
+              position_ms: trackData.startMs ?? 0,
+            }),
+          }
+        )
+          .then((res) => {
+            console.log("Play response:", res.status);
+            if (!res.ok) {
+              return res.text().then((text) => {
+                console.error("Play failed:", text);
+              });
+            }
+          })
+          .catch((e) => console.error("Play request failed:", e));
+      } catch (e) {
+        console.error("JSON parse failed:", e);
+        if (audioRef.current) {
+          audioRef.current.src = data.currentRound.question;
+          audioRef.current
+            .play()
+            .catch((e) => console.error("Audio playback failed:", e));
+        }
+      }
+    }
+  }, [
+    data?.lobbyType,
+    data?.currentRound?.question,
+    data?.spotifyAccessToken,
+    spotifyReady,
+    deviceId,
+    spotifyPlayer,
+  ]);
 
   const [name] = useAtom(nameAtom);
   if (!name || (isFetched && !data?.joined)) {
@@ -202,12 +321,22 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
           } ${seconds <= 0 ? "animate-pulse" : ""}`}>
           <span style={{ "--value": seconds } as React.CSSProperties}></span>
         </span>
-        <h1
-          className={` ${
-            data?.lobbyType === "flags" ? "text-8xl" : "text-2xl sm:text-4xl"
-          } p-5 text-center`}>
-          {round.question}
-        </h1>
+        {data?.lobbyType === LobbyType.AudioClip ? (
+          <div className="flex flex-col items-center space-y-4">
+            <audio ref={audioRef} className="hidden" />
+            <div className="text-6xl">🎵</div>
+            <h2 className="text-2xl font-semibold">
+              Listen to the clip and guess the song!
+            </h2>
+          </div>
+        ) : (
+          <h1
+            className={` ${
+              data?.lobbyType === "flags" ? "text-8xl" : "text-2xl sm:text-4xl"
+            } p-5 text-center`}>
+            {round.question}
+          </h1>
+        )}
 
         <div className="grid grid-cols-2 grid-rows-2">
           {round.choices.map((choice, i) => {
@@ -292,9 +421,11 @@ const GamePage = () => {
   }
 
   return (
-    <AblyProvider client={client}>
-      <GameContent lobbyCode={code} />
-    </AblyProvider>
+    <>
+      <AblyProvider client={client}>
+        <GameContent lobbyCode={code} />
+      </AblyProvider>
+    </>
   );
 };
 

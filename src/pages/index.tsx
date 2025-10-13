@@ -7,6 +7,7 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 import { LeaderBoardButton } from "../components/leaderBoardButton";
 import { lobbyTypeAtom, LobbyTypeButton } from "../components/lobbyTypeButton";
+import { SpotifyAuthButton } from "../components/spotifyAuthButton";
 
 export const nameAtom = atomWithStorage<string>("name", "");
 
@@ -76,6 +77,9 @@ const Home: NextPage = () => {
         </form>
         <LobbyTypeButton />
         <LeaderBoardButton />
+        <div className="pt-4 border-t border-base-300">
+          <SpotifyAuthButton />
+        </div>
       </div>
     </div>
   );

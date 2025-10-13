@@ -9,11 +9,19 @@ import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { lightModeAtom, ThemeButton } from "../components/themeButton";
 import { useAtom } from "jotai";
+import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType = ({
+  Component,
+  pageProps,
+}: {
+  Component: any;
+  pageProps: { session?: Session } & Record<string, any>;
+}) => {
   const [lightMode] = useAtom(lightModeAtom);
   return (
-    <>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <title>woodvale</title>
         <meta name="description" content="woodvale game" />
@@ -41,7 +49,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Analytics />
       <Component {...pageProps} />
       <ThemeButton />
-    </>
+    </SessionProvider>
   );
 };
 

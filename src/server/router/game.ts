@@ -82,8 +82,11 @@ export const gameRouter = createRouter()
 
       const answer = selected[answerIndex] ?? "";
       const regEx = new RegExp(answer, "igu");
+      const isAudioClip = lobby.lobbyType === "audioclip";
       const roundData = {
-        question: question.replace(regEx, answer.replace(/[A-z]/g, "_")),
+        question: isAudioClip
+          ? question
+          : question.replace(regEx, answer.replace(/[A-z]/g, "_")),
         answer: answerIndex,
         choices: {
           create: choices,
@@ -304,6 +307,7 @@ export const gameRouter = createRouter()
         selected: myAnswer?.answer ?? -1,
         score: roundOver ? myAnswer?.score ?? -1 : -1,
         roundOver: roundOver,
+        spotifyAccessToken: ctx.session?.accessToken ?? null,
       };
     },
   })

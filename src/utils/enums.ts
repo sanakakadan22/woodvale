@@ -19,19 +19,21 @@ export enum LobbyType {
   Debut = "debut",
   Fearless = "fearless",
   Cats = "cats",
-  Showgirl = "showgirl"
+  Showgirl = "showgirl",
+  AudioClip = "audioclip",
 }
 
 export function LobbyTypeToEmoji(lobbyType: LobbyType): string {
-    return {
-      [LobbyType.TTPD]: "🪶",
-      [LobbyType.Taylor]: "💃",
-      [LobbyType.Flags]: "🏴",
-      [LobbyType.Debut]: "💚",
-      [LobbyType.Fearless]: "🫶",
-      [LobbyType.Cats]: "🐈",
-      [LobbyType.Showgirl]: "❤️‍🔥",
-    }[lobbyType];
+  return {
+    [LobbyType.TTPD]: "🪶",
+    [LobbyType.Taylor]: "💃",
+    [LobbyType.Flags]: "🏴",
+    [LobbyType.Debut]: "💚",
+    [LobbyType.Fearless]: "🫶",
+    [LobbyType.Cats]: "🐈",
+    [LobbyType.Showgirl]: "❤️‍🔥",
+    [LobbyType.AudioClip]: "🎵",
+  }[lobbyType];
 }
 
 export function LobbyTypeToAlbum(lobbyType: string): string | undefined {
@@ -41,5 +43,6 @@ export function LobbyTypeToAlbum(lobbyType: string): string | undefined {
     [LobbyType.Fearless]: "Fearless",
     [LobbyType.Cats]: "Cats",
     [LobbyType.Showgirl]: "The Life of a Showgirl",
+    [LobbyType.AudioClip]: "The Life of a Showgirl",
   }[lobbyType];
 }
