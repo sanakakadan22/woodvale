@@ -71,8 +71,7 @@
 
 /* Light mode (default) - glittery orange/mint green */
 html {
-  min-height: 100%;
-  min-height: 100dvh;
+  height: 100%;
 }
 
 body {
