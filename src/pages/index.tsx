@@ -3,13 +3,13 @@ import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import React from "react";
 import Image from "next/image";
-import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 import { LeaderBoardButton } from "../components/leaderBoardButton";
 import { lobbyTypeAtom, LobbyTypeButton } from "../components/lobbyTypeButton";
 import { SpotifyAuthButton } from "../components/spotifyAuthButton";
-
-export const nameAtom = atomWithStorage<string>("name", "");
+import { SpotifyDevicePicker } from "../components/spotifyDevicePicker";
+import { nameAtom } from "../utils/atoms";
+import { useSpotifyPlayer } from "../utils/spotify";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -22,6 +22,7 @@ const Home: NextPage = () => {
 
   const [lobbyType] = useAtom(lobbyTypeAtom);
   const [name, setName] = useAtom(nameAtom);
+  useSpotifyPlayer()
 
   return (
     <div className="grid h-[calc(100dvh)] w-full place-items-center">
@@ -77,7 +78,8 @@ const Home: NextPage = () => {
         </form>
         <LobbyTypeButton />
         <LeaderBoardButton />
-        <div className="pt-4 border-t border-base-300">
+        <div className="pt-4 border-t border-base-300 flex flex-col items-center gap-3">
+          <SpotifyDevicePicker />
           <SpotifyAuthButton />
         </div>
       </div>

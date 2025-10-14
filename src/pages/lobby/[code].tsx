@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { GameEvent, LobbyType, LobbyTypeToEmoji } from "../../utils/enums";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
-import { nameAtom } from "../index";
+import { nameAtom } from "../../utils/atoms";
 import { useAtom } from "jotai";
 import { PlayerNameInput } from "../../components/name_input";
 import { AblyProvider, usePresence } from "ably/react";

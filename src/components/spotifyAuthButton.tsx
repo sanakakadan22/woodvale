@@ -14,9 +14,6 @@ export function SpotifyAuthButton() {
   if (session) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm">
-          {session.user?.name ?? session.user?.email}
-        </span>
         <button
           className="btn btn-sm btn-ghost"
           onClick={() => signOut()}

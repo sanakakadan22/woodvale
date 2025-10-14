@@ -1,7 +1,7 @@
 import React from "react";
 import { trpc } from "../utils/trpc";
 import { useAtom } from "jotai";
-import { nameAtom } from "../pages";
+import { nameAtom } from "../utils/atoms";
 
 export const PlayerNameInput: React.FC<{
   lobbyCode: string;
