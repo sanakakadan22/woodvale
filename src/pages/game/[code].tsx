@@ -61,24 +61,27 @@ const GameContent: React.FC<{ lobbyCode: string }> = ({ lobbyCode }) => {
     script.async = true;
     document.body.appendChild(script);
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = new window.Spotify.Player({
+      const player = new window.Spotify!.Player({
         name: "Woodvale Game Player",
         getOAuthToken: (cb: (token: string) => void) => {
-          cb(session?.accessToken);
+          cb(session!.accessToken!);
         },
         volume: 0.5,
       });
 
-      player.addListener("ready", ({ device_id }) => {
+      player.addListener("ready", ({ device_id }: { device_id: string }) => {
         console.log("Ready with Device ID", device_id);
         setDeviceId(device_id);
         setSpotifyPlayer(player);
         setTimeout(() => setSpotifyReady(true), 100);
       });
 
-      player.addListener("not_ready", ({ device_id }) => {
-        console.log("Device ID has gone offline", device_id);
-      });
+      player.addListener(
+        "not_ready",
+        ({ device_id }: { device_id: string }) => {
+          console.log("Device ID has gone offline", device_id);
+        }
+      );
 
       player.connect();
     };
